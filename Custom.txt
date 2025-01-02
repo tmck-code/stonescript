@@ -1,0 +1,69 @@
+// When powered on, the Mind Stone continuously
+// executes instructions given to it.
+// Instructions must be scribed in Stonescript.
+// Learn more at:
+// StoneStoryRPG.com/stonescript
+// -Bezerra, the Sage
+
+import UI/MindstoneButton
+// import Cosmetics/WavyScarf
+import Custom/Log
+
+?hp < 30
+  activate potion
+
+?loc = caves
+  equipL sword
+  equipR shield
+  ?foe = boss
+    equip crossbow
+
+?loc = fungus_forest
+  ?pickup.distance < 10
+    equipL star
+  ?foe boss
+    equipL fire wand
+    equipR poison wand
+  :
+    ?foe.distance > 30
+      equipL tri
+    :
+      equipL poison wand
+      equipR fire wand
+
+
+?loc = halls
+ equipL poison wand
+ equipR vigor wand
+
+?loc = rocky
+  equip shovel
+  ?hp < 31
+    activate potion
+  ?foe = boss
+    equipL crossbow
+    equipR poison wand
+
+?loc = mine
+  ?pickup.distance < 10
+    equipL star
+  :?foe ! boss
+    ?foe.distance > 30
+      equipL tri
+    :?foe.distance <= 25 & foe.distance >= 20
+      equipR dashing
+    :
+      equipR ice wand
+      equipL aether wand
+  :
+    equipL aether wand
+    equipR ice wand
+
+?loc = ridge
+  ?pickup.distance < 10
+    equipL star
+  :?foe ! boss & foe.distance > 30
+    equipL tri
+  :
+    equipL poison wand
+    equipR fire wand

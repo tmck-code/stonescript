@@ -1,0 +1,3 @@
+>`0,0,id='@loc.id@' name='@loc.name@' loc='@loc@'
+>`0,1,frame: @totaltime@
+>`0,2,time: @time.FormatCasual(totaltime, true)@
