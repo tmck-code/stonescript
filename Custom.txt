@@ -5,10 +5,6 @@
 // StoneStoryRPG.com/stonescript
 // -Bezerra, the Sage
 
-import UI/MindstoneButton
-// import Cosmetics/WavyScarf
-import Custom/Log
-
 ?hp < 30
   activate potion
 
@@ -48,11 +44,16 @@ import Custom/Log
  equipR vigor wand
 
 ?loc = rocky
-  equip shovel
+  ?harvest.distance < 3
+    >using shovel
+    equip shovel
+  :
+    >using tri
+    equipL tri
   ?hp < 31
     activate potion
   ?foe = boss
-    equipL crossbow
+    equipL fire wand
     equipR poison wand
 
 ?loc = mine
