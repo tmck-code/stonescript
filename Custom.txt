@@ -31,6 +31,17 @@ import Custom/Log
       equipL poison wand
       equipR fire wand
 
+?loc = undead_crypt
+  ?pickup.distance < 10
+    equipL star
+  ?foe = boss
+    equipL crossbow
+  :
+    ?foe.distance > 30
+      equipL tri
+    :
+      equipL vigor wand
+      equipR poison wand
 
 ?loc = halls
  equipL poison wand
