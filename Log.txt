@@ -1,4 +1,7 @@
->`0,0,leval: @loc.id@/@loc.name@/@loc.stars@☆
->`0,1,frame: @totaltime@
->`0,2,time: @time.FormatCasual(totaltime, true)@
->`0,3,foe: @foe.id@/@foe.name@/@foe.hp@hp
+>`0,1,leval: @loc.id@/@loc.name@/@loc.stars@☆
+>`0,2,frame: @totaltime@
+>`0,3,time: @time.FormatCasual(totaltime, true)@
+>`0,4,foe: @foe.id@/@foe.distance@/@foe.hp@hp
+
+>o-20,-6,#yellow,l:(@item.left.gp@) @item.left@
+>o-20,-5,#orange,r:(@item.right.gp@) @item.right@
