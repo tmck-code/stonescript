@@ -1,7 +1,7 @@
->`0,1,leval: @loc.id@/@loc.name@/@loc.stars@☆
->`0,2,frame: @totaltime@
->`0,3,time: @time.FormatCasual(totaltime, true)@
->`0,4,foe: @foe.id@/@foe.distance@/@foe.hp@hp
+>`0,1,LEVEL: @loc.id@/@loc.name@/@loc.stars@☆
+>`0,2,FRAME: @totaltime@
+>`0,3,TIME: @time.FormatCasual(totaltime, true)@
+>`0,4,FOE: @foe.id@/@foe.distance@/@foe.hp@hp
 
->o-20,-6,#yellow,l:(@item.left.gp@) @item.left@
->o-20,-5,#orange,r:(@item.right.gp@) @item.right@
+>o-20,-2,#yellow,l:(@item.left.gp@) @item.left@
+>o-20,-1,@color.FromRGB(255,102,0)@,r:(@item.right.gp@) @item.right@
