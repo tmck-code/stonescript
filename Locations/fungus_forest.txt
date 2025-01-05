@@ -1,0 +1,15 @@
+func FungusForest()
+  ?pickup.distance < 10
+    equipL star
+  ?foe = boss
+    equipL fire wand
+    equipR poison wand
+  :
+    ?foe.distance > 30
+      equipL tri
+    :
+      equipL poison wand
+      equipR fire wand
+
+?loc = fungus_forest
+  FungusForest()

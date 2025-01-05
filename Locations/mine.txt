@@ -1,0 +1,19 @@
+func Mine()
+  ?pickup.distance < 10
+    equipL star
+    >o-6,3,#yellow,Loot!!
+  :?foe = boss
+    equipL poison wand
+    equipR aether wand
+    >o-6,3,#blue,Lets fight!
+  :
+    ?foe.distance > 35
+      equipL tri
+      >o-6,3,#green,Lets go!
+    :
+      equipR aether wand
+      equipL poison wand
+      >o-6,3,#red,Lets fight!
+
+?loc = mine
+  Mine()

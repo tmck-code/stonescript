@@ -1,0 +1,6 @@
+func Halls()
+  equipL poison wand
+  equipR vigor wand
+
+?loc = halls
+  Halls()

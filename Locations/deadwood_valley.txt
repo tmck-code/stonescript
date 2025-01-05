@@ -1,0 +1,27 @@
+func DeadWoodValley()
+  ?pickup.distance < 10
+    equipL star
+    equipR tri
+    >o-6,3,#yellow,Loot!!
+  ?hp < 31
+    activate potion
+  ?foe = boss
+    equipL fire wand
+    equipR poison wand
+    >o-6,3,#blue,Lets fight!
+  :
+    ?foe = flesh_scarab
+      equipL war hammer
+      equipR sword
+      >o-6,3,#red,Lets fight!
+    :?foe.distance > 30
+      equipL tri
+      equipR star
+      >o-6,3,#green,Lets go!
+    :
+      equipL poison wand
+      equipR fire wand
+      >o-6,3,#red,Lets fight!
+
+?loc = deadwood_valley
+  DeadWoodValley()
