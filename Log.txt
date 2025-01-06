@@ -6,13 +6,24 @@ func Fmt(data)
     ^)
   return string.Join("/", strParts)
 
-func Log(l)
+func LogTop(l)
   for i = 0 .. l.Count()-1
     >`0,@i+1@,@l[i][0]@: @Fmt(l[i][1])@
 
 func LogStrat(y, l, colour)
   >`0,@y@,@colour@,strat: @l@
 
-func LogWeapons()
-  >o-20,-7,#yellow,l:(@item.left.gp@) @item.left@
-  >o-20,-6,@color.FromRGB(255,102,0)@,r:(@item.right.gp@) @item.right@
+func LogBelow(l)
+  for i = 0 .. l.Count()-1
+    >o-20,@-7-i@,@l[i][0]@,@Fmt(l[i][1])@
+
+LogTop([
+  ["level", [loc.id, loc.name, loc.stars+"☆"]],
+  ["time ", [totaltime, time.FormatCasual(totaltime, true)]],
+  ["foe  ", [foe.distance, foe.Count, foe.hp, foe.id]],
+])
+
+LogBelow([
+  ["#yellow",                ["l", (item.left.gp), item.left]],
+  [color.FromRGB(255,102,0), ["r", item.right, item.right.gp]],
+])

@@ -1,0 +1,21 @@
+var log = import SS/Log
+var strats = import SS/Strats
+
+func HauntedHalls()
+  log.LogStrat(4, "HauntedHalls", "#green")
+  strats.LootStar()
+  strats.BigBlade(5)
+
+  ?foe = boss
+    strats.HeavyHammer()
+    equipL vigor wand
+    equipR poison wand
+    >o-6,3,#blue,Lets boss!
+  :?!strats.Speedy(30)
+    strats.Quarterstaff()
+    equipL poison wand
+    equipR vigor wand
+    >o-6,3,#red,Lets fight!
+
+?loc = halls
+  HauntedHalls()

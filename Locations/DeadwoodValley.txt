@@ -5,18 +5,18 @@ func DeadWoodValley()
   log.LogStrat(4, "DeadWoodValley", "#green")
   strats.LootStar()
 
-  ?hp < 31
-    activate potion
   ?foe = boss
     equipL fire wand
     equipR poison wand
     >o-6,3,#blue,Lets fight!
   :
-    ?foe = flesh_scarab
+    ?foe = scarab
+      strats.HeavyHammer()
       equipL ice hammer
       equipR sword
       >o-6,3,#red,Lets fight!
-    ?!strats.Speedy(30)
+
+    :?!strats.Speedy(30)
       equipL poison wand
       equipR fire wand
       >o-6,3,#red,Lets fight!

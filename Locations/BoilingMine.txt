@@ -1,0 +1,29 @@
+var log = import SS/Log
+var strats = import SS/Strats
+
+func BoilingMine()
+  log.LogStrat(4, "BoilingMine", "#green")
+  strats.LootStar()
+  strats.BigBlade(5)
+
+  ?foe = boss
+    strats.HeavyHammer()
+    strats.Quarterstaff()
+
+    equipL poison wand
+    equipR aether wand
+    >o-6,3,#blue,Lets fight!
+
+  :?!strats.Speedy(25)
+    >o-6,3,#red,Lets fight!
+
+    ?foe = fire_elemental
+      equipL crossbow
+      equipR shield
+    :
+      strats.Quarterstaff()
+      equipR aether wand
+      equipL poison wand
+
+?loc = mine
+  BoilingMine()

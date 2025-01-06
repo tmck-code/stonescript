@@ -2,8 +2,7 @@ var log = import SS/Log
 var strats = import SS/Strats
 
 func Temple()
-  log.LogStrat(4, "Mine", "#green")
-  strats.LootStar()
+  log.LogStrat(4, "Temple", "#green")
 
   ?foe = boss
     equipL poison wand

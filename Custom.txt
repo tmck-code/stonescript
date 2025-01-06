@@ -1,28 +1,26 @@
-// When powered on, the Mind Stone continuously
-// executes instructions given to it.
-// Instructions must be scribed in Stonescript.
-// Learn more at:
-// StoneStoryRPG.com/stonescript
-// -Bezerra, the Sage
+// import all shared strategies & logging utility
+var strats = import SS/Strats
+import SS/Log
 
-import SS/Locations/fungus_forest
-import SS/Locations/caves
-import SS/Locations/undead_crypt
-import SS/Locations/halls
-import SS/Locations/rocky
-import SS/Locations/deadwood_valley
-import SS/Locations/mine
-import SS/Locations/temple
-import SS/Locations/icy_ridge
+func ToggleRemoteCache()
+  // Use the "up" key to toggle remote caching of scripts on & off
+  ?key = upBegin
+    sys.cacheRemoteFiles = !sys.cacheRemoteFiles
+    ?sys.cacheRemoteFiles
+      >Remote caching ENABLED
+    :
+      >Remote caching DISABLED
 
-?hp < 30
-  activate potion
+strats.AutoHeal()   // enable auto-heal (via potions)
+strats.LootStar()   // enable bonus loot with star stone
+ToggleRemoteCache() // enable remote cache toggle
 
-// We use the "up" key as an input to toggle
-// remote caching on/off during rapid iteration
-?key = upBegin
-  sys.cacheRemoteFiles = !sys.cacheRemoteFiles
-  ?sys.cacheRemoteFiles
-    >Remote caching ENABLED
-  :
-    >Remote caching DISABLED
+// import all location-specific strategies
+import SS/Locations/RockyPlateau
+import SS/Locations/DeadwoodValley
+import SS/Locations/CausticCaves
+import SS/Locations/FungusForest
+import SS/Locations/HauntedHalls
+import SS/Locations/BoilingMine
+import SS/Locations/IcyRidge
+import SS/Locations/Temple

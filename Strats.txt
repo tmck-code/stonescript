@@ -7,7 +7,31 @@ func LootStar()
 func Speedy(dist)
   ?foe.distance > dist
     equipL tri
+    equipR star
     >o-6,3,#green,Lets go!
     return true
   :
     return false
+
+func AutoHeal()
+  ?hp < 30
+    activate potion
+
+func BigBlade(min_foes)
+  ?foe.Count > min_foes & foe.distance <= 8
+  ^ & item.GetCooldown("blade") <= 0 & item.CanActivate()
+  ^ | (item.right = "blade" & item.right.state = 2)
+    equip blade of the fallen god
+    activate R
+
+func HeavyHammer()
+  ?item.GetCooldown("heavy_hammer") <= 0 & item.CanActivate()
+  ^ | (item.right = "heavy_hammer" & item.right.state = 2)
+    equip heavy hammer
+    activate R
+
+func Quarterstaff()
+  ?foe.distance > 16
+  ^ & item.GetCooldown("quarterstaff") <= 0 & item.CanActivate()
+    equip quarterstaff
+    activate R
