@@ -5,7 +5,7 @@ func Temple()
   log.LogStrat(4, "Mine", "#green")
   strats.LootStar()
 
-  :?foe = boss
+  ?foe = boss
     equipL poison wand
     equipR ice wand
     >o-6,3,#blue,Lets fight!
