@@ -1,16 +1,20 @@
 func Mine()
+  equipL tri
+  >o-6,3,#green,Lets go!
+
   ?pickup.distance < 10
     equipL star
+    equipR tri
     >o-6,3,#yellow,Loot!!
+
   :?foe = boss
     equipL poison wand
     equipR aether wand
     >o-6,3,#blue,Lets fight!
   :
-    ?foe.distance > 35
-      equipL tri
-      >o-6,3,#green,Lets go!
-    :
+    equipL tri
+    >o-6,3,#green,Lets go!
+    ?foe.distance < 20
       equipR aether wand
       equipL poison wand
       >o-6,3,#red,Lets fight!

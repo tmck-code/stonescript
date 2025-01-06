@@ -10,15 +10,6 @@ func Log(l)
   for i = 0 .. l.Count()-1
     >`0,@i+1@,@l[i][0]@: @Fmt(l[i][1])@
 
-func LogLocation()
-  var logs = [
-    ["LL",[loc.id, loc.name, loc.stars+＂☆＂]],
-    ["FE",[totaltime]],
-    ["TE",[time.FormatCasual(totaltime, true)]],
-    ["FE",[foe.id, foe.distance, foe.hp]],
-  ]
-  Log(logs)
-
 func LogWeapons()
   >o-20,-7,#yellow,l:(@item.left.gp@) @item.left@
   >o-20,-6,@color.FromRGB(255,102,0)@,r:(@item.right.gp@) @item.right@

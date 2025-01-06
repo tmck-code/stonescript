@@ -1,14 +1,18 @@
 func UndeadCrypt()
+  equipL tri
+  >o-6,3,#green,Lets go!
+
   ?pickup.distance < 10
     equipL star
+    equipR tri
+    >o-6,3,#yellow,Loot!!
+
   ?foe = boss
     equipL crossbow
+    >o-6,3,#blue,Lets fight!
   :
-    ?foe.distance > 30
-      equipL tri
-    :
+    equipL tri
+    ?foe.distance < 25
       equipL vigor wand
       equipR poison wand
-
-?loc = undead_crypt
-  UndeadCrypt()
+      >o-6,3,#red,Lets fight!

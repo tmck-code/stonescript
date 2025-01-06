@@ -5,7 +5,14 @@
 // StoneStoryRPG.com/stonescript
 // -Bezerra, the Sage
 
-import SS/Locations/All
+import SS/Locations/fungus_forest
+import SS/Locations/undead_crypt
+import SS/Locations/halls
+import SS/Locations/rocky
+import SS/Locations/deadwood_valley
+import SS/Locations/mine
+import SS/Locations/temple
+import SS/Locations/icy_ridge
 
 ?hp < 30
   activate potion
