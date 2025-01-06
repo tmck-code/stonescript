@@ -18,7 +18,7 @@ func AutoHeal()
     activate potion
 
 func BigBlade(min_foes)
-  ?foe.Count > min_foes & foe.distance <= 8
+  ?foe.Count >= min_foes
   ^ & item.GetCooldown("blade") <= 0 & item.CanActivate()
   ^ | (item.right = "blade" & item.right.state = 2)
     equip blade of the fallen god

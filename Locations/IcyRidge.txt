@@ -5,9 +5,9 @@ func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
   strats.LootStar()
 
-  ?!strats.Speedy(30)
-    equipL poison wand
+  ?!strats.Speedy(20)
     equipR fire wand
+    equipR shield
     >o-6,3,#red,Lets fight!
 
 ?loc = icy_ridge

@@ -9,6 +9,7 @@ func FungusForest()
     equipL fire wand
     equipR poison wand
   :
+    strats.BigBlade(7)
     ?!strats.Speedy(30)
       equipL poison wand
       equipR fire wand

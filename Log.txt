@@ -6,6 +6,10 @@ func Fmt(data)
     ^)
   return string.Join("/", strParts)
 
+func FmtFoes()
+  ?foe.Count > 0
+    return string.Format("n:{0}, {1}m - {2}/{3}hp", foe.Count, foe.distance, foe.id, foe.hp)
+
 func LogTop(l)
   for i = 0 .. l.Count()-1
     >`0,@i+1@,@l[i][0]@: @Fmt(l[i][1])@
@@ -20,10 +24,10 @@ func LogBelow(l)
 LogTop([
   ["level", [loc.id, loc.name, loc.stars+"☆"]],
   ["time ", [totaltime, time.FormatCasual(totaltime, true)]],
-  ["foe  ", [foe.distance, foe.Count, foe.hp, foe.id]],
+  ["foe  ", [FmtFoes()]],
 ])
 
 LogBelow([
-  ["#yellow",                ["l", (item.left.gp), item.left]],
+  ["#yellow",                ["l", item.left, item.left.gp]],
   [color.FromRGB(255,102,0), ["r", item.right, item.right.gp]],
 ])
