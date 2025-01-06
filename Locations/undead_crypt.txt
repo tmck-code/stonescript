@@ -1,18 +1,15 @@
-func UndeadCrypt()
-  equipL tri
-  >o-6,3,#green,Lets go!
+var log = import SS/Log
+var strats = import SS/Strats
 
-  ?pickup.distance < 10
-    equipL star
-    equipR tri
-    >o-6,3,#yellow,Loot!!
+func UndeadCrypt()
+  log.LogStrat(4, "Mine", "#green")
+  strats.LootStar()
 
   ?foe = boss
     equipL crossbow
     >o-6,3,#blue,Lets fight!
   :
-    equipL tri
-    ?foe.distance < 25
+    ?!strats.Speedy(25)
       equipL vigor wand
       equipR poison wand
       >o-6,3,#red,Lets fight!

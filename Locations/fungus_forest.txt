@@ -1,13 +1,15 @@
+var log = import SS/Log
+var strats = import SS/Strats
+
 func FungusForest()
-  ?pickup.distance < 10
-    equipL star
+  log.LogStrat(4, "FungusForest", "#green")
+  strats.LootStar()
+
   ?foe = boss
     equipL fire wand
     equipR poison wand
   :
-    ?foe.distance > 30
-      equipL tri
-    :
+    ?!strats.Speedy(30)
       equipL poison wand
       equipR fire wand
 

@@ -6,6 +6,7 @@
 // -Bezerra, the Sage
 
 import SS/Locations/fungus_forest
+import SS/Locations/caves
 import SS/Locations/undead_crypt
 import SS/Locations/halls
 import SS/Locations/rocky

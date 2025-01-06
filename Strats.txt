@@ -1,0 +1,13 @@
+func LootStar()
+  ?pickup.distance < 10
+    equipL star
+    equipR tri
+    >o-6,3,#yellow,Loot!!
+
+func Speedy(dist)
+  ?foe.distance > dist
+    equipL tri
+    >o-6,3,#green,Lets go!
+    return true
+  :
+    return false

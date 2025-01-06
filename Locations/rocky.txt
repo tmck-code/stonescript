@@ -1,17 +1,17 @@
+var log = import SS/Log
+var strats = import SS/Strats
+
 func Rocky()
-  //?harvest.distance < 3
-  //  >using shovel
-  //  equip shovel
-  >using tri
-  equipL tri
+  log.LogStrat(4, "Rocky", "#green")
+  strats.LootStar()
+
   ?hp < 31
     activate potion
   ?foe = boss
     equipL fire wand
     equipR poison wand
   :
-    >using tri
-    equip tri
+    strats.Speedy(20)
 
 ?loc = rocky
   Rocky()
