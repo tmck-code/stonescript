@@ -2,18 +2,23 @@ var log    = import SS/Log
 var strats = import SS/Strats
 
 func IcyRidge()
-  log.LogStrat(4, "IcyRidge", "#green")
+  log.LogStrat(4, "IcyRidge2", "#green")
   strats.LootStar()
+  ?totaltime = 500
+    strats.BigBlade(3)
 
   ?foe = boss
-    equipL fire wand *9 dF
-    equipR fire wand *9 dP
+    strats.Bardiche()
+    equipL fire wand +6
+    equipR fire wand +7
   :?foe = ice_elemental & foe.distance <= 22
-    equipL heavy crossbow
-    equipR ice shield
+    equipL fire crossbow
+    equipR compound shield
+    // equipR ice shield
   :?!strats.Speedy(25)
-    equipL fire wand *9 dF
-    equipR fire wand *9 dP
+    strats.Bardiche()
+    equipL fire wand +6
+    equipR fire wand +7
     >o-6,3,#red,Lets fight!
 
 ?loc = icy_ridge

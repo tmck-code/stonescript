@@ -35,3 +35,15 @@ func Quarterstaff()
   ^ & item.GetCooldown("quarterstaff") <= 0 & item.CanActivate()
     equip quarterstaff
     activate R
+
+func Quarterstaff()
+  ?foe.distance > 16
+  ^ & item.GetCooldown("quarterstaff") <= 0 & item.CanActivate()
+    equip quarterstaff
+    activate R
+
+func Bardiche()
+  ?item.GetCooldown("bardiche") <= 0 & item.CanActivate()
+  ^ | (item.right = "bardiche" & item.right.state = 2) 
+    equip bardiche
+    activate R
