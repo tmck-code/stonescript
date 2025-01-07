@@ -1,13 +1,19 @@
-var log = import SS/Log
+var log    = import SS/Log
 var strats = import SS/Strats
 
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
   strats.LootStar()
 
-  ?!strats.Speedy(20)
-    equipR fire wand
-    equipR shield
+  ?foe = boss
+    equipL fire wand *9 dF
+    equipR fire wand *9 dP
+  :?foe = ice_elemental & foe.distance <= 22
+    equipL heavy crossbow
+    equipR ice shield
+  :?!strats.Speedy(25)
+    equipL fire wand *9 dF
+    equipR fire wand *9 dP
     >o-6,3,#red,Lets fight!
 
 ?loc = icy_ridge
