@@ -4,18 +4,36 @@ var strats = import SS/Strats
 func HauntedHalls()
   log.LogStrat(4, "HauntedHalls", "#green")
   strats.LootStar()
-  strats.BigBlade(5)
+  strats.UseTwoHandedWeaponIfReady("quarterstaff")
+  strats.UseTwoHandedWeaponIfReady("bardiche")
+  strats.UseTwoHandedWeaponIfReady("heavy_hammer")
 
   ?foe = boss
-    strats.HeavyHammer()
-    equipL vigor wand
-    equipR poison wand
+    ?usingBlade
+      equip blade
+    :
+      ?strats.BigBlade(1)
+        usingBlade = true
+      :
+        equipL vigor wand
+        equipR poison wand
     >o-6,3,#blue,Lets boss!
   :?!strats.Speedy(30)
-    strats.Quarterstaff()
-    equipL poison wand
-    equipR vigor wand
+    ?foe = ghost
+      equipL vigor wand
+      equipR poison wand
+    :?usingBlade
+      equip blade
+    :
+      ?strats.BigBlade(5)
+        usingBlade = true
+      :
+        equipL poison wand
+        equipR vigor wand
     >o-6,3,#red,Lets fight!
+
+
+var usingBlade = false
 
 ?loc = halls
   HauntedHalls()

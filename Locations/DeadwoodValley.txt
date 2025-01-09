@@ -11,9 +11,9 @@ func DeadWoodValley()
     >o-6,3,#blue,Lets fight!
   :
     ?foe = scarab
-      strats.HeavyHammer()
+      strats.UseTwoHandedWeaponIfReady("heavy_hammer")
       equipL ice hammer
-      equipR sword
+      equipR compound shield
       >o-6,3,#red,Lets fight!
 
     :?!strats.Speedy(30)

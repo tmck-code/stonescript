@@ -11,8 +11,7 @@ func Caves()
     >o-6,3,#blue,Lets boss!
   :
     ?!strats.Speedy(30)
-      equipL ice wand
-      equipR vigor wand
+      equip ice staff
       >o-6,3,#red,Lets fight!
 
 ?loc = caves

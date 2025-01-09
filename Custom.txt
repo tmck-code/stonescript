@@ -11,7 +11,7 @@ func ToggleRemoteCache()
     :
       >Remote caching DISABLED
 
-strats.AutoHeal()   // enable auto-heal (via potions)
+strats.AutoPotion()   // enable auto-heal (via potions)
 strats.LootStar()   // enable bonus loot with star stone
 ToggleRemoteCache() // enable remote cache toggle
 

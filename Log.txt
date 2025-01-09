@@ -10,24 +10,70 @@ func FmtFoes()
   ?foe.Count > 0
     return string.Format("n:{0}, {1}m - {2}/{3}hp", foe.Count, foe.distance, foe.id, foe.hp)
 
-func LogTop(l)
-  for i = 0 .. l.Count()-1
-    >`0,@i+1@,@l[i][0]@: @Fmt(l[i][1])@
-
 func LogStrat(y, l, colour)
   >`0,@y@,@colour@,strat: @l@
 
-func LogBelow(l)
+func LogBelowPlayer(l)
   for i = 0 .. l.Count()-1
     >o-20,@-7-i@,@l[i][0]@,@Fmt(l[i][1])@
 
-LogTop([
+func LogTopLeft(l)
+  for i = 0 .. l.Count()-1
+    >`0,@i+1@,@l[i][0]@: @Fmt(l[i][1])@
+
+func LogLowerLeft(x, y, color, message)
+  y = y + screen.h
+  >`@x@,@y@,@color@,@message@
+
+func LogLowerRight(x, y, color, message)
+  x = x + screen.w
+  y = y + screen.h
+  >`@x@,@y@,@color@,@message@
+
+func LogTopRight(x, color, messages)
+  var longest = 0
+  for i = 0 .. messages.Count()-1
+    longest = math.Max(longest, string.Size(messages[i]))
+
+  for i = 0 .. messages.Count()-1
+    // x pos = 
+    //   width (go to right of screen)
+    // - longest string (make sure they all fit)
+    // + offset (align to the right)
+    var x = screen.w - longest + (longest - string.Size(messages[i]))
+    >`@x@,@i+7@,@color@,@messages[i]@
+
+func LogCooldown(weapon)
+  var canUse = item.GetCooldown(weapon) <= 0 & item.CanActivate()
+
+  return string.Format("{0}: {1} ({2})", weapon, item.GetCooldown(weapon), canUse)
+
+LogTopLeft([
   ["level", [loc.id, loc.name, loc.stars+"☆"]],
   ["time ", [totaltime, time.FormatCasual(totaltime, true)]],
   ["foe  ", [FmtFoes()]],
 ])
 
-LogBelow([
+var bossFinished
+
+LogBelowPlayer([
   ["#yellow",                ["l", item.left, item.left.gp]],
   [color.FromRGB(255,102,0), ["r", item.right, item.right.gp]],
 ])
+
+?time <= 10
+  bossFinished = false
+:?foe = boss & foe.hp <= 100
+  bossFinished = true
+
+>o-6,4,#red,bossFinished: @bossFinished@
+
+?!bossFinished
+  LogTopRight(
+  ^  -15, "#green", [
+  ^    LogCooldown("blade"),
+  ^    LogCooldown("bardiche"),
+  ^    LogCooldown("quarterstaff"),
+  ^    LogCooldown("heavy_hammer"),
+  ^  ]
+  ^)
