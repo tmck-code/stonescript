@@ -8,13 +8,12 @@ func IcyRidge()
   ?foe = boss
     strats.BigBlade(1)
     strats.UseAvailableTwoHandedWeapon()
+    // equip fire staff
     equipL fire wand +6
     equipR fire wand +7
   :?foe = ice_wall
-    equip fire crossbow +6
+    equip fire crossbow
   :?!strats.Speedy(25)
-    // :?foe = ice_wall | foe = ice_pillar
-    //   equipL fire crossbow
     ?foe = ice_elemental & foe.distance <= 22
       equip fire crossbow +6
     :
