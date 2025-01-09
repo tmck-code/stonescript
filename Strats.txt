@@ -4,6 +4,8 @@ func LootStar()
     equipL star
     equipR tri
     >o-6,3,#yellow,Loot!!
+    return true
+  return false
 
 // hoon around in-between the action
 // returns true if applied, false otherwise
