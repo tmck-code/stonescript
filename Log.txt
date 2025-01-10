@@ -1,7 +1,7 @@
 // logging print to a specific location ---------------------
 
-func d(y, l, colour)
-  >`0,@y@,@colour@,strat: @l@
+func LogStrat(y, l, colour)
+  >`0,0,@colour@,strat: @l@
 
 func LogAbovePlayer(l)
   for i = 0 .. l.Count()-1
@@ -75,13 +75,13 @@ func FormatCooldownLogs(weapon_ids)
   return logs
 
 func FormatWeaponName(weapon)
-  ?weapon == "blade"
+  ?weapon = "blade"
     return "Blade of the Fallen God"
-  :?weapon == "bardiche"
+  :?weapon = "bardiche"
     return "Bardiche"
-  :?weapon == "quarterstaff"
+  :?weapon = "quarterstaff"
     return "Quarterstaff"
-  :?weapon == "heavy_hammer"
+  :?weapon = "heavy_hammer"
     return "Heavy Hammer"
   :
     return weapon

@@ -12,7 +12,7 @@ func Temple()
     equipR ice wand
     >o-6,3,#blue,Lets fight!
   :
-    ?!strats.Speedy(20)
+    ?!strats.BeFast(true, true)
       strats.UseAvailableTwoHandedWeapon()
 
       equipR vigor wand

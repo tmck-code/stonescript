@@ -16,7 +16,7 @@ func HauntedHalls()
         equipL vigor wand
         equipR poison wand
     >o-6,3,#blue,Lets boss!
-  :?!strats.Speedy(30)
+  :?!strats.BeFast(true, true)
     ?foe = ghost
       equipL vigor wand
       equipR poison wand

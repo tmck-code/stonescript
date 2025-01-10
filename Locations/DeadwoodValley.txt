@@ -18,7 +18,7 @@ func DeadWoodValley()
       equipR sword
       >o-6,3,#red,Lets fight!
 
-    :?!strats.Speedy(30)
+    :?!strats.BeFast(true, true)
       equipL poison wand
       equipR fire wand
       >o-6,3,#red,Lets fight!

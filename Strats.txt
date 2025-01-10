@@ -17,6 +17,19 @@ func Speedy(dist)
     return true
   return false
 
+func BeFast(do_speedy, do_dash)
+  ?do_speedy
+    return Speedy(30)
+  ?do_dash
+    return Dash(11, 16)
+  return false
+
+func Dash(min_dist, max_dist)
+  ?foe.distance >= min_dist & foe.distance <= max_dist
+    equipR dash
+    return true
+  return false
+
 // auto-use potion when hp < 30
 func AutoPotion()
   ?hp < 30
@@ -24,9 +37,10 @@ func AutoPotion()
 
 var lastActivation = 0
 
-// equip & activate a two-handed weapon if the ability is ready
-func UseTwoHandedWeaponIfReady(weapon)
-  ?item.GetCooldown(weapon) <= 0 & item.CanActivate()
+// equip & activate a two-handed weapon, if the ability is ready
+// and the foe is within the specified distance
+func UseTwoHandedWeaponIfReady(weapon, dist)
+  ?foe.distance <= dist & item.GetCooldown(weapon) <= 0 & item.CanActivate()
     equip @weapon@
     activate R
     lastActivation = time
@@ -36,17 +50,17 @@ func UseTwoHandedWeaponIfReady(weapon)
 // use blade of the fallen god if there are enough foes
 func BigBlade(min_foes)
   ?foe.count >= min_foes
-    return UseTwoHandedWeaponIfReady("blade")
+    return UseTwoHandedWeaponIfReady("blade", 30)
   return false
 
 
 func UseAvailableTwoHandedWeapon()
   ?foe.distance <= 20 & time - lastActivation > 30
-    ?UseTwoHandedWeaponIfReady("bardiche")
+    ?UseTwoHandedWeaponIfReady("bardiche", 10)
       return true
-    :?UseTwoHandedWeaponIfReady("quarterstaff")
+    :?UseTwoHandedWeaponIfReady("quarterstaff", 10)
       return true
-    :?UseTwoHandedWeaponIfReady("heavy_hammer")
+    :?UseTwoHandedWeaponIfReady("heavy_hammer", 10)
       return true
   :
     >o-6,5,#red,too far

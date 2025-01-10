@@ -11,7 +11,7 @@ func FungusForest()
     equipL fire wand
     equipR poison wand
   :
-    ?!strats.Speedy(30)
+    ?!strats.BeFast(true, true)
       equipL poison wand
       equipR fire wand
 

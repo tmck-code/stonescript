@@ -13,7 +13,7 @@ func BoilingMine()
     equipL aether wand +5
     >o-6,3,#blue,Lets fight!
 
-  :?!strats.Speedy(30)
+  :?!strats.BeFast(true, true)
     strats.BigBlade(10)
     strats.UseAvailableTwoHandedWeapon()
     >o-6,3,#red,Lets fight!
