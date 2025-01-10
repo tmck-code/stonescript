@@ -3,10 +3,8 @@ var strats = import SS/Strats
 
 func HauntedHalls()
   log.LogStrat(4, "HauntedHalls", "#green")
-  strats.LootStar()
-  strats.UseTwoHandedWeaponIfReady("quarterstaff")
-  strats.UseTwoHandedWeaponIfReady("bardiche")
-  strats.UseTwoHandedWeaponIfReady("heavy_hammer")
+  strats.UseAvailableTwoHandedWeapon()
+  ?strats.BigBlade(10)
 
   ?foe = boss
     ?usingBlade

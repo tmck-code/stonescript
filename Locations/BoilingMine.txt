@@ -2,27 +2,28 @@ var log = import SS/Log
 var strats = import SS/Strats
 
 func BoilingMine()
-  log.LogStrat(4, "BoilingMine", "#green")
-  strats.LootStar()
-  strats.BigBlade(6)
+  log.LogStrat(0, "BoilingMine", "#green")
+  strats.BigBlade(16)
 
   ?foe = boss
+    strats.BigBlade(1)
     strats.UseAvailableTwoHandedWeapon()
 
-    equipL poison wand
-    equipR aether wand
+    equipR aether wand +7
+    equipL aether wand +5
     >o-6,3,#blue,Lets fight!
 
   :?!strats.Speedy(30)
-    >o-6,3,#red,Lets fight!
+    strats.BigBlade(10)
     strats.UseAvailableTwoHandedWeapon()
+    >o-6,3,#red,Lets fight!
 
     // ?foe = fire_elemental
     //   equipR compound shield
     //   equipL aether wand
-    ?foe.distance < 16
-      equipR aether wand
-      equipL poison wand
+    ?foe.distance < 20
+      equipR aether wand +7
+      equipL aether wand +5
     :?foe = slave_master | foe = elemental
       equip fire crossbow +6
     :

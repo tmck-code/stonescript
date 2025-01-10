@@ -11,9 +11,12 @@ func ToggleRemoteCache()
     :
       >Remote caching DISABLED
 
-strats.AutoPotion()   // enable auto-heal (via potions)
-strats.LootStar()   // enable bonus loot with star stone
-ToggleRemoteCache() // enable remote cache toggle
+// enable auto-heal (via potions)
+strats.AutoPotion()
+// enable bonus loot with star stone
+strats.LootStar()
+// enable remote cache toggle
+ToggleRemoteCache()
 
 // import all location-specific strategies
 import SS/Locations/RockyPlateau

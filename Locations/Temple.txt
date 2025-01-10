@@ -3,7 +3,6 @@ var strats = import SS/Strats
 
 func Temple()
   log.LogStrat(4, "Temple", "#green")
-  strats.LootStar()
   strats.BigBlade(6)
 
   ?foe = boss
@@ -16,7 +15,7 @@ func Temple()
     ?!strats.Speedy(20)
       strats.UseAvailableTwoHandedWeapon()
 
-      equipR ice wand
+      equipR vigor wand
       equipL poison wand
       >o-6,3,#red,Lets fight!
 

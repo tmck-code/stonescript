@@ -3,17 +3,19 @@ var strats = import SS/Strats
 
 func DeadWoodValley()
   log.LogStrat(4, "DeadWoodValley", "#green")
-  strats.LootStar()
 
   ?foe = boss
+    strats.BigBlade(1)
+    strats.UseAvailableTwoHandedWeapon()
     equipL fire wand
     equipR poison wand
     >o-6,3,#blue,Lets fight!
   :
+    strats.BigBlade(5)
+    strats.UseAvailableTwoHandedWeapon()
     ?foe = scarab
-      strats.UseTwoHandedWeaponIfReady("heavy_hammer")
       equipL ice hammer
-      equipR compound shield
+      equipR sword
       >o-6,3,#red,Lets fight!
 
     :?!strats.Speedy(30)

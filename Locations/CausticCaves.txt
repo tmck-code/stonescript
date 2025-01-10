@@ -3,15 +3,18 @@ var strats = import SS/Strats
 
 func Caves()
   log.LogStrat(4, "Caves", "#green")
-  strats.LootStar()
+  strats.UseAvailableTwoHandedWeapon()
+  strats.BigBlade(18)
 
   ?foe = boss
+    strats.BigBlade(1)
     equipL vigor wand
     equipR ice wand
     >o-6,3,#blue,Lets boss!
   :
     ?!strats.Speedy(30)
-      equip ice staff
+      equipL vigor wand
+      equipL poison wand
       >o-6,3,#red,Lets fight!
 
 ?loc = caves

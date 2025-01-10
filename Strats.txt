@@ -35,7 +35,7 @@ func UseTwoHandedWeaponIfReady(weapon)
 
 // use blade of the fallen god if there are enough foes
 func BigBlade(min_foes)
-  ?foe.Count >= min_foes
+  ?foe.count >= min_foes
     return UseTwoHandedWeaponIfReady("blade")
   return false
 

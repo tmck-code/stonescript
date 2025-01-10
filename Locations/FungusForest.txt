@@ -3,13 +3,14 @@ var strats = import SS/Strats
 
 func FungusForest()
   log.LogStrat(4, "FungusForest", "#green")
-  strats.LootStar()
+  strats.UseAvailableTwoHandedWeapon()
+  strats.BigBlade(18)
 
   ?foe = boss
+    strats.BigBlade(1)
     equipL fire wand
     equipR poison wand
   :
-    strats.BigBlade(7)
     ?!strats.Speedy(30)
       equipL poison wand
       equipR fire wand

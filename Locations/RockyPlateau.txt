@@ -3,7 +3,6 @@ var strats = import SS/Strats
 
 func Rocky()
   log.LogStrat(4, "Rocky", "#green")
-  strats.LootStar()
 
   ?hp < 31
     activate potion
