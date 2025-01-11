@@ -105,6 +105,8 @@ LogTopLeft([
   ["#white",  "foe  ", Fmt([FmtFoes()])],
   ["#yellow", "l    ", Fmt([item.left, item.left.gp])],
   [orange,    "r    ", Fmt([item.right, item.right.gp])],
+  ["#white",  "buffs  ", Fmt([buffs.string])],
+  ["#white",  "debuffs", Fmt([debuffs.string])],
 ])
 
 ?!bossFinished
