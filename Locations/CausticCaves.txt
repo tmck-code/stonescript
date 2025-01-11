@@ -16,8 +16,9 @@ func Caves()
     equipL vigor wand
     equipR poison wand
     ?!strats.BeFast(true, true)
-      equipL vigor wand
-      equipR poison wand
+      equip skeleton_arm
+      // equipL vigor wand
+      // equipR poison wand
       >o-6,3,#red,Lets fight!
 
 ?loc = caves
