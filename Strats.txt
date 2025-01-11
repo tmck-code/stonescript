@@ -1,24 +1,15 @@
 // global variables
 var LAST_WEAPON_ACTIVATION = 0
 
-var log = import SS/Log
-
-// increase loot
-func LootStar()
-  ?pickup.distance < 10
-    equipL star
-    equipR tri
-    >o-6,3,#yellow,Loot!!
-    return true
-  return false
-
 // close distance to the foe
 func Dash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
-    equip dash
-    >o-6,3,#green,Dashing!
+    equipR bash
+    >o-6,5,#green,Dashing!
     return true
-  return false
+  :
+    >o-6,5,#red,NOT Dashing!
+    return false
 
 // hoon around in-between the action
 // returns true if applied, false otherwise
@@ -31,20 +22,24 @@ func Speedy(dist)
   return false
 
 func BeFast(do_speedy, do_dash)
-  >o-6,3,#yellow,Speedy: @foe.distance > 30@
-  >o-6,4,#yellow,Dash:   @foe.distance >= 11 & foe.distance <= 16@
+  >o-6,3,#yellow,Speedy: @foe.distance > 30@/@do_speedy@
+  >o-6,4,#yellow,Dash:   @foe.distance >= 11@/@foe.distance <= 16@/@do_dash@
 
-  ?do_speedy
-    return Speedy(30)
-  ?do_dash
-    return Dash(11, 16)
+  return (do_speedy & Speedy(30)) | (do_dash & Dash(11, 16))
+
+func Pickpocket()
+  ?item.CanActivate()
+  ^& item.GetCooldown("skeleton_arm") = 0
+  ^& foe.distance < 9 & foe.distance > 3
+  ^& buffs.string = "pick_pocket"
+  ^& foe ! immune_to_physical
+  ^& foe.hp > 0
+    >o-6,5,#green,Lets get!!!!!
+    equip skeleton_arm
+    activate R
+    return true
+  >o-6,5,#red,Lets not get :(
   return false
-
-
-// auto-use potion when hp < 30
-func AutoPotion()
-  ?hp < 30
-    activate potion
 
 // equip & activate a two-handed weapon, if the ability is ready
 // and the foe is within the specified distance
@@ -71,5 +66,4 @@ func UseAvailableTwoHandedWeapon()
       return true
     :?UseTwoHandedWeaponIfReady("heavy_hammer", 10)
       return true
-  :
-    >o-6,5,#red,too far
+  return false

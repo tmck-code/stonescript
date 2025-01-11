@@ -1,22 +1,30 @@
 // import all shared strategies & logging utility
-var strats = import SS/Strats
 import SS/Log
+var gameEngine = import SS/Actions/GameEngine
 
-func ToggleRemoteCache()
-  // Use the "up" key to toggle remote caching of scripts on & off
-  ?key = upBegin
-    sys.cacheRemoteFiles = !sys.cacheRemoteFiles
-    ?sys.cacheRemoteFiles
-      >Remote caching ENABLED
-    :
-      >Remote caching DISABLED
+// increase loot
+func LootStar()
+  ?pickup.distance < 10
+    equipL star
+    equipR tri
+    >o-6,3,#yellow,Loot!!
+    return true
+  return false
+
+// auto-use potion when hp < 30
+func AutoPotion()
+  ?hp < 30
+    activate potion
+
+// toggle remote cache
+gameEngine.ToggleRemoteCache()
+// toggle "Attack Animation Cancel (AAC)"
+// gameEngine.ToggleCancelAttackAnimation()
 
 // enable auto-heal (via potions)
-strats.AutoPotion()
-// enable bonus loot with star stone
-strats.LootStar()
-// enable remote cache toggle
-ToggleRemoteCache()
+AutoPotion()
+// // enable bonus loot with star stone
+LootStar()
 
 // import all location-specific strategies
 import SS/Locations/RockyPlateau
