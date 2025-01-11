@@ -11,7 +11,7 @@ func Caves()
     equipR ice wand
   :
     >o-6,3,#red,Lets fight!
-    strats.BigBlade(7)
+    strats.BigBlade(12)
     ?!strats.BeFast(true, true)
       equipL vigor wand
       equipR ice wand
