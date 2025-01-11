@@ -1,9 +1,22 @@
+// global variables
+var LAST_WEAPON_ACTIVATION = 0
+
+var log = import SS/Log
+
 // increase loot
 func LootStar()
   ?pickup.distance < 10
     equipL star
     equipR tri
     >o-6,3,#yellow,Loot!!
+    return true
+  return false
+
+// close distance to the foe
+func Dash(min_dist, max_dist)
+  ?foe.distance >= min_dist & foe.distance <= max_dist
+    equip dash
+    >o-6,3,#green,Dashing!
     return true
   return false
 
@@ -18,24 +31,23 @@ func Speedy(dist)
   return false
 
 func BeFast(do_speedy, do_dash)
+  // log.LogAbovePlayer([
+  //   ["#yellow", "Speedy: " + do_speedy],
+  //   ["#yellow", "Dash:   " + do_dash],
+  // ])
+  >o-6,3,#yellow,Speedy: @foe.distance > 30@
+  >o-6,4,#yellow,Dash:   @foe.distance >= 11 & foe.distance <= 16@
   ?do_speedy
     return Speedy(30)
   ?do_dash
     return Dash(11, 16)
   return false
 
-func Dash(min_dist, max_dist)
-  ?foe.distance >= min_dist & foe.distance <= max_dist
-    equipR dash
-    return true
-  return false
 
 // auto-use potion when hp < 30
 func AutoPotion()
   ?hp < 30
     activate potion
-
-var lastActivation = 0
 
 // equip & activate a two-handed weapon, if the ability is ready
 // and the foe is within the specified distance
@@ -43,7 +55,7 @@ func UseTwoHandedWeaponIfReady(weapon, dist)
   ?foe.distance <= dist & item.GetCooldown(weapon) <= 0 & item.CanActivate()
     equip @weapon@
     activate R
-    lastActivation = time
+    LAST_WEAPON_ACTIVATION = time
     return true
   return false
 
@@ -55,7 +67,7 @@ func BigBlade(min_foes)
 
 
 func UseAvailableTwoHandedWeapon()
-  ?foe.distance <= 20 & time - lastActivation > 30
+  ?foe.distance <= 20 & time - LAST_WEAPON_ACTIVATION > 30
     ?UseTwoHandedWeaponIfReady("bardiche", 10)
       return true
     :?UseTwoHandedWeaponIfReady("quarterstaff", 10)

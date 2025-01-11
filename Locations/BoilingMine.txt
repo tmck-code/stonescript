@@ -4,6 +4,7 @@ var strats = import SS/Strats
 func BoilingMine()
   log.LogStrat(0, "BoilingMine", "#green")
   strats.BigBlade(16)
+  strats.BeFast(true, true)
 
   ?foe = boss
     strats.BigBlade(1)
@@ -11,12 +12,12 @@ func BoilingMine()
 
     equipR aether wand +7
     equipL aether wand +5
-    >o-6,3,#blue,Lets fight!
+    // >o-6,3,#blue,Lets fight!
 
   :?!strats.BeFast(true, true)
     strats.BigBlade(10)
     strats.UseAvailableTwoHandedWeapon()
-    >o-6,3,#red,Lets fight!
+    // >o-6,3,#red,Lets fight!
 
     // ?foe = fire_elemental
     //   equipR compound shield

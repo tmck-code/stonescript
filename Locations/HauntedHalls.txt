@@ -1,37 +1,38 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
+var USING_BLADE = false
+
 func HauntedHalls()
   log.LogStrat(4, "HauntedHalls", "#green")
   strats.UseAvailableTwoHandedWeapon()
-  ?strats.BigBlade(10)
+  // strats.BigBlade(10)
+  // strats.BeFast(true, true)
 
   ?foe = boss
-    ?usingBlade
+    ?USING_BLADE
       equip blade
     :
       ?strats.BigBlade(1)
-        usingBlade = true
+        USING_BLADE = true
       :
         equipL vigor wand
         equipR poison wand
     >o-6,3,#blue,Lets boss!
-  :?!strats.BeFast(true, true)
-    ?foe = ghost
-      equipL vigor wand
-      equipR poison wand
-    :?usingBlade
-      equip blade
-    :
-      ?strats.BigBlade(5)
-        usingBlade = true
+  :
+    ?!strats.BeFast(true, true)
+      ?foe = ghost
+        equipL vigor wand
+        equipR poison wand
+      :?USING_BLADE
+        equip blade
       :
-        equipL poison wand
-        equipR vigor wand
-    >o-6,3,#red,Lets fight!
-
-
-var usingBlade = false
+        ?strats.BigBlade(5)
+          USING_BLADE = true
+        :
+          equipL poison wand
+          equipR vigor wand
+      >o-6,3,#red,Lets fight!
 
 ?loc = halls
   HauntedHalls()
