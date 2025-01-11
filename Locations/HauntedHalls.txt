@@ -5,34 +5,35 @@ var USING_BLADE = false
 
 func HauntedHalls()
   log.LogStrat(4, "HauntedHalls", "#green")
-  strats.UseAvailableTwoHandedWeapon()
-  // strats.BigBlade(10)
-  // strats.BeFast(true, true)
+  strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
 
   ?foe = boss
-    ?USING_BLADE
-      equip blade
+    strats.BigBlade(1)
+    ?buffs.GetTime("pick_pocket") < 100
+      equip skeleton_arm
     :
-      ?strats.BigBlade(1)
-        USING_BLADE = true
-      :
-        equipL vigor wand
-        equipR poison wand
+      strats.UseTwoHandedWeaponIfReady("bardiche", 10)
+      equip heavy hammer
+      strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+    // equipL vigor wand
+    // equipR poison wand
     >o-6,3,#blue,Lets boss!
   :
     ?!strats.BeFast(true, true)
-      ?foe = ghost
-        equipL vigor wand
-        equipR poison wand
-      :?USING_BLADE
-        equip blade
-      :
-        ?strats.BigBlade(5)
-          USING_BLADE = true
-        :
-          equipL poison wand
-          equipR vigor wand
       >o-6,3,#red,Lets fight!
+      strats.BigBlade(5)
+      ?foe.distance > 16
+        equipL poison wand
+        equipR vigor wand
+      :?foe.distance <= 16 & foe.distance >= 11
+        equipR dash
+        strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+      :?!foe = immune_to_physical
+        equip heavy hammer
+        strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+      :
+        equipL poison wand
+        equipR vigor wand
 
 ?loc = halls
   HauntedHalls()

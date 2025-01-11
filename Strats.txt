@@ -31,12 +31,9 @@ func Speedy(dist)
   return false
 
 func BeFast(do_speedy, do_dash)
-  // log.LogAbovePlayer([
-  //   ["#yellow", "Speedy: " + do_speedy],
-  //   ["#yellow", "Dash:   " + do_dash],
-  // ])
   >o-6,3,#yellow,Speedy: @foe.distance > 30@
   >o-6,4,#yellow,Dash:   @foe.distance >= 11 & foe.distance <= 16@
+
   ?do_speedy
     return Speedy(30)
   ?do_dash
