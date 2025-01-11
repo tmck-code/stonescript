@@ -19,12 +19,12 @@ func AutoPotion()
 // toggle remote cache
 gameEngine.ToggleRemoteCache()
 // toggle "Attack Animation Cancel (AAC)"
-// gameEngine.ToggleCancelAttackAnimation()
+gameEngine.ToggleCancelAttackAnimation()
 
 // enable auto-heal (via potions)
 AutoPotion()
 // enable bonus loot with star stone
-LootStar()
+// LootStar()
 
 // import all location-specific strategies
 import SS/Locations/RockyPlateau

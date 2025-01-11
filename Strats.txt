@@ -4,7 +4,7 @@ var LAST_WEAPON_ACTIVATION = 0
 // close distance to the foe
 func Dash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
-    equipR bash
+    equipR dashing
     >o-6,5,#green,Dashing!
     return true
   :
@@ -28,10 +28,10 @@ func BeFast(do_speedy, do_dash)
   return (do_speedy & Speedy(30)) | (do_dash & Dash(11, 16))
 
 func Pickpocket()
+  // ^& buffs.string = "pick_pocket"
   ?item.CanActivate()
   ^& item.GetCooldown("skeleton_arm") = 0
   ^& foe.distance < 9 & foe.distance > 3
-  ^& buffs.string = "pick_pocket"
   ^& foe ! immune_to_physical
   ^& foe.hp > 0
     >o-6,5,#green,Lets get!!!!!

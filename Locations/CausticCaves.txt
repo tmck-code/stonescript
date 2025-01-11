@@ -11,11 +11,13 @@ func Caves()
     equipR ice wand
   :
     >o-6,3,#red,Lets fight!
+    strats.BigBlade(7)
     ?!strats.BeFast(true, true)
-      ?(foe.hp + foe.armor) <= 15
-        strats.Pickpocket()
       equipL vigor wand
       equipR ice wand
+
+      ?(foe.hp + foe.armor) <= 10
+        strats.Pickpocket()
 
 ?loc = caves
   Caves()
