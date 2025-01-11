@@ -13,15 +13,19 @@ func DeadWoodValley()
   :
     strats.BigBlade(5)
     strats.UseAvailableTwoHandedWeapon()
-    ?foe = scarab
-      equipL ice hammer
-      equipR sword
-      >o-6,3,#red,Lets fight!
-
-    :?!strats.BeFast(true, true)
-      equipL poison wand
-      equipR fire wand
-      >o-6,3,#red,Lets fight!
+    ?!strats.BeFast(true, true)
+      ?buffs.GetTime("pick_pocket") < 100
+        equip skeleton_arm
+      :?foe = scarab
+        // strats.Pickpocket()
+        equipL ice hammer
+        equipR sword
+        >o-6,3,#red,Lets fight!
+      :
+        // strats.Pickpocket()
+        equipL poison wand
+        equipR fire wand
+        >o-6,3,#red,Lets fight!
 
 ?loc = deadwood_valley
   DeadWoodValley()

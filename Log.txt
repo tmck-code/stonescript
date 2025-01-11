@@ -20,7 +20,7 @@ func LogLowerRight(x, y, color, message)
   y = y + screen.h
   >`@x@,@y@,@color@,@message@
 
-func LogTopRight(x, messages)
+func LogTopRight(x, y_offset, messages)
   var longest = 0
 
   for i = 0 .. messages.Count()-1
@@ -36,7 +36,7 @@ func LogTopRight(x, messages)
     // - longest string (make sure they all fit)
     // + offset (align to the right)
     var x = screen.w - longest + (longest - string.Size(msg))
-    >`@x@,@i+1@,@color@,@msg@
+    >`@x@,@y_offset+i+1@,@color@,@msg@
 
 // formatting ----------------------------------------
 
@@ -110,4 +110,6 @@ LogTopLeft([
 ])
 
 ?!bossFinished
-  LogTopRight(-15, FormatCooldownLogs(["blade","bardiche","quarterstaff","heavy_hammer"]))
+  LogTopRight(-15, 5, FormatCooldownLogs(["blade","bardiche","quarterstaff","heavy_hammer","skeleton_arm"]))
+
+LogTopRight(-20, 10, [["#green", Fmt([foe.state, foe.time])]])

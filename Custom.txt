@@ -23,7 +23,7 @@ gameEngine.ToggleRemoteCache()
 
 // enable auto-heal (via potions)
 AutoPotion()
-// // enable bonus loot with star stone
+// enable bonus loot with star stone
 LootStar()
 
 // import all location-specific strategies

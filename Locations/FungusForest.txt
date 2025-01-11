@@ -11,7 +11,10 @@ func FungusForest()
     equipL fire wand
     equipR poison wand
   :
-    ?!strats.BeFast(true, true)
+    ?buffs.GetTime("pick_pocket") < 100
+      equip skeleton_arm
+    :?!strats.BeFast(true, true)
+      // strats.Pickpocket()
       equipL poison wand
       equipR fire wand
 

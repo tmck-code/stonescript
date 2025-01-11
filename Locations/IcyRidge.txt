@@ -9,7 +9,11 @@ func IcyRidge()
     strats.UseAvailableTwoHandedWeapon()
     // equips both fire wands
     loadout 1
-    ?!strats.Speedy(25)
+  :
+    ?buffs.GetTime("pick_pocket") < 100 & foe ! immune_to_physical 
+      equip skeleton_arm
+    :?!strats.BeFast(true, true)
+      // strats.Pickpocket()
       ?foe = ice_elemental | foe = ice_wall
         equip fire crossbow
       :

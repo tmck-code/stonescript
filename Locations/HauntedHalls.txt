@@ -1,27 +1,24 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
-var USING_BLADE = false
-
 func HauntedHalls()
   log.LogStrat(4, "HauntedHalls", "#green")
-  strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
 
   ?foe = boss
     strats.BigBlade(1)
-    ?buffs.GetTime("pick_pocket") < 100
-      equip skeleton_arm
-    :
-      strats.UseTwoHandedWeaponIfReady("bardiche", 10)
-      equip heavy hammer
-      strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
-    // equipL vigor wand
-    // equipR poison wand
+    strats.UseTwoHandedWeaponIfReady("bardiche", 10)
+    equip heavy hammer
+    strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+    equipL vigor wand
+    equipR poison wand
     >o-6,3,#blue,Lets boss!
   :
-    ?!strats.BeFast(true, true)
+    ?buffs.GetTime("pick_pocket") < 100 & foe ! immune_to_physical 
+      equip skeleton_arm
+    :?!strats.BeFast(true, true)
+      // strats.Pickpocket()
       >o-6,3,#red,Lets fight!
-      strats.BigBlade(5)
+      strats.BigBlade(7)
       ?foe.distance > 16
         equipL poison wand
         equipR vigor wand
@@ -32,6 +29,7 @@ func HauntedHalls()
         equip heavy hammer
         strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
       :
+        // strats.Pickpocket()
         equipL poison wand
         equipR vigor wand
 

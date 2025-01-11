@@ -3,29 +3,19 @@ var strats = import SS/Strats
 
 func Caves()
   log.LogStrat(4, "Caves", "#green")
-  // strats.UseAvailableTwoHandedWeapon()
-  strats.BigBlade(5)
 
   ?foe = boss
-    // equip skeleton_arm
+    >o-6,3,#blue,Lets boss!
     strats.BigBlade(1)
-    ?buffs.GetTime("pick_pocket") < 100
-      equip skeleton_arm
-    :
+    equipL vigor wand
+    equipR ice wand
+  :
+    >o-6,3,#red,Lets fight!
+    ?!strats.BeFast(true, true)
+      ?(foe.hp + foe.armor) <= 15
+        strats.Pickpocket()
       equipL vigor wand
       equipR ice wand
-    >o-6,3,#blue,Lets boss!
-  :
-    equipL vigor wand
-    equipR poison wand
-    ?!strats.BeFast(true, true)
-      strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
-      ?foe.count < 4
-        equip skeleton_arm
-      :
-        equipL vigor wand
-        equipR poison wand
-      >o-6,3,#red,Lets fight!
 
 ?loc = caves
   Caves()
