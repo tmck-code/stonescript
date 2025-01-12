@@ -7,13 +7,13 @@ func Caves()
   ?foe = boss
     >o-6,3,#blue,Lets boss!
     strats.BigBlade(1)
-    equipL vigor wand
+    equipL stone wand
     equipR ice wand
   :
     >o-6,3,#red,Lets fight!
     strats.BigBlade(12)
     ?!strats.BeFast(true, true)
-      equipL vigor wand
+      equipL stone wand
       equipR ice wand
 
       ?(foe.hp + foe.armor) <= 10

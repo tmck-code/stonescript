@@ -13,23 +13,19 @@ func HauntedHalls()
     equipR poison wand
     >o-6,3,#blue,Lets boss!
   :
-    ?buffs.GetTime("pick_pocket") < 100 & foe ! immune_to_physical 
-      equip skeleton_arm
-    :?!strats.BeFast(true, true)
-      // strats.Pickpocket()
+    ?!strats.BeFast(true, true)
       >o-6,3,#red,Lets fight!
+      ?(foe.hp + foe.armor) <= 15
+        strats.Pickpocket()
       strats.BigBlade(7)
       ?foe.distance > 16
         equipL poison wand
         equipR vigor wand
-      :?foe.distance <= 16 & foe.distance >= 11
-        equipR dash
         strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
       :?!foe = immune_to_physical
         equip heavy hammer
         strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
       :
-        // strats.Pickpocket()
         equipL poison wand
         equipR vigor wand
 
