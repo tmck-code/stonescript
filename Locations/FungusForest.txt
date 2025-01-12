@@ -3,18 +3,16 @@ var strats = import SS/Strats
 
 func FungusForest()
   log.LogStrat(4, "FungusForest", "#green")
-  strats.UseAvailableTwoHandedWeapon()
-  strats.BigBlade(18)
 
   ?foe = boss
     strats.BigBlade(1)
-    equipL fire wand
-    equipR poison wand
+    equip heavy_hammer
+    strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+    // equipL fire wand
+    // equipR poison wand
   :
-    ?buffs.GetTime("pick_pocket") < 100
-      equip skeleton_arm
-    :?!strats.BeFast(true, true)
-      // strats.Pickpocket()
+    ?!strats.BeFast(true, true)
+      strats.BigBlade(18)
       equipL poison wand
       equipR fire wand
 

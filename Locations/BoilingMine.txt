@@ -7,29 +7,20 @@ func BoilingMine()
   strats.BeFast(true, true)
 
   ?foe = boss
+    >o-6,3,#blue,Lets fight!
     strats.BigBlade(1)
     strats.UseAvailableTwoHandedWeapon()
 
-    equipR aether wand +7
-    equipL aether wand +5
-    // >o-6,3,#blue,Lets fight!
+    equipR aether wand
+    equipL poison wand
   :
-    ?buffs.GetTime("pick_pocket") < 100 & foe ! immune_to_physical 
-      equip skeleton_arm
-    :?!strats.BeFast(true, true)
-      // strats.Pickpocket()
+    ?!strats.BeFast(true, true)
+      >o-6,3,#red,Lets fight!
       strats.BigBlade(10)
       strats.UseAvailableTwoHandedWeapon()
-      // >o-6,3,#red,Lets fight!
 
-      // ?foe = fire_elemental
-      //   equipR compound shield
-      //   equipL aether wand
-      ?foe.distance < 20
-        equipR aether wand +7
-        equipL aether wand +5
-      :?foe = slave_master | foe = elemental
-        equip fire crossbow +6
+      ?foe = slave_master | foe = elemental
+        equip fire crossbow
       :
         equipR aether wand
         equipL poison wand

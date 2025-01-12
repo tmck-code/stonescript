@@ -103,8 +103,10 @@ LogTopLeft([
   ["#white",  "level", Fmt([loc.name, loc.stars+"☆"])],
   ["#white",  "time ", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
   ["#white",  "foe  ", Fmt([FmtFoes()])],
-  ["#yellow", "l    ", Fmt([item.left, item.left.gp])],
-  [orange,    "r    ", Fmt([item.right, item.right.gp])],
+  // ["#yellow", "l    ", Fmt([item.left, item.left.gp])],
+  ["#yellow", "l    ", Fmt([item.left.gp])],
+  // [orange,    "r    ", Fmt([item.right, item.right.gp])],
+  [orange,    "r    ", Fmt([item.right.gp])],
   ["#white",  "buffs  ", Fmt([buffs.string])],
   ["#white",  "debuffs", Fmt([debuffs.string])],
 ])
