@@ -25,7 +25,6 @@ func LogTopRight(x, y_offset, messages)
 
   for i = 0 .. messages.Count()-1
     longest = math.Max(longest, string.Size(messages[i][1]))
-
   var msg
   var color
   for i = 0 .. messages.Count()-1
@@ -40,12 +39,22 @@ func LogTopRight(x, y_offset, messages)
 
 // formatting ----------------------------------------
 
+func FmtValue(value)
+  var msg = []
+  ?Type(value) ! array
+    return string.Format("{0}", value)
+
+  for i = 0 .. value.Count()-1
+    ?Type(value) = array
+      msg.Add(FmtValue(value[i]))
+    :
+      msg.Add(string.Format("{0}", value[i]))
+  return "["+string.Join(",", msg)+"]"
+
 func Fmt(data)
   var strParts = []
   for i = 0 .. data.Count()-1
-    strParts.Add(
-    ^  string.Format("{0}", data[i])
-    ^)
+    strParts.Add(FmtValue(data[i]))
   return string.Join("/", strParts)
 
 // returns an array of [color, message]

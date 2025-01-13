@@ -4,25 +4,26 @@ var strats = import SS/Strats
 func HauntedHalls()
   log.LogStrat(4, "HauntedHalls", "#green")
 
-  ?foe = boss
-    >o-6,3,#blue,Lets boss!
+  ?foe = boss | BOSS = true
+    BOSS = true
+    >o-6,3,#blue,Lets boss! @BOSS@
     strats.MaskOfTheLost()
     strats.BigBlade(1)
-    ?foe.distance <= 5
-      strats.UseTwoHandedWeaponIfReady("bardiche", 10)
-      strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
-      equipL vigor sword
-      equipR ice hammer
+    ?foe.distance > 25 & foe ! ghost
+      equip vigor crossbow
     :
       equipL vigor wand
       equipR poison wand
   :
     ?!strats.BeFast(true, true)
-      >o-6,3,#red,Lets fight!
+      >o-6,3,#red,Lets fight! @BOSS@
       strats.MaskOfTheLost()
-      strats.BigBlade(15)
+      strats.BigBlade(10)
 
-      ?foe ! immune_to_physical
+      ?foe.distance > 20 & foe ! ghost
+        equip vigor crossbow
+
+      :?foe ! immune_to_physical
         strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
         equipL vigor sword
         equipR war hammer *9
@@ -30,5 +31,10 @@ func HauntedHalls()
         equipL poison wand
         equipR vigor wand
 
+var BOSS = false
+var i = 0
+
 ?loc = halls
+  ?loc.loop
+    BOSS = false
   HauntedHalls()

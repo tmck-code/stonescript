@@ -1,12 +1,17 @@
+var log = import SS/Log
+
 func DictLookup(dict, k)
   for i = 0 .. dict.Count()-1
-    if dict[i][0] = k
+    ?dict[i][0] = k
       return dict[i][1]
   return "not found"
 
-var d = [
-  ["a", [1]],
-  ["b", [2]],
-  ["c", [3]],
-]
-// >20,0,lookup: @d@, "a" -> @DictLookup(d, "a")@
+func Demo()
+  var d = [
+    ["a", 1],
+    ["b", 2],
+    ["c", 3],
+  ]
+
+  >`0,13,@log.Fmt([d])@
+  >`0,14,b>@log.Fmt([DictLookup(d, "b")])@
