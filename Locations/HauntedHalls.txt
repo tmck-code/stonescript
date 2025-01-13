@@ -5,26 +5,27 @@ func HauntedHalls()
   log.LogStrat(4, "HauntedHalls", "#green")
 
   ?foe = boss
-    strats.BigBlade(1)
-    strats.UseTwoHandedWeaponIfReady("bardiche", 10)
-    equip heavy hammer
-    strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
-    equipL vigor wand
-    equipR poison wand
     >o-6,3,#blue,Lets boss!
+    strats.MaskOfTheLost()
+    strats.BigBlade(1)
+    ?foe.distance <= 5
+      strats.UseTwoHandedWeaponIfReady("bardiche", 10)
+      strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+      equipL vigor sword
+      equipR ice hammer
+    :
+      equipL vigor wand
+      equipR poison wand
   :
     ?!strats.BeFast(true, true)
       >o-6,3,#red,Lets fight!
-      ?(foe.hp + foe.armor) <= 15
-        strats.Pickpocket()
-      strats.BigBlade(7)
-      ?foe.distance > 16
-        equipL poison wand
-        equipR vigor wand
+      strats.MaskOfTheLost()
+      strats.BigBlade(15)
+
+      ?foe ! immune_to_physical
         strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
-      :?!foe = immune_to_physical
-        equip heavy hammer
-        strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+        equipL vigor sword
+        equipR war hammer *9
       :
         equipL poison wand
         equipR vigor wand

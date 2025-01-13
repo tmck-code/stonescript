@@ -8,22 +8,23 @@ func BoilingMine()
 
   ?foe = boss
     >o-6,3,#blue,Lets fight!
+    strats.MaskOfTheLost()
     strats.BigBlade(1)
     strats.UseAvailableTwoHandedWeapon()
 
     equipR aether wand
     equipL poison wand
   :
-    ?!strats.BeFast(true, true)
+    ?!strats.BeFast(true, false)
       >o-6,3,#red,Lets fight!
+      strats.MaskOfTheLost()
       strats.BigBlade(10)
       strats.UseAvailableTwoHandedWeapon()
 
-      ?foe = slave_master | foe = elemental
+      ?((foe = slave_master | foe = elemental) & foe.distance > 10) | foe.distance > 20
         equip fire crossbow
       :
-        equipR aether wand
-        equipL poison wand
-
+        equipL big aether sword
+        equipR bashing
 ?loc = mine
   BoilingMine()

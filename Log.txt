@@ -48,10 +48,6 @@ func Fmt(data)
     ^)
   return string.Join("/", strParts)
 
-func FmtFoes()
-  ?foe.Count > 0
-    return string.Format("n:{0}, {1}m - {2}/{3}hp", foe.Count, foe.distance, foe.id, foe.hp)
-
 // returns an array of [color, message]
 func FormatCooldownLog(weapon)
   var canUse = item.GetCooldown(weapon) <= 0 & item.CanActivate()
@@ -86,6 +82,12 @@ func FormatWeaponName(weapon)
   :
     return weapon
 
+func FormatFoeState()
+  ?foe.state = 32
+    return "attack prepare"
+  :?foe.state = 33
+    return "attack do"
+
 // --------------------------
 
 var bossFinished
@@ -100,18 +102,31 @@ var bossFinished
 var orange = color.FromRGB(255,102,0)
 
 LogTopLeft([
-  ["#white",  "level", Fmt([loc.name, loc.stars+"☆"])],
-  ["#white",  "time ", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
-  ["#white",  "foe  ", Fmt([FmtFoes()])],
-  // ["#yellow", "l    ", Fmt([item.left, item.left.gp])],
-  ["#yellow", "l    ", Fmt([item.left.gp])],
-  // [orange,    "r    ", Fmt([item.right, item.right.gp])],
-  [orange,    "r    ", Fmt([item.right.gp])],
+  ["#white",  "level",   Fmt([loc.name, loc.stars+"☆"])],
+  ["#white",  "time ",   Fmt([totaltime, time.FormatCasual(totaltime, true)])],
+  ["#white",  "foe  ",   Fmt([foe.id])],
+  ["#white",  "     ",   Fmt([
+    string.Format("n={0}", foe.Count),
+    string.Format("{0}m",  foe.distance),
+    string.Format("{0}cp", foe.hp),
+  ])],
+  // ["#yellow", "l    ",   Fmt([item.left, item.left.gp])],
+  ["#yellow", "l    ",   Fmt([item.left.gp])],
+  // [orange,    "r    ",   Fmt([item.right, item.right.gp])],
+  [orange,    "r    ",   Fmt([item.right.gp])],
   ["#white",  "buffs  ", Fmt([buffs.string])],
   ["#white",  "debuffs", Fmt([debuffs.string])],
+  ["#blue",   "key",     Fmt([key])],
 ])
 
 ?!bossFinished
-  LogTopRight(-15, 5, FormatCooldownLogs(["blade","bardiche","quarterstaff","heavy_hammer","skeleton_arm"]))
+  LogTopRight(-15, 5, FormatCooldownLogs([
+  ^  "blade",
+  ^  "bardiche",
+  ^  "quarterstaff",
+  ^  "heavy_hammer",
+  ^  "skeleton_arm",
+  ^  "mask",
+  ^]))
 
-LogTopRight(-20, 10, [["#green", Fmt([foe.state, foe.time])]])
+LogTopRight(-20, 11, [["#green", Fmt([foe.state, foe.time])]])

@@ -22,8 +22,8 @@ func Speedy(dist)
   return false
 
 func BeFast(do_speedy, do_dash)
-  >o-6,3,#yellow,Speedy: @foe.distance > 30@/@do_speedy@
-  >o-6,4,#yellow,Dash:   @foe.distance >= 11@/@foe.distance <= 16@/@do_dash@
+  >o-6,3,#yellow,Speedy: @foe.distance > 30 & do_speedy@
+  >o-6,4,#yellow,Dash:   @foe.distance >= 11 & foe.distance <= 16 & do_dash@
 
   return (do_speedy & Speedy(30)) | (do_dash & Dash(11, 16))
 
@@ -41,6 +41,8 @@ func Pickpocket()
   >o-6,5,#red,Lets not get :(
   return false
 
+// weapons ---------------------------------------------------
+
 // equip & activate a two-handed weapon, if the ability is ready
 // and the foe is within the specified distance
 func UseTwoHandedWeaponIfReady(weapon, dist)
@@ -51,13 +53,6 @@ func UseTwoHandedWeaponIfReady(weapon, dist)
     return true
   return false
 
-// use blade of the fallen god if there are enough foes
-func BigBlade(min_foes)
-  ?foe.count >= min_foes
-    return UseTwoHandedWeaponIfReady("blade", 30)
-  return false
-
-
 func UseAvailableTwoHandedWeapon()
   ?foe.distance <= 20 & time - LAST_WEAPON_ACTIVATION > 30
     ?UseTwoHandedWeaponIfReady("bardiche", 10)
@@ -67,3 +62,36 @@ func UseAvailableTwoHandedWeapon()
     :?UseTwoHandedWeaponIfReady("heavy_hammer", 10)
       return true
   return false
+
+func UseAvailableLostWeapons()
+  ?item.GetCooldown("mask") = 0
+    activate R
+    return true
+  :?UseTwoHandedWeaponIfReady("blade", 10)
+    return true
+  return false
+
+// weapons (lost) --------------------------------------------
+
+// use blade of the fallen god if there are enough foes
+func BigBlade(min_foes)
+  ?foe.count >= min_foes
+    return UseTwoHandedWeaponIfReady("blade", 20)
+  return false
+
+func MaskOfTheLost()
+  equipR mask
+  ?item.GetCooldown("mask") = 0 
+    activate R
+  return true
+
+// Use the "right" key to trigger the blade of the fallen god
+func ListenForBladeTrigger()
+  ?key = rightBegin
+    >0,10,Triggered Blade!
+    equip blade
+    activate R
+    LAST_WEAPON_ACTIVATION = time
+    return true
+  return false
+

@@ -6,11 +6,15 @@ func Caves()
 
   ?foe = boss
     >o-6,3,#blue,Lets boss!
-    strats.BigBlade(1)
+    // strats.BigBlade(1)
+    // equip blade
+    strats.MaskOfTheLost()
     equipL stone wand
     equipR ice wand
   :
     >o-6,3,#red,Lets fight!
+    ?foe.count > 5
+      strats.MaskOfTheLost()
     strats.BigBlade(12)
     ?!strats.BeFast(true, true)
       equipL stone wand

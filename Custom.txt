@@ -1,5 +1,6 @@
 // import all shared strategies & logging utility
 import SS/Log
+import SS/Structs
 var gameEngine = import SS/Actions/GameEngine
 
 // increase loot
@@ -16,6 +17,16 @@ func AutoPotion()
   ?hp < 30
     activate potion
 
+// Use the "right" key to trigger the blade of the fallen god
+func ListenForBladeTrigger()
+  ?key = rightBegin
+    >0,10,Triggered Blade!
+    equip blade
+    activate R
+    return true
+  return false
+
+
 // toggle remote cache
 gameEngine.ToggleRemoteCache()
 // toggle "Attack Animation Cancel (AAC)"
@@ -24,7 +35,12 @@ gameEngine.ToggleCancelAttackAnimation()
 // enable auto-heal (via potions)
 AutoPotion()
 // enable bonus loot with star stone
-// LootStar()
+LootStar()
+// trigger blade of the fallen god by pressing "right"
+ListenForBladeTrigger()
+
+equipL poison wand
+equipR fire wand
 
 // import all location-specific strategies
 import SS/Locations/RockyPlateau

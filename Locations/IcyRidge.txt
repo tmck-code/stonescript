@@ -5,12 +5,15 @@ func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
 
   ?foe = boss
+    strats.MaskOfTheLost()
     strats.BigBlade(1)
     strats.UseAvailableTwoHandedWeapon()
     equipL fire wand *9
     equipR fire wand *10
   :
     ?!strats.BeFast(true, true)
+      ?foe.count > 5 & foe.debuffs = "ignition"
+        strats.MaskOfTheLost()
       // ^ | foe = ice_wall
       ?foe = ice_elemental
         equip fire crossbow

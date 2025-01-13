@@ -5,14 +5,15 @@ func FungusForest()
   log.LogStrat(4, "FungusForest", "#green")
 
   ?foe = boss
-    strats.BigBlade(1)
+    // strats.BigBlade(1)
     equip heavy_hammer
     strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+    strats.UseTwoHandedWeaponIfReady("bardiche", 10)
     // equipL fire wand
     // equipR poison wand
   :
     ?!strats.BeFast(true, true)
-      strats.BigBlade(18)
+      // strats.BigBlade(6)
       equipL poison wand
       equipR fire wand
 
