@@ -22,7 +22,7 @@ func BoilingMine()
       strats.UseAvailableTwoHandedWeapon()
 
       ?((foe = slave_master | foe = elemental) & foe.distance > 10) | foe.distance > 20
-        equip fire crossbow
+        equip aether crossbow
       :
         equipL big aether sword
         equipR bashing

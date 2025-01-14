@@ -7,8 +7,8 @@ func DeadWoodValley()
   ?foe = boss
     >o-6,3,#blue,Lets fight!
     strats.BigBlade(1)
-    equipL fire wand
-    equipR poison wand
+    equipL big aether sword
+    equipR compound shield
   :
     ?!strats.BeFast(true, true)
       >o-6,3,#red,Lets fight!
@@ -17,7 +17,8 @@ func DeadWoodValley()
       ?foe = scarab
         strats.UseTwoHandedWeaponIfReady("bardiche", 10)
         strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
-        equip heavy hammer
+        equipL big aether sword
+        equipR compound shield
       :
         equipL poison wand
         equipR fire wand

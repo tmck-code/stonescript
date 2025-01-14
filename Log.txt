@@ -119,13 +119,11 @@ LogTopLeft([
     string.Format("{0}m",  foe.distance),
     string.Format("{0}cp", foe.hp),
   ])],
-  // ["#yellow", "l    ",   Fmt([item.left, item.left.gp])],
-  ["#yellow", "l    ",   Fmt([item.left.gp])],
-  // [orange,    "r    ",   Fmt([item.right, item.right.gp])],
-  [orange,    "r    ",   Fmt([item.right.gp])],
-  ["#white",  "buffs  ", Fmt([buffs.string])],
-  ["#white",  "debuffs", Fmt([debuffs.string])],
-  ["#blue",   "key",     Fmt([key])],
+  ["#yellow", "l",    Fmt([item.left.gp, item.left.state, item.left.time])],
+  [orange,    "r",    Fmt([item.right.gp, item.right.state, item.right.time])],
+  ["#white",  "buf ", Fmt([buffs.string])],
+  ["#white",  "dbuf", Fmt([debuffs.string])],
+  ["#blue",   "key",  Fmt([key])],
 ])
 
 ?!bossFinished
