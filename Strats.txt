@@ -4,7 +4,8 @@ var LAST_WEAPON_ACTIVATION = 0
 // close distance to the foe
 func Dash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
-    equipR dashing
+    // equipR dashing
+    equipR bash
     >o-6,5,#green,Dashing!
     return true
   :
@@ -45,21 +46,28 @@ func Pickpocket()
 
 // equip & activate a two-handed weapon, if the ability is ready
 // and the foe is within the specified distance
-func UseTwoHandedWeaponIfReady(weapon, dist)
+func UseWeaponIfReady(weapon, dist)
   ?foe.distance <= dist & item.GetCooldown(weapon) <= 0 & item.CanActivate()
     equip @weapon@
     activate R
-    LAST_WEAPON_ACTIVATION = time
     return true
   return false
 
+func UseWeaponIfDist(weapon, dist)
+  ?foe.distance <= dist & item.CanActivate()
+    equip @weapon@
+    activate R
+    return true
+  return false
+
+
 func UseAvailableTwoHandedWeapon()
   ?foe.distance <= 20 & time - LAST_WEAPON_ACTIVATION > 30
-    ?UseTwoHandedWeaponIfReady("bardiche", 10)
+    ?UseWeaponIfReady("bardiche", 10)
       return true
-    :?UseTwoHandedWeaponIfReady("quarterstaff", 10)
+    :?UseWeaponIfReady("quarterstaff", 10)
       return true
-    :?UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+    :?UseWeaponIfReady("heavy_hammer", 10)
       return true
   return false
 
@@ -67,7 +75,7 @@ func UseAvailableLostWeapons()
   ?item.GetCooldown("mask") = 0
     activate R
     return true
-  :?UseTwoHandedWeaponIfReady("blade", 10)
+  :?UseWeaponIfReady("blade", 10)
     return true
   return false
 
@@ -76,7 +84,7 @@ func UseAvailableLostWeapons()
 // use blade of the fallen god if there are enough foes
 func BigBlade(min_foes)
   ?foe.count >= min_foes
-    return UseTwoHandedWeaponIfReady("blade", 20)
+    return UseWeaponIfReady("blade", 20)
   return false
 
 func MaskOfTheLost()
@@ -94,4 +102,3 @@ func ListenForBladeTrigger()
     LAST_WEAPON_ACTIVATION = time
     return true
   return false
-

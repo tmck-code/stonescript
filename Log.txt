@@ -97,6 +97,14 @@ func FormatFoeState()
   :?foe.state = 33
     return "attack do"
 
+// func FormatLocInfo()
+//   for i = 0 .. LOC_INFO.Count()-1
+//     var k = LOC_INFO[i][0]
+//     ?k = loc.id
+//       var val = LOC_INFO[i][1]
+//       return string.Format("type: {0}, weak: {1}", val[0], val[1])
+//   return "type: ??, weak: ??"
+
 // --------------------------
 
 var bossFinished
@@ -123,7 +131,7 @@ LogTopLeft([
   [orange,    "r",    Fmt([item.right.gp, item.right.state, item.right.time])],
   ["#white",  "buf ", Fmt([buffs.string])],
   ["#white",  "dbuf", Fmt([debuffs.string])],
-  ["#blue",   "key",  Fmt([key])],
+  ["#blue",   "key",  Fmt([string.Break(key, 15)[0]])],
 ])
 
 ?!bossFinished
@@ -134,6 +142,13 @@ LogTopLeft([
   ^  "heavy_hammer",
   ^  "skeleton_arm",
   ^  "mask",
+  ^  "fissure_stone",
   ^]))
 
-LogTopRight(-20, 11, [["#green", Fmt([foe.state, foe.time])]])
+
+LogTopRight(-20, 18, [["#green", Fmt([foe.state, foe.time])]])
+
+// var LOC_INFO_LOGGED = false
+// ?LOC_INFO_LOGGED = false
+//   LogTopRight(-20, 19, [["#yellow", FormatLocInfo()]])
+//   LOC_INFO_LOGGED = true

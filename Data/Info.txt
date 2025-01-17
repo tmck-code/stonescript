@@ -1,0 +1,32 @@
+// info definitions --------------------------------------
+
+var LOC_INFO = [
+  ["rocky",           ["enemy_type=??",         "weakness=??"]],
+  ["deadwood_valley", ["enemy_type=stone",      "weakness=??"]],
+  ["caustic_caves",   ["enemy_type=🐍poison",   "weakness=❄ice"]],
+  ["fungus_forest",   ["enemy_type=🤍vigor",    "weakness=🐍poison"]],
+  ["halls",           ["enemy_type=⭐æther",     "weakness=🤍vigor"]],
+  ["mine",            ["enemy_type=🔥fire",     "weakness=⭐æther"]],
+  ["icy_ridge",       ["enemy_type=❄ice",       "weakness=🔥fire"]],
+  ["temple",          ["enemy_type=🐍poison",   "weakness=??"]],
+]
+
+var DEFAULT_LOC_INFO = ["enemy_type=??", "weakness=??"]
+
+func LocInfoDefinition(loc_id)
+  for i = 0 .. LOC_INFO.Count()-1
+    ?LOC_INFO[i][0] = loc_id
+      return LOC_INFO[i][1]
+  return DEFAULT_LOC_INFO
+
+func LocInfoByKey(loc_id, info_key)
+  var info = LocInfoDefinition(loc_id)
+  for i = 0 .. info.Count()-1
+    var data = string.Split(info[i], "=")
+    var k = data[0]
+    var v = data[1]
+    ?k = info_key
+      return v
+  return "??"
+
+// info storage --------------------------------------

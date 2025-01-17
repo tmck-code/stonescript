@@ -5,20 +5,23 @@ func DeadWoodValley()
   log.LogStrat(4, "DeadWoodValley", "#green")
 
   ?foe = boss
-    >o-6,3,#blue,Lets fight!
-    strats.BigBlade(1)
-    equipL big aether sword
-    equipR compound shield
+    ?!strats.BeFast(true, true)
+      >o-6,3,#blue,Lets fight!
+      strats.BigBlade(1)
+      strats.MaskOfTheLost()
+      equipL big aether sword
+      equipR compound shield
   :
     ?!strats.BeFast(true, true)
       >o-6,3,#red,Lets fight!
       strats.BigBlade(5)
+      strats.MaskOfTheLost()
 
       ?foe = scarab
-        strats.UseTwoHandedWeaponIfReady("bardiche", 10)
-        strats.UseTwoHandedWeaponIfReady("heavy_hammer", 10)
+        strats.UseWeaponIfReady("bardiche", 10)
+        strats.UseWeaponIfReady("heavy_hammer", 10)
         equipL big aether sword
-        equipR compound shield
+        equipR ice hammer
       :
         equipL poison wand
         equipR fire wand
