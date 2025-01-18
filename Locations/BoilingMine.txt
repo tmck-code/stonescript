@@ -3,28 +3,29 @@ var strats = import SS/Strats
 
 func BoilingMine()
   log.LogStrat(0, "BoilingMine", "#green")
-  strats.BigBlade(16)
-  strats.BeFast(true, true)
 
   ?foe = boss
     >o-6,3,#blue,Lets fight!
-    strats.MaskOfTheLost()
-    strats.BigBlade(1)
-    strats.UseAvailableTwoHandedWeapon()
+    ?strats.canUseBladeDS(2)
+      strats.useBladeDS()
 
     equipR aether wand
     equipL poison wand
   :
     ?!strats.BeFast(true, false)
       >o-6,3,#red,Lets fight!
-      strats.MaskOfTheLost()
-      strats.BigBlade(10)
       strats.UseAvailableTwoHandedWeapon()
 
-      ?((foe = slave_master | foe = elemental) & foe.distance > 10) | foe.distance > 20
+      ?((foe = slave_master | foe = elemental) & foe.distance > 10)
         equip aether crossbow
+      :?foe.distance > 20
+        equip aether crossbow
+      :?foe.distance > 10
+        equipL aether wand
+        equipR vigor wand
       :
         equipL big aether sword
-        equipR bashing
+        equipR compound shield
+
 ?loc = mine
   BoilingMine()

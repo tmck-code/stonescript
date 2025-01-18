@@ -25,44 +25,11 @@ func ListenForBladeTrigger()
     return true
   return false
 
-func canUseBlade()
-  return item.GetCooldown("blade") <= 0
-
-// cannot be interrupted, doesn't need a cooldown check
-func useBlade()
-  equip blade
-  activate R
-  return
-
-/* Checks if Blade of the Fallen God
-can be used in 2 screens of distance,
-according to a certain screen index. */
-func canUseBladeDS(nScreen)
-  return canUseBlade()
-  ^& screen.i = nScreen
-
-var slideCount = 0 // counter to give screen.Next() time to slide
-func useBladeDS()
-  ?slideCount = 0
-    screen.Next()
-    slideCount = 20
-
-  :?slideCount > 0
-    slideCount--
-
-    ?slideCount = 0
-      useBlade()
-      screen.ResetOffset()
-      return
-
 
 // toggle remote cache
 gameEngine.ToggleRemoteCache()
 // toggle "Attack Animation Cancel (AAC)"
 gameEngine.ToggleCancelAttackAnimation()
-
-?canUseBladeDS(3)
-  useBladeDS()
 
 var strats = import SS/Strats
 
