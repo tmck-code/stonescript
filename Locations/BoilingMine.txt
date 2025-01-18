@@ -15,7 +15,7 @@ func BoilingMine()
     :
       equip aether crossbos
   :
-    ?!strats.BeFast(true, false)
+    ?!strats.BeFast(true, true)
       >o-6,3,#red,Lets fight!
       strats.UseAvailableTwoHandedWeapon()
 

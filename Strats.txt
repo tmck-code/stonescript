@@ -4,12 +4,11 @@ var LAST_WEAPON_ACTIVATION = 0
 // close distance to the foe
 func Dash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
-    // equipR dashing
     equipR bash
-    >o-6,5,#green,Dashing!
+    >o0,4,#green,dash
     return true
   :
-    >o-6,5,#red,NOT Dashing!
+    >o0,4,#red,dash
     return false
 
 // hoon around in-between the action
@@ -18,14 +17,12 @@ func Speedy(dist)
   ?foe.distance > dist
     equipL star
     equipR tri
-    >o-6,3,#green,Lets go!
+    >o-6,4,#green,speedy
     return true
+  >o-6,4,#red,speedy
   return false
 
 func BeFast(do_speedy, do_dash)
-  >o-6,3,#yellow,Speedy: @foe.distance > 30 & do_speedy@
-  >o-6,4,#yellow,Dash:   @foe.distance >= 11 & foe.distance <= 16 & do_dash@
-
   return (do_speedy & Speedy(30)) | (do_dash & Dash(11, 16))
 
 func Pickpocket()

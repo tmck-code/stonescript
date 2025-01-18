@@ -9,12 +9,11 @@ func HauntedHalls()
   ?loc.loop
     BOSS = false
   log.LogStrat(4, "HauntedHalls", "#green")
-
-  >`0,18,#green,@log.Get("halls:enemy_type") - @log.Get("halls:vulnerability")@
+  ?strats.canUseBladeDS(2)
+    strats.useBladeDS()
 
   ?foe = boss | BOSS = true
     BOSS = true
-    >o-6,3,#blue,Lets boss! @BOSS@
     ?foe.distance > 25 & foe ! ghost
       equip vigor crossbow
     :
@@ -22,8 +21,6 @@ func HauntedHalls()
       equipR poison wand
   :
     ?!strats.BeFast(true, true)
-      >o-6,3,#red,Lets fight! @BOSS@
-
       ?foe.distance > 20 & foe ! ghost
         equip vigor crossbow
 

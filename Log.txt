@@ -3,9 +3,9 @@
 func LogStrat(y, l, colour)
   >`0,0,@colour@,strat: @l@
 
-func LogAbovePlayer(l)
+func LogAbovePlayer(l, x_offset)
   for i = 0 .. l.Count()-1
-    >o-10,@-2-i@,@l[i][0]@,@l[i][1]@
+    >o@x_offset@,@-1-i@,@l[i][0]@,@l[i][1]@
 
 func LogTopLeft(l)
   for i = 0 .. l.Count()-1
@@ -100,56 +100,55 @@ func FormatFoeState()
   :?foe.state = 33
     return "attack do"
 
-func LogBuffs()
+func FmtBuffs(buff_string)
   var bfs = []
-  var dbfs = []
   var msgs = []
+  var longestMsgSize = 0
 
-  ?string.Size(buffs.string) > 0
-    ?string.IndexOf(buffs.string, ",") = -1
-      bfs = [buffs.string]
+  ?string.Size(buff_string) > 0
+    ?string.IndexOf(buff_string, ",") = -1
+      bfs = [buff_string]
     :
-      bfs = string.Split(buffs.string, ",")
+      bfs = string.Split(buff_string, ",")
 
-  ?string.Size(debuffs.string) > 0
-    ?string.IndexOf(debuffs.string, ",") = -1
-      dbfs = [debuffs.string]
+  var t = ""
+  for i = 0 .. bfs.Count() - 1
+    var b = ""
+    ?string.IndexOf(bfs[i], ":") = -1
+      b = bfs[i]
+      t = "?"
     :
-      dbfs = string.Split(debuffs.string, ",")
+      var parts = string.Split(bfs[i], ":")
+      b = parts[1]
+      t = parts[3]
 
-  ?dbfs.Count() > 0
-    for i = 0 .. dbfs.Count() - 1
-      var db = ""
-      ?string.IndexOf(dbfs[i], ":") = -1
-        db = Fmt([dbfs[i]])
-      :
-        var parts = string.Split(dbfs[i], ":")
-        db = FmtWithSep([parts[1], parts[3]], ":")
+    ?string.IndexOf(b, "debuff_") = 0
+      b = string.Sub(b, 7)
+      b = FmtWithSep([b, t], ":")
+      msgs.Add(["#red", Fmt([b]) ])
 
-      ?string.IndexOf(db, "debuff_") = 0
-        db = string.Sub(db, 7)
-      msgs.Add(["#red", Fmt([db]) ])
-
-  ?bfs.Count() > 0
-    for i = 0 .. bfs.Count() - 1
-      var b = ""
-      ?string.IndexOf(bfs[i], ":") = -1
-        b = Fmt([bfs[i]])
-      :
-        var parts = string.Split(bfs[i], ":")
-        b = FmtWithSep([parts[1], parts[3]], ":")
-
-      ?string.IndexOf(b, "debuff_") = 0
-        b = string.Sub(b, 7)
-      msgs.Add(["#green", Fmt([b]) ])
+    :?string.IndexOf(b, "_debuff") ! -1
+      b = string.Sub(b, 0, string.IndexOf(b, "_debuff"))
+      b = FmtWithSep([b, t], ":")
+      msgs.Add(["#red", Fmt([b]) ])
+    :?string.Size(b) > 0
+      b = FmtWithSep([b, t], ":")
+      msgs.Add(["#green", Fmt([b])])
+    
+    longestMsgSize = math.Max(longestMsgSize, string.Size(b))
 
   ?msgs.Count() = 0
-    msgs = [["#green", "none"]]
+    msgs = [["#yellow", "none"]]
+    longestMsgSize = 4
 
-  LogAbovePlayer(msgs)
+  return [msgs, longestMsgSize]
 
 func LogAllBuffsAndDebuffs()
-  return
+  var mine = FmtBuffs(string.Join(",", [buffs.string, debuffs.string]))
+  var foes = FmtBuffs(string.Join(",", [foe.buffs.string, foe.debuffs.string]))
+
+  LogAbovePlayer(mine[0], -3-mine[1])
+  LogAbovePlayer(foes[0], 4)
 
 // --------------------------
 
@@ -196,7 +195,7 @@ LogTopLeft([
 
 LogTopRight(-20, 18, [["#green", Fmt([foe.state, foe.time])]])
 
-LogBuffs()
+LogAllBuffsAndDebuffs()
 
 // var LOC_INFO_LOGGED = false
 // ?LOC_INFO_LOGGED = false
