@@ -3,26 +3,27 @@ var strats = import SS/Strats
 
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
+  ?strats.canUseBladeDS(2)
+    strats.useBladeDS()
 
   ?foe = boss
-    strats.MaskOfTheLost()
-    strats.BigBlade(1)
-    strats.UseAvailableTwoHandedWeapon()
-    equipL fire wand *9
-    equipR fire wand *10
+    ?foe.distance > 12
+      strats.UseWeaponIfDist("fissure", 18)
+      equip fire crossbow
+    :?foe.distance <= 3
+      strats.UseAvailableTwoHandedWeapon()
+    :
+      equipL fire wand *9
+      equipR fire wand *10
   :
-    ?!strats.BeFast(true, true)
-      ?foe.count > 5 & foe.debuffs = "ignition"
-        strats.MaskOfTheLost()
-      // ^ | foe = ice_wall
-      ?foe = ice_elemental
+    ?!strats.BeFast(true, false)
+      >o-6,3,#red,Lets fight!
+      ?foe = ice_elemental | foe.distance > 12
         equip fire crossbow
       :
-        strats.BigBlade(8)
         strats.UseAvailableTwoHandedWeapon()
         equipL fire wand *9
         equipR fire wand *10
-        >o-6,3,#red,Lets fight!
 
 ?loc = icy_ridge
   IcyRidge()

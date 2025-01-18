@@ -3,14 +3,17 @@ var strats = import SS/Strats
 
 func BoilingMine()
   log.LogStrat(0, "BoilingMine", "#green")
+  ?strats.canUseBladeDS(2)
+    strats.useBladeDS()
 
   ?foe = boss
     >o-6,3,#blue,Lets fight!
-    ?strats.canUseBladeDS(2)
-      strats.useBladeDS()
 
-    equipR aether wand
-    equipL poison wand
+    ?log.CheckDebuff("debuff_move_speed")
+      equipL aether wand
+      equipR aether wand
+    :
+      equip aether crossbos
   :
     ?!strats.BeFast(true, false)
       >o-6,3,#red,Lets fight!

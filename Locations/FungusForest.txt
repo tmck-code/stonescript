@@ -13,12 +13,14 @@ func FungusForest()
           ?item.GetCooldown("heavy_hammer") = 0 & item.CanActivate()
             equip heavy hammer +10
             activate R
+            equipR compound shield
+            equipL poison sword
         :
           equipR compound shield
           equipL poison sword
   :?!strats.BeFast(true, false)
     ?foe.distance >= 17
-      equip poison crossbow
+      equip aether crossbow
     :?foe.distance >= 10
       equipR poison wand
       equipL fire wand
