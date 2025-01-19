@@ -6,17 +6,10 @@ func DeadWoodValley()
 
   ?foe = boss
     ?!strats.BeFast(true, true)
-      >o-6,3,#blue,Lets fight!
-      strats.BigBlade(1)
-      strats.MaskOfTheLost()
       equipL big aether sword
       equipR compound shield
   :
     ?!strats.BeFast(true, true)
-      >o-6,3,#red,Lets fight!
-      strats.BigBlade(5)
-      strats.MaskOfTheLost()
-
       ?foe = scarab
         strats.UseWeaponIfReady("bardiche", 10)
         strats.UseWeaponIfReady("heavy_hammer", 10)

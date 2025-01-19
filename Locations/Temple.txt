@@ -5,20 +5,12 @@ func Temple()
   log.LogStrat(4, "Temple", "#green")
 
   ?foe = boss
-    >o-6,3,#blue,Lets fight!
-    strats.MaskOfTheLost()
-    strats.BigBlade(1)
     strats.UseAvailableTwoHandedWeapon()
-
     equipL poison wand
     equipR ice wand
   :
     ?!strats.BeFast(true, true)
-      >o-6,3,#red,Lets fight!
-      strats.MaskOfTheLost()
-      strats.BigBlade(5)
       strats.UseAvailableTwoHandedWeapon()
-
       equipR ice wand
       equipL poison wand
 

@@ -16,8 +16,7 @@ func IcyRidge()
       equipL fire wand *9
       equipR fire wand *10
   :
-    ?!strats.BeFast(true, false)
-      >o-6,3,#red,Lets fight!
+    ?!strats.BeFast(true, true)
       ?foe = ice_elemental | foe.distance > 12
         equip fire crossbow
       :

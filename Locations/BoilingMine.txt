@@ -7,8 +7,6 @@ func BoilingMine()
     strats.useBladeDS()
 
   ?foe = boss
-    >o-6,3,#blue,Lets fight!
-
     ?log.CheckDebuff("debuff_move_speed")
       equipL aether wand
       equipR aether wand
@@ -16,7 +14,6 @@ func BoilingMine()
       equip aether crossbos
   :
     ?!strats.BeFast(true, true)
-      >o-6,3,#red,Lets fight!
       strats.UseAvailableTwoHandedWeapon()
 
       ?((foe = slave_master | foe = elemental) & foe.distance > 10)

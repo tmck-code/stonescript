@@ -100,6 +100,24 @@ func FormatFoeState()
   :?foe.state = 33
     return "attack do"
 
+func FormatItemState(item_state)
+  // 1 is idle/checking for targets
+  ?item_state = 1
+    return "idle"
+  // 2 is cast/ pre-damage animation
+  :?item_state = 2
+    return "cast"
+  // 3 is perf/ post-damage animation
+  :?item_state = 3
+    return "perf"
+  // 4 is cooldown, waiting until it can be used again
+  // (for regular attacks, abilities dont use it)
+  :?item_state = 4
+    return "cool"
+
+func FormatItemStates()
+  return [FormatItemState(item.left.state), FormatItemState(item.right.state)]
+
 func FmtBuffs(buff_string)
   var bfs = []
   var msgs = []
@@ -122,19 +140,22 @@ func FmtBuffs(buff_string)
       b = parts[1]
       t = parts[3]
 
+    // try to remove "debuff_" prefix
     ?string.IndexOf(b, "debuff_") = 0
       b = string.Sub(b, 7)
       b = FmtWithSep([b, t], ":")
       msgs.Add(["#red", Fmt([b]) ])
 
+    // try to remove "_debuff" suffix
     :?string.IndexOf(b, "_debuff") ! -1
       b = string.Sub(b, 0, string.IndexOf(b, "_debuff"))
       b = FmtWithSep([b, t], ":")
       msgs.Add(["#red", Fmt([b]) ])
+    // otherwise, just print the buff
     :?string.Size(b) > 0
       b = FmtWithSep([b, t], ":")
-      msgs.Add(["#green", Fmt([b])])
-    
+      msgs.Add(["#green", Fmt([b]) ])
+
     longestMsgSize = math.Max(longestMsgSize, string.Size(b))
 
   ?msgs.Count() = 0
@@ -174,10 +195,6 @@ LogTopLeft([
   ])],
   ["#yellow", "l",   Fmt([item.left.gp, item.left.state, item.left.time])],
   [orange,    "r",   Fmt([item.right.gp, item.right.state, item.right.time])],
-  ["#white",  "↑",   Fmt([buffs.string])],
-  ["#white",  "↓",   Fmt([debuffs.string])],
-  ["#white",  "f↑",  Fmt([foe.buffs.string])],
-  ["#white",  "f↓",  Fmt([foe.debuffs.string])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
 ])
 
