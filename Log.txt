@@ -118,45 +118,77 @@ func FormatItemState(item_state)
 func FormatItemStates()
   return [FormatItemState(item.left.state), FormatItemState(item.right.state)]
 
+// Formats a string of buffs or debuffs, returning 
+// - an array of [color, message] tuples,
+// - the longest message size, to use for right-aligning messages
 func FmtBuffs(buff_string)
   var bfs = []
   var msgs = []
   var longestMsgSize = 0
 
-  ?string.Size(buff_string) > 0
+  // check if there are any buffs
+  ?string.Size(buff_string) = 0 | string.Equals(buff_string, ",")
+    msgs = [["#yellow", "none"]]
+    longestMsgSize = 4
+    return [msgs, longestMsgSize]
+  :
+    // if there is only one buff, it won't have a comma
     ?string.IndexOf(buff_string, ",") = -1
       bfs = [buff_string]
     :
+      // split the string into an array of buffs
       bfs = string.Split(buff_string, ",")
 
   var t = ""
-  for i = 0 .. bfs.Count() - 1
+  var debuffLen = string.Size("debuff")
+
+  ?bfs.Count() = 0
+    msgs = [["#yellow", "none"]]
+    longestMsgSize = 4
+    return [msgs, longestMsgSize]
+
+  // for each buff
+  for i = 0 .. bfs.Count()-1
     var b = ""
-    ?string.IndexOf(bfs[i], ":") = -1
-      b = bfs[i]
-      t = "?"
-    :
+    // if the buff is formatted as
+    // "buff:buff_name:level:time_remaining"
+    ?string.Size(bfs[i]) = 0
+      continue
+
+    ?string.IndexOf(bfs[i], ":") ! -1
       var parts = string.Split(bfs[i], ":")
       b = parts[1]
       t = parts[3]
+    :
+      // otherwise, the buff is formatted as
+      // "buff_string:time_remaining"
+      b = bfs[i]
+      t = ""
 
-    // try to remove "debuff_" prefix
-    ?string.IndexOf(b, "debuff_") = 0
-      b = string.Sub(b, 7)
+    ?string.Size(b) > 0
+      longestMsgSize = math.Max(longestMsgSize, string.Size(b))
+      // now, detect if buff is a buff or a debuff
+      // and strip _debuff_ prefixes & suffixes
+      var idx = string.IndexOf(b, "debuff")
+
+      // it's a buff
+      ?idx = -1
+        b = FmtWithSep([b, t], ":")
+        msgs.Add(["#green", Fmt([b]) ])
+        continue
+
+      // it's a debuff_ prefix
+      ?idx = 0
+        b = string.Sub(b, debuffLen+1)
+      // it's a _debuff suffix
+      :?idx + debuffLen = string.Size(b)
+        b = string.Sub(b, idx)
+      // it's a _debuff_ in the middle
+      :
+        b = string.Sub(b, idx-1, (idx-1)+(debuffLen+1))
+
       b = FmtWithSep([b, t], ":")
       msgs.Add(["#red", Fmt([b]) ])
-
-    // try to remove "_debuff" suffix
-    :?string.IndexOf(b, "_debuff") ! -1
-      b = string.Sub(b, 0, string.IndexOf(b, "_debuff"))
-      b = FmtWithSep([b, t], ":")
-      msgs.Add(["#red", Fmt([b]) ])
-    // otherwise, just print the buff
-    :?string.Size(b) > 0
-      b = FmtWithSep([b, t], ":")
-      msgs.Add(["#green", Fmt([b]) ])
-
-    longestMsgSize = math.Max(longestMsgSize, string.Size(b))
 
   ?msgs.Count() = 0
     msgs = [["#yellow", "none"]]
@@ -165,6 +197,8 @@ func FmtBuffs(buff_string)
   return [msgs, longestMsgSize]
 
 func LogAllBuffsAndDebuffs()
+  // [[colour,msg] tuples, longest msg size]
+  // longest msg size is used to right-align the left logs (mine)
   var mine = FmtBuffs(string.Join(",", [buffs.string, debuffs.string]))
   var foes = FmtBuffs(string.Join(",", [foe.buffs.string, foe.debuffs.string]))
 
@@ -193,8 +227,8 @@ LogTopLeft([
     string.Format("{0}m",  foe.distance),
     string.Format("{0}cp", foe.hp),
   ])],
-  ["#yellow", "l",   Fmt([item.left.gp, item.left.state, item.left.time])],
-  [orange,    "r",   Fmt([item.right.gp, item.right.state, item.right.time])],
+  ["#yellow", "l",   Fmt([item.left.gp,  FormatItemState(item.left.state),  item.left.time])],
+  [orange,    "r",   Fmt([item.right.gp, FormatItemState(item.right.state), item.right.time])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
 ])
 
@@ -212,6 +246,7 @@ LogTopLeft([
 
 LogTopRight(-20, 18, [["#green", Fmt([foe.state, foe.time])]])
 
+// log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()
 
 // var LOC_INFO_LOGGED = false

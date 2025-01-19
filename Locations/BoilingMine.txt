@@ -7,11 +7,11 @@ func BoilingMine()
     strats.useBladeDS()
 
   ?foe = boss
-    ?log.CheckDebuff("debuff_move_speed")
+    // ?log.CheckDebuff("debuff_move_speed")
       equipL aether wand
-      equipR aether wand
-    :
-      equip aether crossbos
+      equipR aether wand *8
+    // :
+    // equip aether crossbow
   :
     ?!strats.BeFast(true, true)
       strats.UseAvailableTwoHandedWeapon()
