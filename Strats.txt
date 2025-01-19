@@ -4,8 +4,15 @@ var LAST_WEAPON_ACTIVATION = 0
 // close distance to the foe
 func Dash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
-    equipR bash
     >o0,4,#green,dash
+    var weaponL = item.left
+    var weaponR = item.right
+    equipR bash
+    activate R
+    ?string.Size(weaponL) > 0
+      equipL @weaponL@
+    ?string.Size(weaponR) > 0
+      equipR @weaponR@
     return true
   :
     >o0,4,#red,dash
