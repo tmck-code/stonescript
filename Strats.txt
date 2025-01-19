@@ -4,7 +4,7 @@ var LAST_WEAPON_ACTIVATION = 0
 // close distance to the foe
 func Dash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
-    >o0,4,#green,dash
+    >o0,4,#green,→
     var weaponL = item.left
     var weaponR = item.right
     equipR bash
@@ -15,7 +15,7 @@ func Dash(min_dist, max_dist)
       equipR @weaponR@
     return true
   :
-    >o0,4,#red,dash
+    >o0,4,#red,→
     return false
 
 // hoon around in-between the action
@@ -24,26 +24,23 @@ func Speedy(dist)
   ?foe.distance > dist
     equipL star
     equipR tri
-    >o-6,4,#green,speedy
+    >o-6,4,#green,>>
     return true
-  >o-6,4,#red,speedy
+  >o-6,4,#red,>>
   return false
 
 func BeFast(do_speedy, do_dash)
   return (do_speedy & Speedy(30)) | (do_dash & Dash(11, 16))
 
 func Pickpocket()
-  // ^& buffs.string = "pick_pocket"
   ?item.CanActivate()
   ^& item.GetCooldown("skeleton_arm") = 0
   ^& foe.distance < 9 & foe.distance > 3
   ^& foe ! immune_to_physical
   ^& foe.hp > 0
-    >o-6,5,#green,Lets get!!!!!
     equip skeleton_arm
     activate R
     return true
-  >o-6,5,#red,Lets not get :(
   return false
 
 // weapons ---------------------------------------------------

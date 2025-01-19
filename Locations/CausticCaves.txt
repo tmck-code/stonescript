@@ -4,16 +4,27 @@ var strats = import SS/Strats
 func Caves()
   log.LogStrat(4, "Caves", "#green")
 
-  ?foe = boss
-    equipL stone wand
-    equipR ice wand
-  :
-    ?!strats.BeFast(true, true)
-      equipL stone wand
-      equipR ice wand
+  ?strats.canUseBladeDS(2)
+    strats.useBladeDS()
+    return
 
-      ?(foe.hp + foe.armor) <= 10
-        strats.Pickpocket()
+  ?foe = boss
+    equipL fire wand
+    equipR ice wand
+    return
+
+  ?strats.BeFast(true, true)
+    return
+
+  ?(foe.hp + foe.armor) <= 10
+    strats.Pickpocket()
+
+  ?foe.distance > 12
+    equipL ice crossbow
+    return
+
+  equipL stone wand
+  equipR ice wand
 
 ?loc = caves
   Caves()

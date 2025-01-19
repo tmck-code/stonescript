@@ -1,11 +1,25 @@
 // logging print to a specific location ---------------------
 
+func longestLength(l)
+  var longest = 0
+  for i = 0 .. l.Count()-1
+    longest = math.Max(longest, string.Size(l[i]))
+  return longest
+
+
 func LogStrat(y, l, colour)
   >`0,0,@colour@,strat: @l@
 
-func LogAbovePlayer(l, x_offset)
+func LogAbovePlayer(l, x_offset, alignment)
+  var len = 0
   for i = 0 .. l.Count()-1
-    >o@x_offset@,@-1-i@,@l[i][0]@,@l[i][1]@
+    len = math.Max(len, string.Size(l[i][1]))
+  
+  for i = 0 .. l.Count()-1
+    ?alignment = "right"
+      >o@x_offset+(len-string.Size(l[i][1]))@,@-1-i@,@l[i][0]@,@l[i][1]@
+    :?alignment = "left"
+      >o@x_offset@,@-1-i@,@l[i][0]@,@l[i][1]@
 
 func LogTopLeft(l)
   for i = 0 .. l.Count()-1
@@ -21,8 +35,9 @@ func LogLowerRight(x, y, color, message)
   >`@x@,@y@,@color@,@message@
 
 func LogTopRight(x, y_offset, messages)
+  ?messages.Count() = 0
+    return
   var longest = 0
-
   for i = 0 .. messages.Count()-1
     longest = math.Max(longest, string.Size(messages[i][1]))
   var msg
@@ -79,7 +94,9 @@ func FormatCooldownLog(weapon)
 func FormatCooldownLogs(weapon_ids)
   var logs = []
   for i = 0 .. weapon_ids.Count()-1
-    logs.Add(FormatCooldownLog(weapon_ids[i]))
+    var formatted = FormatCooldownLog(weapon_ids[i])
+    ?formatted[0] ! "#green"
+      logs.Add(formatted)
   return logs
 
 func FormatWeaponName(weapon)
@@ -103,17 +120,17 @@ func FormatFoeState()
 func FormatItemState(item_state)
   // 1 is idle/checking for targets
   ?item_state = 1
-    return "idle"
+    return "|     "
   // 2 is cast/ pre-damage animation
   :?item_state = 2
-    return "cast"
+    return "|==>  "
   // 3 is perf/ post-damage animation
   :?item_state = 3
-    return "perf"
+    return "|==> ~"
   // 4 is cooldown, waiting until it can be used again
   // (for regular attacks, abilities dont use it)
   :?item_state = 4
-    return "cool"
+    return "xxxxxx"
 
 func FormatItemStates()
   return [FormatItemState(item.left.state), FormatItemState(item.right.state)]
@@ -141,6 +158,7 @@ func FmtBuffs(buff_string)
 
   var t = ""
   var debuffLen = string.Size("debuff")
+  var buffLen = string.Size("buff")
 
   ?bfs.Count() = 0
     msgs = [["#yellow", "none"]]
@@ -173,6 +191,14 @@ func FmtBuffs(buff_string)
 
       // it's a buff
       ?idx = -1
+        idx = string.IndexOf(b, "buff")
+        ?idx = 0
+          b = string.Sub(b, buffLen+1)
+        :?idx+buffLen = string.Size(b)
+          b = string.Sub(b, idx)
+        :
+          // b = string.Sub(b, idx1+string.Size(b))
+          b = string.Sub(b, idx-1+debuffLen)
         b = FmtWithSep([b, t], ":")
         msgs.Add(["#green", Fmt([b]) ])
         continue
@@ -182,10 +208,10 @@ func FmtBuffs(buff_string)
         b = string.Sub(b, debuffLen+1)
       // it's a _debuff suffix
       :?idx + debuffLen = string.Size(b)
-        b = string.Sub(b, idx)
+        b = string.Sub(b, idx-1)
       // it's a _debuff_ in the middle
       :
-        b = string.Sub(b, idx-1, (idx-1)+(debuffLen+1))
+        b = string.Sub(b, idx-1+debuffLen)
 
       b = FmtWithSep([b, t], ":")
       msgs.Add(["#red", Fmt([b]) ])
@@ -202,8 +228,8 @@ func LogAllBuffsAndDebuffs()
   var mine = FmtBuffs(string.Join(",", [buffs.string, debuffs.string]))
   var foes = FmtBuffs(string.Join(",", [foe.buffs.string, foe.debuffs.string]))
 
-  LogAbovePlayer(mine[0], -3-mine[1])
-  LogAbovePlayer(foes[0], 4)
+  LogAbovePlayer(mine[0], -3-mine[1], "right")
+  LogAbovePlayer(foes[0], 4, "left")
 
 // --------------------------
 
@@ -219,10 +245,10 @@ var bossFinished
 var orange = color.FromRGB(255,102,0)
 
 LogTopLeft([
-  ["#white",  "level", Fmt([loc.name, loc.stars+"☆"])],
-  ["#white",  "time ", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
-  ["#white",  "foe  ", Fmt([foe.id])],
-  ["#white",  "     ", Fmt([
+  ["#white",  "", Fmt([loc.name, loc.stars+"☆"])],
+  ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
+  ["#white",  "f", Fmt([foe.id])],
+  ["#white",  " ", Fmt([
     string.Format("n={0}", foe.Count),
     string.Format("{0}m",  foe.distance),
     string.Format("{0}cp", foe.hp),
