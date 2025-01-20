@@ -15,7 +15,6 @@ func LogAbovePlayer(l, x_offset, alignment)
   
   for i = 0 .. l.Count()-1
     ?alignment = "right"
-      // >`0,20,#red,x_offset:@x_offset@,len:@len@,str_size:@string.Size(l[i][1])@=@x_offset-string.Size(l[i][1]))@str: @l[i][0]@,@l[i][1]@
       >o@x_offset-string.Size(l[i][1]))@,@-1-i@,@l[i][0]@,@l[i][1]@
     :?alignment = "left"
       >o@x_offset@,@-1-i@,@l[i][0]@,@l[i][1]@
@@ -142,15 +141,14 @@ func cleanBuffString(b, buff_type)
     idx = string.IndexOf(b, buff_type)
     ?idx = -1
       return b
-    :
-      ?idx = 0
-        b = string.Sub(b, buffLen+1)
-      // it's a _debuff: [idx: suffix, len: total - length of suffix]
-      :?idx + buffLen = string.Size(b)-1
-        b = string.Sub(b, 0, string.Size(b)-(buffLen+1))
-      // it's a _debuff_ in the middle: [idx: after the _, len: implicit]
-      :?idx ! -1
-        b = string.Sub(b, idx+(buffLen+1)-1)
+    :?idx = 0
+      b = string.Sub(b, buffLen+1)
+    // it's a _debuff: [idx: suffix, len: total - length of suffix]
+    :?idx = string.Size(b)-buffLen
+      b = string.Sub(b, 0, string.Size(b)-(buffLen+1))
+    // it's a _debuff_ in the middle: [idx: after the _, len: implicit]
+    :?idx ! -1
+      b = string.Sub(b, idx+(buffLen+1)-1)
 
 // Formats a string of buffs or debuffs, returning 
 // - an array of [color, message] tuples,
@@ -208,7 +206,6 @@ func FmtBuffs(buff_string)
 
       // it's a buff
       ?idx ! -1
-        // >`0,@20+i@,#red,idx:@idx@,len:@string.Size(b)@,debuffLen:@debuffLen@,b:@b@
         // it's a debuff_ prefix: [idx: after the debuff_, len: implicit]
         b = cleanBuffString(b, "debuff")
         b = FmtWithSep([b, t], ":")
@@ -222,8 +219,6 @@ func FmtBuffs(buff_string)
 
       b = FmtWithSep([b, t], ":")
       msgs.Add(["#green", Fmt([b]) ])
-
-
 
   ?msgs.Count() = 0
     msgs = [["#yellow", "none"]]
