@@ -1,5 +1,3 @@
-// logging print to a specific location ---------------------
-
 func longestLength(l)
   var longest = 0
   for i = 0 .. l.Count()-1
@@ -75,27 +73,28 @@ func FmtWithSep(data, sep)
 func Fmt(data)
   return FmtWithSep(data, " ")
 
-// returns an array of [color, message]
+// returns an array of [color, message, remainingCooldown]
 func FormatCooldownLog(weapon)
-  var canUse = item.GetCooldown(weapon) <= 0 & item.CanActivate()
-  var msg = string.Format("{0}: {1}", weapon, item.GetCooldown(weapon))
+  var remaining = item.GetCooldown(weapon)
+  var canUse = remaining <= 0 & item.CanActivate()
+  var msg = string.Format("{0}: {1}", weapon, remaining)
   ?!item.CanActivate()
-    return ["#red", msg]
-  :?item.GetCooldown(weapon) > 200
-    return ["#red", msg]
-  :?item.GetCooldown(weapon) > 100 & item.GetCooldown(weapon) <= 200
+    return ["#red", msg, remaining]
+  :?remaining > 200
+    return ["#red", msg, remaining]
+  :?remaining > 100 & remaining <= 200
     // orange
-    return [color.FromRGB(255,102,0), msg]
-  :?item.GetCooldown(weapon) > 0
-    return ["#yellow", msg]
+    return [color.FromRGB(255,102,0), msg, remaining]
+  :?remaining > 0
+    return ["#yellow", msg, remaining]
   :
-    return ["#green", msg]
+    return ["#green", msg, remaining]
 
 func FormatCooldownLogs(weapon_ids)
   var logs = []
   for i = 0 .. weapon_ids.Count()-1
     var formatted = FormatCooldownLog(weapon_ids[i])
-    ?formatted[0] ! "#green"
+    ?formatted[2] > 0
       logs.Add(formatted)
   return logs
 
@@ -192,27 +191,28 @@ func FmtBuffs(buff_string)
       // it's a buff
       ?idx = -1
         idx = string.IndexOf(b, "buff")
+        // it's a buff_ prefix: [idx: after the buff_, len: implicit]
         ?idx = 0
           b = string.Sub(b, buffLen+1)
-        :?idx+buffLen = string.Size(b)
-          b = string.Sub(b, idx)
-        :
-          // b = string.Sub(b, idx1+string.Size(b))
-          b = string.Sub(b, idx-1+debuffLen)
+        // it's a _buff: [idx: suffix, len: total - length of suffix]
+        :?idx = string.Size(b)-buffLen
+          b = string.Sub(b, 0, string.Size(b)-buffLen-1)
+        // it's a _buff_ in the middle: [idx: after the _, len: implicit]
+        :?idx ! -1
+          b = string.Sub(b, idx+buffLen+1)
         b = FmtWithSep([b, t], ":")
         msgs.Add(["#green", Fmt([b]) ])
         continue
 
-      // it's a debuff_ prefix
+      // it's a debuff_ prefix: [idx: after the debuff_, len: implicit]
       ?idx = 0
         b = string.Sub(b, debuffLen+1)
-      // it's a _debuff suffix
-      :?idx + debuffLen = string.Size(b)
-        b = string.Sub(b, idx-1)
-      // it's a _debuff_ in the middle
-      :
-        b = string.Sub(b, idx-1+debuffLen)
-
+      // it's a _debuff: [idx: suffix, len: total - length of suffix]
+      :?idx + debuffLen = string.Size(b)-1
+        b = string.Sub(b, 0, string.Size(b)-(debuffLen+1))
+      // it's a _debuff_ in the middle: [idx: after the _, len: implicit]
+      :?idx ! -1
+        b = string.Sub(b, idx+(debuffLen+1)-1)
       b = FmtWithSep([b, t], ":")
       msgs.Add(["#red", Fmt([b]) ])
 
