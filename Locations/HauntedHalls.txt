@@ -12,7 +12,8 @@ func HauntedHalls()
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
-  ?foe = boss | BOSS = true
+  ?foe = boss
+    //  | BOSS = true
     BOSS = true
     ?foe.distance > 25 & foe ! ghost
       equip vigor crossbow
@@ -24,10 +25,10 @@ func HauntedHalls()
       ?foe.distance > 20 & foe ! ghost
         equip vigor crossbow
 
-      :?foe ! immune_to_physical
+      :?foe ! immune_to_physical & foe.distance <= 5
         strats.UseWeaponIfReady("heavy_hammer", 10)
-        equipL vigor sword
-        equipR war hammer *9
+        equipL vigor hammer
+        equipR compound shield
       :
         equipL poison wand
         equipR vigor wand
