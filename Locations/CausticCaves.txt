@@ -6,25 +6,20 @@ func Caves()
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
-    return
 
   ?foe = boss
     equipL fire wand
     equipR ice wand
-    return
-
-  ?strats.BeFast(true, true)
-    return
-
-  ?(foe.hp + foe.armor) <= 10
-    strats.Pickpocket()
-
-  ?foe.distance > 12
-    equipL ice crossbow
-    return
-
-  equipL stone wand
-  equipR ice wand
+  :
+    ?!strats.BeFast(true, true)
+      ?foe.distance > 12
+        equip ice staff
+      :?foe.distance < 5
+        equipL ice hammer
+        equipR ice wand
+      :
+        equipL vigor wand
+        equipR ice wand
 
 ?loc = caves
   Caves()

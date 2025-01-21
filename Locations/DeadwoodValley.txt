@@ -6,8 +6,8 @@ func DeadWoodValley()
 
   ?foe = boss
     ?!strats.BeFast(true, true)
-      equipL big aether sword
-      equipR compound shield
+      equipL crossbow *10 +5
+      equipR crossbow *10 +6
   :
     ?!strats.BeFast(true, true)
       ?foe = scarab
@@ -15,6 +15,8 @@ func DeadWoodValley()
         strats.UseWeaponIfReady("heavy_hammer", 10)
         equipL big aether sword
         equipR ice hammer
+      // :?foe.distance > 20
+      //   equip aether crossbow
       :
         equipL poison wand
         equipR fire wand

@@ -4,7 +4,6 @@ func longestLength(l)
     longest = math.Max(longest, string.Size(l[i]))
   return longest
 
-
 func LogStrat(y, l, colour)
   >`0,0,@colour@,strat: @l@
 
@@ -98,17 +97,32 @@ func FormatCooldownLogs(weapon_ids)
       logs.Add(formatted)
   return logs
 
-func FormatWeaponName(weapon)
+func FormatSpecialWeaponName(weapon)
   ?weapon = "blade"
     return "Blade of the Fallen God"
-  :?weapon = "bardiche"
+  ?weapon = "bardiche"
     return "Bardiche"
-  :?weapon = "quarterstaff"
+  ?weapon = "quarterstaff"
     return "Quarterstaff"
-  :?weapon = "heavy_hammer"
+  ?weapon = "heavy_hammer"
     return "Heavy Hammer"
-  :
-    return weapon
+  ?weapon = "skeleton_arm"
+    return "Skeleton Arm"
+  ?weapon = "mask"
+    return "Mask"
+  ?weapon = "fissure_stone"
+    return "Fissure Stone"
+  return false
+
+func FormatCraftedWeaponName(weapon)
+  var parts = string.Split(weapon, ",")
+  return string.Join("\n", parts)
+
+func FormatWeaponName(weapon)
+  var fmt = FormatSpecialWeaponName(weapon)
+  ?fmt ! false
+    return fmt
+  return FormatCraftedWeaponName(weapon)
 
 func FormatFoeState()
   ?foe.state = 32
@@ -148,7 +162,7 @@ func cleanBuffString(b, buff_type)
       b = string.Sub(b, 0, string.Size(b)-(buffLen+1))
     // it's a _debuff_ in the middle: [idx: after the _, len: implicit]
     :?idx ! -1
-      b = string.Sub(b, idx+(buffLen+1)-1)
+      b = string.Sub(b, idx+(buffLen+1))
 
 // Formats a string of buffs or debuffs, returning 
 // - an array of [color, message] tuples,
@@ -156,13 +170,11 @@ func cleanBuffString(b, buff_type)
 func FmtBuffs(buff_string)
   var bfs = []
   var msgs = []
-  var longestMsgSize = 0
 
   // check if there are any buffs
   ?string.Size(buff_string) = 0 | string.Equals(buff_string, ",")
     msgs = [["#yellow", "none"]]
-    longestMsgSize = 4
-    return [msgs, longestMsgSize]
+    return msgs
   :
     // if there is only one buff, it won't have a comma
     ?string.IndexOf(buff_string, ",") = -1
@@ -177,8 +189,7 @@ func FmtBuffs(buff_string)
 
   ?bfs.Count() = 0
     msgs = [["#yellow", "none"]]
-    longestMsgSize = 4
-    return [msgs, longestMsgSize]
+    return msgs
 
   // for each buff
   for i = 0 .. bfs.Count()-1
@@ -198,42 +209,47 @@ func FmtBuffs(buff_string)
       b = bfs[i]
       t = ""
 
-    ?string.Size(b) > 0
-      longestMsgSize = math.Max(longestMsgSize, string.Size(b))
-      // now, detect if buff is a buff or a debuff
+    ?string.Size(b) > 0      // now, detect if buff is a buff or a debuff
       // and strip _debuff_ prefixes & suffixes
-      var idx = string.IndexOf(b, "debuff")
 
+      var idx = string.IndexOf(b, "debuff")
       // it's a buff
       ?idx ! -1
-        // it's a debuff_ prefix: [idx: after the debuff_, len: implicit]
         b = cleanBuffString(b, "debuff")
         b = FmtWithSep([b, t], ":")
         msgs.Add(["#red", Fmt([b]) ])
         continue
 
       idx = string.IndexOf(b, "buff")
-      // it's a buff_ prefix: [idx: after the buff_, len: implicit]
+      // it's a debuff
       ?idx ! -1
         b = cleanBuffString(b, "buff")
-
-      b = FmtWithSep([b, t], ":")
-      msgs.Add(["#green", Fmt([b]) ])
+        b = FmtWithSep([b, t], ":")
+        msgs.Add(["#green", Fmt([b]) ])
+        continue
 
   ?msgs.Count() = 0
     msgs = [["#yellow", "none"]]
-    longestMsgSize = 4
 
-  return [msgs, longestMsgSize]
+  return msgs
+
+func FmtBossHealth()
+  ?foe = boss & foe.hp > 0
+    return string.Format("{0}/{1} {2}%", foe.hp, foe.maxhp, foe.hp*100/foe.maxhp)
+  :
+    return string.Format("{0}/{1} {2}%", foe.hp, foe.maxhp, 0)
+
+
+// --------------------------
+
 
 func LogAllBuffsAndDebuffs()
-  // [[colour,msg] tuples, longest msg size]
-  // longest msg size is used to right-align the left logs (mine)
-  var mine = FmtBuffs(string.Join(",", [buffs.string, debuffs.string]))
-  var foes = FmtBuffs(string.Join(",", [foe.buffs.string, foe.debuffs.string]))
+  // [colour,msg] tuples
+  var mine = FmtBuffs(string.Join(",", [debuffs.string, buffs.string]))
+  var foes = FmtBuffs(string.Join(",", [foe.debuffs.string, foe.buffs.string]))
 
-  LogAbovePlayer(mine[0], -3, "right")
-  LogAbovePlayer(foes[0], 4, "left")
+  LogAbovePlayer(mine, -3, "right")
+  LogAbovePlayer(foes, 4, "left")
 
 // --------------------------
 
@@ -260,26 +276,18 @@ LogTopLeft([
   ["#yellow", "l",   Fmt([item.left.gp,  FormatItemState(item.left.state),  item.left.time])],
   [orange,    "r",   Fmt([item.right.gp, FormatItemState(item.right.state), item.right.time])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
+  // ["#yellow", "left",  Fmt([FormatWeaponName(item.left.id)])],
+  // ["#red",    "right", Fmt([FormatWeaponName(item.right.id)])],
 ])
 
 ?!bossFinished
   LogTopRight(-15, 5, FormatCooldownLogs([
-  ^  "blade",
-  ^  "bardiche",
-  ^  "quarterstaff",
-  ^  "heavy_hammer",
-  ^  "skeleton_arm",
-  ^  "mask",
-  ^  "fissure_stone",
+  ^  "blade", "bardiche", "quarterstaff", "heavy_hammer",
+  ^  "skeleton_arm", "mask", "fissure_stone",
   ^]))
 
-
 LogTopRight(-20, 18, [["#green", Fmt([foe.state, foe.time])]])
+LogTopRight(-20, 18, [["#green", Fmt([FmtBossHealth()]) ]])
 
 // log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()
-
-// var LOC_INFO_LOGGED = false
-// ?LOC_INFO_LOGGED = false
-//   LogTopRight(-20, 19, [["#yellow", FormatLocInfo()]])
-//   LOC_INFO_LOGGED = true

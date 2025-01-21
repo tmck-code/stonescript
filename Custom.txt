@@ -13,7 +13,7 @@ func LootStar()
 
 // auto-use potion when hp is low
 func AutoPotion()
-  ?hp < 45
+  ?hp < 41
     activate potion
 
 // Use the "right" key to trigger the blade of the fallen god
@@ -32,10 +32,6 @@ gameEngine.ToggleRemoteCache()
 gameEngine.ToggleCancelAttackAnimation()
 
 var strats = import SS/Strats
-
-// strats.UseWeaponIfDist("fissure", 18)
-?foe.count >= 8
-  strats.MaskOfTheLost()
 
 // enable auto-heal (via potions)
 AutoPotion()

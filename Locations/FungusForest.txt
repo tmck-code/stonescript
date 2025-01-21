@@ -4,6 +4,9 @@ var strats = import SS/Strats
 func FungusForest()
   log.LogStrat(4, "FungusForest", "#green")
 
+  ?strats.canUseBladeDS(1)
+    strats.useBladeDS()
+
   ?foe = boss
     ?!strats.BeFast(true, true)
       ?foe.distance >= 5

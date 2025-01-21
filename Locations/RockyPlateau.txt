@@ -4,10 +4,13 @@ var strats = import SS/Strats
 func Rocky()
   log.LogStrat(4, "Rocky", "#green")
 
-  ?foe = boss
+  ?foe = boss & foe.distance <= 40
     ?!strats.BeFast(true, true)
-      equipL fire wand
-      equipR poison wand
+      // equipL fire wand
+      // equipR poison wand
+      equip fire crossbow
+  :
+    equip shovel
 
 ?loc = rocky
   Rocky()
