@@ -1,25 +1,30 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
+var foeState = 0
+
 func Caves()
-  log.LogStrat(4, "Caves", "#green")
+  log.LogStrat(4, "Caves "+loc.stars+"☆", "#green")
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
   ?foe = boss
-    equipL fire wand
+    equipL vigor wand
     equipR ice wand
+    return
+
+  ?strats.BeFast(true, true)
+    return
+
+  ?hp*100/maxhp < 80 | foe.distance > 12
+    equip vigor crossbow
+  :?foe.distance <= 7
+    equipL ice hammer
+    equipR vigor sword
   :
-    ?!strats.BeFast(true, true)
-      ?foe.distance > 12
-        equip ice staff
-      :?foe.distance < 5
-        equipL ice hammer
-        equipR ice wand
-      :
-        equipL vigor wand
-        equipR ice wand
+    equipL vigor wand
+    equipR ice wand
 
 ?loc = caves
   Caves()

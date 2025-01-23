@@ -7,20 +7,28 @@ func longestLength(l)
 func LogStrat(y, l, colour)
   >`0,0,@colour@,strat: @l@
 
-func LogAbovePlayer(l, x_offset, alignment)
-  var len = 0
-  for i = 0 .. l.Count()-1
-    len = math.Max(len, string.Size(l[i][1]))
+// e.g. LogStrat(["#red", "attack"], 0, "right", -1)
+// umm, does that example seem correct?
+
+func LogAbovePlayer(l, x_offset, y_offset, increment, alignment)
+  ?l.Count() = 0
+    return
   
   for i = 0 .. l.Count()-1
+    var colour = l[i][0]
+    var msg = l[i][1]
+    var y = (i*increment)+y_offset
     ?alignment = "right"
-      >o@x_offset-string.Size(l[i][1]))@,@-1-i@,@l[i][0]@,@l[i][1]@
+      >o@x_offset-string.Size(msg))@,@y@,@colour@,@msg@
     :?alignment = "left"
-      >o@x_offset@,@-1-i@,@l[i][0]@,@l[i][1]@
+      >o@x_offset@,@y@,@colour@,@msg@
 
 func LogTopLeft(l)
   for i = 0 .. l.Count()-1
-    >`0,@i+1@,@l[i][0]@,@l[i][1]@: @l[i][2]@
+    var colour = l[i][0]
+    var k = l[i][1]
+    var value = l[i][2]
+    >`0,@i+1@,@colour@,@k@: @value@
 
 func LogLowerLeft(x, y, color, message)
   y = y + screen.h
@@ -124,13 +132,22 @@ func FormatWeaponName(weapon)
     return fmt
   return FormatCraftedWeaponName(weapon)
 
-func FormatFoeState()
-  ?foe.state = 32
-    return "attack prepare"
-  :?foe.state = 33
-    return "attack do"
+// --------------------------------------------------
+// State Formatting
 
-func FormatItemState(item_state)
+func FmtItemState(item_state, item_hand)
+  ?item_state = 1
+    return "idle"
+  :?item_state = 2
+    return "cast"
+  :?item_state = 3
+    return "perf"
+  :?item_state = 4
+    return "cool"
+  :
+    return string.Format("?? {0}", item_state)
+
+func FmtItemStateVis(item_state)
   // 1 is idle/checking for targets
   ?item_state = 1
     return "|     "
@@ -145,36 +162,119 @@ func FormatItemState(item_state)
   :?item_state = 4
     return "xxxxxx"
 
-func FormatItemStates()
-  return [FormatItemState(item.left.state), FormatItemState(item.right.state)]
+func FmtFoeState(foe_state)
+  ?foe_state = 32
+    return "attack prepare"
+  :?foe_state = 33
+    return "attack do"
+  :?foe_state = 34
+    return "attack done"
+  :?foe_state = 2
+    return "waiting..."
+  :
+    return string.Format("??: {0}", foe_state)
+  
+
+var seenItemStatesLeft = []
+var itemStateTimesLeft = []
+var seenItemStatesRight = []
+var itemStateTimesRight = []
+
+var seenFoeStates = []
+var foeStateTimes = []
+
+?loc.loop
+  seenItemStatesLeft.Clear()
+  itemStateTimesLeft.Clear()
+  seenItemStatesRight.Clear()
+  itemStateTimesRight.Clear()
+  seenFoeStates.Clear()
+  foeStateTimes.Clear()
+
+func CollectStates(state_name, foe_state, foe_time, seen_states, state_times)
+  var stateValue = FmtFoeState(foe_state)
+
+  var t = foe_time
+  var idx = seen_states.IndexOf(foe_state)
+  ?idx = -1
+    seen_states.Add(foe_state)
+    state_times.Add(t)
+  :?time % 2 = 0
+    state_times.Emplace(idx, t)
+
+  var lines = []
+  for i = 0 .. seen_states.Count()-1
+    ?i = idx
+      lines.Add(["#green", string.Format(" {0}:{1}", seen_states[i], state_times[i])])
+    :
+      lines.Add(["#white", string.Format(" {0}:{1}", seen_states[i], state_times[i])])
+  return lines
+
+var lastLeftItem = ""
+var lastRightItem = ""
+var lastFoe = ""
+
+func LogAllStates()
+
+  ?lastLeftItem ! item.left.id
+    seenItemStatesLeft.Clear()
+    itemStateTimesLeft.Clear()
+    lastLeftItem = item.left.id
+
+  var leftItemLines = CollectStates(item, item.left.state, item.left.time, seenItemStatesLeft, itemStateTimesLeft)
+  ?leftItemLines.Count() > 0
+    >`0,7,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+    for i = 0 .. leftItemLines.Count()-1
+      >`0,@i+8@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
+
+  ?lastRightItem ! item.right.id
+    seenItemStatesRight.Clear()
+    itemStateTimesRight.Clear()
+    lastRightItem = item.right.id
+
+  var rightItemLines = CollectStates(item, item.right.state, item.right.time, seenItemStatesRight, itemStateTimesRight)
+  ?rightItemLines.Count() > 0
+    >`6,7,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+    for i = 0 .. rightItemLines.Count()-1
+      >`6,@i+8@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
+
+  ?lastFoe ! foe.id
+    seenFoeStates.Clear()
+    foeStateTimes.Clear()
+    lastFoe = foe.id
+
+  LogTopRight(-15, 8, [["#yellow", string.Sub(foe, 0, math.Min(10, string.Size(foe)))]])
+  var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
+  LogTopRight(-15, 9, foeLines)
 
 func cleanBuffString(b, buff_type)
-  var idx = 0
+  var idx = string.IndexOf(b, buff_type)
   var buffLen = string.Size(buff_type)
-  for i = 0 .. 10
-    idx = string.IndexOf(b, buff_type)
-    ?idx = -1
-      return b
-    :?idx = 0
-      b = string.Sub(b, buffLen+1)
-    // it's a _debuff: [idx: suffix, len: total - length of suffix]
-    :?idx = string.Size(b)-buffLen
-      b = string.Sub(b, 0, string.Size(b)-(buffLen+1))
-    // it's a _debuff_ in the middle: [idx: after the _, len: implicit]
-    :?idx ! -1
-      b = string.Sub(b, idx+(buffLen+1))
+  ?idx = -1
+    return b
+  
+  // it's a buff_: [idx: 0, len: ->]
+  ?idx = 0
+    return string.Sub(b, buffLen+1)
+  // there's a _ before the buff name
+  ?string.IndexOf(b, "_", idx-1) ! idx-1
+    return b
+  // it's a _debuff: [idx: suffix, len: total - length of suffix]
+  ?idx-1 = string.Size(b)-(buffLen+1)
+    return string.Sub(b, 0, idx-1)
+  // it's a _debuff_ in the middle: [idx: suffix, len: total - length of suffix]
+  return string.Sub(b, idx+(buffLen+1))
 
 // Formats a string of buffs or debuffs, returning 
 // - an array of [color, message] tuples,
 // - the longest message size, to use for right-aligning messages
-func FmtBuffs(buff_string)
+func FmtBuffs(buff_string, buff_type, colour)
   var bfs = []
   var msgs = []
 
   // check if there are any buffs
   ?string.Size(buff_string) = 0 | string.Equals(buff_string, ",")
-    msgs = [["#yellow", "none"]]
-    return msgs
+    return []
   :
     // if there is only one buff, it won't have a comma
     ?string.IndexOf(buff_string, ",") = -1
@@ -184,16 +284,18 @@ func FmtBuffs(buff_string)
       bfs = string.Split(buff_string, ",")
 
   var t = ""
-  var debuffLen = string.Size("debuff")
-  var buffLen = string.Size("buff")
+  var b = ""
+  var c = ""
+  var buffTypeLen = string.Size(buff_type)
+  // var debuffLen = string.Size("debuff")
+  // var buffLen = string.Size("buff")
 
   ?bfs.Count() = 0
-    msgs = [["#yellow", "none"]]
-    return msgs
+    return []
 
   // for each buff
   for i = 0 .. bfs.Count()-1
-    var b = ""
+    b = ""
     // if the buff is formatted as
     // "buff:buff_name:level:time_remaining"
     ?string.Size(bfs[i]) = 0
@@ -201,6 +303,7 @@ func FmtBuffs(buff_string)
 
     ?string.IndexOf(bfs[i], ":") ! -1
       var parts = string.Split(bfs[i], ":")
+      c = parts[0]
       b = parts[1]
       t = parts[3]
     :
@@ -208,28 +311,15 @@ func FmtBuffs(buff_string)
       // "buff_string:time_remaining"
       b = bfs[i]
       t = ""
+    ?string.Size(b) = 0
+      continue
 
-    ?string.Size(b) > 0      // now, detect if buff is a buff or a debuff
-      // and strip _debuff_ prefixes & suffixes
-
-      var idx = string.IndexOf(b, "debuff")
-      // it's a buff
-      ?idx ! -1
-        b = cleanBuffString(b, "debuff")
-        b = FmtWithSep([b, t], ":")
-        msgs.Add(["#red", Fmt([b]) ])
-        continue
-
-      idx = string.IndexOf(b, "buff")
-      // it's a debuff
-      ?idx ! -1
-        b = cleanBuffString(b, "buff")
-        b = FmtWithSep([b, t], ":")
-        msgs.Add(["#green", Fmt([b]) ])
-        continue
+    b = cleanBuffString(b, buff_type)
+    msgs.Add([colour, string.Format("{0} {1}:{2}", c, b, t) ])
+    continue
 
   ?msgs.Count() = 0
-    msgs = [["#yellow", "none"]]
+    return []
 
   return msgs
 
@@ -245,11 +335,16 @@ func FmtBossHealth()
 
 func LogAllBuffsAndDebuffs()
   // [colour,msg] tuples
-  var mine = FmtBuffs(string.Join(",", [debuffs.string, buffs.string]))
-  var foes = FmtBuffs(string.Join(",", [foe.debuffs.string, foe.buffs.string]))
+  var playerBuffs = FmtBuffs(buffs.string, "buff", "#green")
+  var playerDebuffs = FmtBuffs(debuffs.string, "debuff", "#red")
 
-  LogAbovePlayer(mine, -3, "right")
-  LogAbovePlayer(foes, 4, "left")
+  var foeBuffs = FmtBuffs(foe.buffs.string, "buff", "#green")
+  var foeDebuffs = FmtBuffs(foe.debuffs.string, "debuff", "#red")
+
+  LogAbovePlayer(playerBuffs,   -3, -2, -1, "right")
+  LogAbovePlayer(playerDebuffs, -3, -1,  1, "right")
+  LogAbovePlayer(foeBuffs,       4, -2, -1, "left")
+  LogAbovePlayer(foeDebuffs,     4, -1,  1, "left")
 
 // --------------------------
 
@@ -265,7 +360,6 @@ var bossFinished
 var orange = color.FromRGB(255,102,0)
 
 LogTopLeft([
-  ["#white",  "", Fmt([loc.name, loc.stars+"☆"])],
   ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
   ["#white",  "f", Fmt([foe.id])],
   ["#white",  " ", Fmt([
@@ -273,21 +367,22 @@ LogTopLeft([
     string.Format("{0}m",  foe.distance),
     string.Format("{0}cp", foe.hp),
   ])],
-  ["#yellow", "l",   Fmt([item.left.gp,  FormatItemState(item.left.state),  item.left.time])],
-  [orange,    "r",   Fmt([item.right.gp, FormatItemState(item.right.state), item.right.time])],
+  ["#yellow", "l",   Fmt([item.left.gp,  FmtItemStateVis(item.left.state),  item.left.time])],
+  [orange,    "r",   Fmt([item.right.gp, FmtItemStateVis(item.right.state), item.right.time])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
   // ["#yellow", "left",  Fmt([FormatWeaponName(item.left.id)])],
   // ["#red",    "right", Fmt([FormatWeaponName(item.right.id)])],
 ])
 
+LogTopRight(-20, 0, [["#green", Fmt([foe.state, foe.time])]])
+LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
+
 ?!bossFinished
-  LogTopRight(-15, 5, FormatCooldownLogs([
+  LogTopRight(-15, 2, FormatCooldownLogs([
   ^  "blade", "bardiche", "quarterstaff", "heavy_hammer",
   ^  "skeleton_arm", "mask", "fissure_stone",
   ^]))
 
-LogTopRight(-20, 18, [["#green", Fmt([foe.state, foe.time])]])
-LogTopRight(-20, 18, [["#green", Fmt([FmtBossHealth()]) ]])
-
 // log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()
+LogAllStates()

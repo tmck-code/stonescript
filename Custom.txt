@@ -29,7 +29,7 @@ func ListenForBladeTrigger()
 // toggle remote cache
 gameEngine.ToggleRemoteCache()
 // toggle "Attack Animation Cancel (AAC)"
-gameEngine.ToggleCancelAttackAnimation()
+// gameEngine.ToggleCancelAttackAnimation()
 
 var strats = import SS/Strats
 
