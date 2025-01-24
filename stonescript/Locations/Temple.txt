@@ -7,10 +7,12 @@ func Temple()
   ?strats.canUseBladeDS(5)
     strats.useBladeDS()
 
+  ?strats.MaskOfTheLost()
+    return
+
   ?foe = boss
     strats.UseAvailableTwoHandedWeapon()
-    equipL poison wand
-    equipR ice wand
+    equip ice crossbow
     return
 
   ?strats.Speedy()

@@ -92,10 +92,11 @@ func BigBlade(min_foes)
   return false
 
 func MaskOfTheLost()
-  equipR mask
   ?item.GetCooldown("mask") = 0 
+    equipR mask
     activate R
-  return true
+    return true
+  return false
 
 // Use the "right" key to trigger the blade of the fallen god
 func ListenForBladeTrigger()

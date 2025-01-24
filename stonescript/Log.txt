@@ -370,8 +370,6 @@ LogTopLeft([
   ["#yellow", "l",   Fmt([item.left.gp,  FmtItemStateVis(item.left.state),  item.left.time])],
   [orange,    "r",   Fmt([item.right.gp, FmtItemStateVis(item.right.state), item.right.time])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
-  // ["#yellow", "left",  Fmt([FormatWeaponName(item.left.id)])],
-  // ["#red",    "right", Fmt([FormatWeaponName(item.right.id)])],
 ])
 
 LogTopRight(-20, 0, [["#green", Fmt([foe.state, foe.time])]])
@@ -386,4 +384,4 @@ LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 // log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()
 LogAllStates()
-LogAbovePlayer([["#yellow", foe.distance]], 0, -2, 1, "left")
+LogAbovePlayer([["#yellow", foe.distance]], 0, -1, 1, "left")
