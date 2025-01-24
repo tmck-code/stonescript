@@ -4,6 +4,9 @@ var strats = import SS/Strats
 func Temple()
   log.LogStrat(4, "Temple", "#green")
 
+  ?strats.canUseBladeDS(5)
+    strats.useBladeDS()
+
   ?foe = boss
     strats.UseAvailableTwoHandedWeapon()
     equipL poison wand

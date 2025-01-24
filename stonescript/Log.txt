@@ -386,3 +386,4 @@ LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 // log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()
 LogAllStates()
+LogAbovePlayer([["#yellow", foe.distance]], 0, -2, 1, "left")
