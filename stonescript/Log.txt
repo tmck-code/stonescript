@@ -216,36 +216,36 @@ var lastFoe = ""
 
 func LogAllStates()
 
-  ?lastLeftItem ! item.left.id
+  ?lastLeftItem ! item.left.id | string.Size(item.left.id) = 0
     seenItemStatesLeft.Clear()
     itemStateTimesLeft.Clear()
     lastLeftItem = item.left.id
+  :
+    var leftItemLines = CollectStates(item, item.left.state, item.left.time, seenItemStatesLeft, itemStateTimesLeft)
+    ?leftItemLines.Count() > 0
+      >`0,7,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+      for i = 0 .. leftItemLines.Count()-1
+        >`0,@i+8@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
 
-  var leftItemLines = CollectStates(item, item.left.state, item.left.time, seenItemStatesLeft, itemStateTimesLeft)
-  ?leftItemLines.Count() > 0
-    >`0,7,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
-    for i = 0 .. leftItemLines.Count()-1
-      >`0,@i+8@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
-
-  ?lastRightItem ! item.right.id
+  ?lastRightItem ! item.right.id | string.Size(item.right.id) = 0
     seenItemStatesRight.Clear()
     itemStateTimesRight.Clear()
     lastRightItem = item.right.id
+  :
+    var rightItemLines = CollectStates(item, item.right.state, item.right.time, seenItemStatesRight, itemStateTimesRight)
+    ?rightItemLines.Count() > 0
+      >`6,7,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+      for i = 0 .. rightItemLines.Count()-1
+        >`6,@i+8@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
 
-  var rightItemLines = CollectStates(item, item.right.state, item.right.time, seenItemStatesRight, itemStateTimesRight)
-  ?rightItemLines.Count() > 0
-    >`6,7,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
-    for i = 0 .. rightItemLines.Count()-1
-      >`6,@i+8@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
-
-  ?lastFoe ! foe.id
+  ?lastFoe ! foe.id | string.Size(foe.id) = 0
     seenFoeStates.Clear()
     foeStateTimes.Clear()
     lastFoe = foe.id
-
-  LogTopRight(-15, 8, [["#yellow", string.Sub(foe, 0, math.Min(10, string.Size(foe)))]])
-  var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
-  LogTopRight(-15, 9, foeLines)
+  :
+    LogTopRight(-15, 8, [["#yellow", foe.id]])
+    var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
+    LogTopRight(-15, 9, foeLines)
 
 func cleanBuffString(b, buff_type)
   var idx = string.IndexOf(b, buff_type)
@@ -362,11 +362,6 @@ var orange = color.FromRGB(255,102,0)
 LogTopLeft([
   ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
   ["#white",  "f", Fmt([foe.id])],
-  ["#white",  " ", Fmt([
-    string.Format("n={0}", foe.Count),
-    string.Format("{0}m",  foe.distance),
-    string.Format("{0}cp", foe.hp),
-  ])],
   ["#yellow", "l",   Fmt([item.left.gp,  FmtItemStateVis(item.left.state),  item.left.time])],
   [orange,    "r",   Fmt([item.right.gp, FmtItemStateVis(item.right.state), item.right.time])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
@@ -384,4 +379,4 @@ LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 // log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()
 LogAllStates()
-LogAbovePlayer([["#yellow", foe.distance]], 0, -1, 1, "left")
+LogAbovePlayer([["#yellow", foe.distance]], 0, -2, -1, "left")

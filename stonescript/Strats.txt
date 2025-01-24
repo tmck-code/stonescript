@@ -93,7 +93,7 @@ func BigBlade(min_foes)
 
 func MaskOfTheLost()
   ?item.GetCooldown("mask") = 0 
-    equipR mask
+    equip mask
     activate R
     return true
   return false

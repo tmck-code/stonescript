@@ -7,8 +7,7 @@ func Temple()
   ?strats.canUseBladeDS(5)
     strats.useBladeDS()
 
-  ?strats.MaskOfTheLost()
-    return
+  strats.MaskOfTheLost()
 
   ?foe = boss
     strats.UseAvailableTwoHandedWeapon()
