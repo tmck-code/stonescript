@@ -8,11 +8,21 @@ func Temple()
     strats.UseAvailableTwoHandedWeapon()
     equipL poison wand
     equipR ice wand
-  :
-    ?!strats.BeFast(true, true)
-      strats.UseAvailableTwoHandedWeapon()
-      equipR ice wand
-      equipL poison wand
+    return
+
+  ?strats.Speedy()
+    return
+
+  ?foe.distance > 12
+    equip ice crossbow
+    return
+
+  ?strats.Dash()
+    return
+
+  strats.UseAvailableTwoHandedWeapon()
+  equipR ice wand
+  equipL poison wand
 
 ?loc = temple
   Temple()
