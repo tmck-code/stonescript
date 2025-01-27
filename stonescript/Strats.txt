@@ -1,8 +1,30 @@
 // global variables
 var LAST_WEAPON_ACTIVATION = 0
 
+// auto-use potion when hp is low
+func _AutoPotion(hp_amount)
+  ?hp < hp_amount
+    activate potion
+    return true
+  return false
+
+func AutoPotion()
+  _AutoPotion(45)
+
+// increase loot
+func _LootStar(pickup_dist)
+  ?pickup.distance < pickup_dist
+    equipL star
+    equipR tri
+    >o-6,3,#yellow,Loot!!
+    return true
+  return false
+
+func LootStar()
+  return _LootStar(30)
+
 // close distance to the foe
-func Dash_(min_dist, max_dist)
+func _Dash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
     >o0,4,#green,→
     // var weaponR = item.right
@@ -16,11 +38,11 @@ func Dash_(min_dist, max_dist)
     return false
 
 func Dash()
-  return Dash_(11, 16)
+  return _Dash(11, 16)
 
 // hoon around in-between the action
 // returns true if applied, false otherwise
-func Speedy_(dist)
+func _Speedy(dist)
   ?foe.distance > dist
     equipL star
     equipR tri
@@ -30,10 +52,10 @@ func Speedy_(dist)
   return false
 
 func Speedy()
-  return Speedy_(30)
+  return _Speedy(30)
 
 func BeFast(do_speedy, do_dash)
-  return (do_speedy & Speedy_(30)) | (do_dash & Dash_(11, 16))
+  return (do_speedy & _Speedy(30)) | (do_dash & _Dash(11, 16))
 
 func Pickpocket()
   ?item.CanActivate()
@@ -47,6 +69,18 @@ func Pickpocket()
   return false
 
 // weapons ---------------------------------------------------
+
+// Use the "right" key to trigger the blade of the fallen god
+func _ListenForBladeTrigger(keybind)
+  ?key = keybind
+    >0,10,Triggered Blade!
+    equip blade
+    activate R
+    return true
+  return false
+
+func ListenForBladeTrigger()
+  _ListenForBladeTrigger(rightBegin)
 
 // equip & activate a two-handed weapon, if the ability is ready
 // and the foe is within the specified distance

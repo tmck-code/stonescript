@@ -44,7 +44,7 @@ func FungusForest()
     equipL fire wand
     return
 
-  equipL big poison sword
+  equipL poison sword
   equipR compound
 
 ?loc = fungus_forest

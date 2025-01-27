@@ -10,24 +10,36 @@ func IcyRidge()
     ?foe.distance > 12
       strats.UseWeaponIfDist("fissure", 18)
       equip fire crossbow
-    :?foe.distance <= 5
+      return
+
+    ?foe.distance <= 5
       strats.UseAvailableTwoHandedWeapon()
       equipL fire hammer
       equipR compound shield
-    :
-      equipL fire wand *9
-      equipR fire wand *10
-  :
-    ?!strats.BeFast(true, true)
-      ?foe = ice_elemental | foe.distance > 10
-        equip fire crossbow
-      :?foe.distance <= 5
-        strats.UseAvailableTwoHandedWeapon()
-        equipL fire hammer
-        equipR compound shield
-      :
-        equipL fire wand *9
-        equipR fire wand *10
+      return
+
+    equipL fire wand *9
+    equipR fire wand *10
+    return
+
+  ?strats.Speedy()
+    return
+
+  ?foe = ice_elemental | foe.distance > 10
+    equip fire crossbow
+    return
+
+  ?strats.Dash()
+    return
+
+  :?foe.distance <= 5
+    strats.UseAvailableTwoHandedWeapon()
+    equipL fire hammer
+    equipR compound shield
+    return
+
+  equipL fire wand *9
+  equipR fire wand *10
 
 ?loc = icy_ridge
   IcyRidge()

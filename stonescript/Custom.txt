@@ -1,44 +1,19 @@
 // import all shared strategies & logging utility
 import SS/Log
-var gameEngine = import SS/Actions/GameEngine
-
-// increase loot
-func LootStar()
-  ?pickup.distance < 10
-    equipL star
-    equipR tri
-    >o-6,3,#yellow,Loot!!
-    return true
-  return false
-
-// auto-use potion when hp is low
-func AutoPotion()
-  ?hp < 41
-    activate potion
-
-// Use the "right" key to trigger the blade of the fallen god
-func ListenForBladeTrigger()
-  ?key = rightBegin
-    >0,10,Triggered Blade!
-    equip blade
-    activate R
-    return true
-  return false
-
-gameEngine.ShowWeapons()
-// toggle remote cache
-gameEngine.ToggleRemoteCache()
-// toggle "Attack Animation Cancel (AAC)"
-// gameEngine.ToggleCancelAttackAnimation()
-
 var strats = import SS/Strats
+var gameEngine = import SS/GameEngine
 
 // enable auto-heal (via potions)
-AutoPotion()
+strats._AutoPotion(45)
 // enable bonus loot with star stone
-LootStar()
+strats._LootStar(30)
+
 // trigger blade of the fallen god by pressing "right"
-ListenForBladeTrigger()
+strats._ListenForBladeTrigger(rightBegin)
+// show weapons by holding "shift"
+gameEngine._ShowWeapons(ability1)
+// toggle remote caching of scripts by pressing "up"
+gameEngine._ToggleRemoteCache(upBegin)
 
 // import all location-specific strategies
 import SS/Locations/RockyPlateau
@@ -49,3 +24,6 @@ import SS/Locations/HauntedHalls
 import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
+
+?foe = boss
+  strats.MaskOfTheLost()
