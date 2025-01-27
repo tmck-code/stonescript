@@ -4,29 +4,34 @@ var strats = import SS/Strats
 func Temple()
   log.LogStrat(4, "Temple", "#green")
 
-  ?strats.canUseBladeDS(5)
-    strats.useBladeDS()
-
-  strats.MaskOfTheLost()
-
   ?foe = boss
     strats.UseAvailableTwoHandedWeapon()
     equip ice crossbow
     return
 
+  ?strats.canUseBladeDS(5)
+    strats.useBladeDS()
+
+  // strats.MaskOfTheLost()
+
   ?strats.Speedy()
     return
 
-  ?foe.distance > 12
+  ?foe.distance > 8
     equip ice crossbow
     return
 
   ?strats.Dash()
     return
 
-  strats.UseAvailableTwoHandedWeapon()
-  equipR ice wand
-  equipL poison wand
+  ?foe.distance > 5
+    equipR ice wand
+    equipL poison wand
+  :
+    strats.UseAvailableTwoHandedWeapon()
+    equipR ice wand
+    equipL ice hammer
+
 
 ?loc = temple
   Temple()

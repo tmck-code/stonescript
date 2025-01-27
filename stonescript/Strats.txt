@@ -33,7 +33,7 @@ func Speedy()
   return Speedy_(30)
 
 func BeFast(do_speedy, do_dash)
-  return (do_speedy & Speedy(30)) | (do_dash & Dash(11, 16))
+  return (do_speedy & Speedy_(30)) | (do_dash & Dash_(11, 16))
 
 func Pickpocket()
   ?item.CanActivate()
@@ -92,7 +92,7 @@ func BigBlade(min_foes)
   return false
 
 func MaskOfTheLost()
-  ?item.GetCooldown("mask") = 0 
+  ?item.GetCooldown("mask") = 0
     equip mask
     activate R
     return true

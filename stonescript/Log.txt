@@ -205,9 +205,9 @@ func CollectStates(state_name, foe_state, foe_time, seen_states, state_times)
   var lines = []
   for i = 0 .. seen_states.Count()-1
     ?i = idx
-      lines.Add(["#green", string.Format(" {0}:{1}", seen_states[i], state_times[i])])
+      lines.Add(["#green", string.Format("{0} {1}", seen_states[i], state_times[i])])
     :
-      lines.Add(["#white", string.Format(" {0}:{1}", seen_states[i], state_times[i])])
+      lines.Add(["#white", string.Format("{0} {1}", seen_states[i], state_times[i])])
   return lines
 
 var lastLeftItem = ""
@@ -223,9 +223,9 @@ func LogAllStates()
   :
     var leftItemLines = CollectStates(item, item.left.state, item.left.time, seenItemStatesLeft, itemStateTimesLeft)
     ?leftItemLines.Count() > 0
-      >`0,7,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+      >`0,4,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
       for i = 0 .. leftItemLines.Count()-1
-        >`0,@i+8@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
+        >`0,@i+5@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
 
   ?lastRightItem ! item.right.id | string.Size(item.right.id) = 0
     seenItemStatesRight.Clear()
@@ -234,9 +234,9 @@ func LogAllStates()
   :
     var rightItemLines = CollectStates(item, item.right.state, item.right.time, seenItemStatesRight, itemStateTimesRight)
     ?rightItemLines.Count() > 0
-      >`6,7,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+      >`6,4,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
       for i = 0 .. rightItemLines.Count()-1
-        >`6,@i+8@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
+        >`6,@i+5@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
 
   ?lastFoe ! foe.id | string.Size(foe.id) = 0
     seenFoeStates.Clear()
@@ -362,8 +362,6 @@ var orange = color.FromRGB(255,102,0)
 LogTopLeft([
   ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
   ["#white",  "f", Fmt([foe.id])],
-  ["#yellow", "l",   Fmt([item.left.gp,  FmtItemStateVis(item.left.state),  item.left.time])],
-  [orange,    "r",   Fmt([item.right.gp, FmtItemStateVis(item.right.state), item.right.time])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
 ])
 
