@@ -25,5 +25,5 @@ import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
 
-?foe = boss
+?foe = boss & foe.distance <= 30
   strats.MaskOfTheLost()

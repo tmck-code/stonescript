@@ -164,16 +164,15 @@ func FmtItemStateVis(item_state)
 
 func FmtFoeState(foe_state)
   ?foe_state = 32
-    return "attack prepare"
+    return "prep (32)"
   :?foe_state = 33
-    return "attack do"
+    return "attack (33)"
   :?foe_state = 34
-    return "attack done"
+    return "complete (34)"
   :?foe_state = 2
-    return "waiting..."
+    return "wait (2)"
   :
-    return string.Format("??: {0}", foe_state)
-  
+    return foe_state  
 
 var seenItemStatesLeft = []
 var itemStateTimesLeft = []
@@ -192,12 +191,12 @@ var foeStateTimes = []
   foeStateTimes.Clear()
 
 func CollectStates(state_name, foe_state, foe_time, seen_states, state_times)
-  var stateValue = FmtFoeState(foe_state)
+  var state_value = FmtFoeState(foe_state)
 
   var t = foe_time
-  var idx = seen_states.IndexOf(foe_state)
+  var idx = seen_states.IndexOf(state_value)
   ?idx = -1
-    seen_states.Add(foe_state)
+    seen_states.Add(state_value)
     state_times.Add(t)
   :?time % 2 = 0
     state_times.Emplace(idx, t)
@@ -345,6 +344,50 @@ func LogAllBuffsAndDebuffs()
   LogAbovePlayer(playerDebuffs, -3, -1,  1, "right")
   LogAbovePlayer(foeBuffs,       4, -2, -1, "left")
   LogAbovePlayer(foeDebuffs,     4, -1,  1, "left")
+// --------------------------
+
+func LogFoeDistance()
+  ?foe.distance = 9999
+    return
+  LogAbovePlayer([["#yellow", foe.distance]], 0, -2, -1, "left")
+
+// --------------------------
+
+var mostRecentStates = ["", ""]
+var currentHealth = maxhp
+var hpLogs = []
+
+?loc.loop
+  mostRecentStates = ["", ""]
+  currentHealth = maxhp
+  hpLogs.Clear()
+
+func LogStatesBeforeDamage()
+  ?hpLogs.Count() > 0
+    for i = 0 .. hpLogs.Count()-1
+      LogAbovePlayer([["#red", hpLogs[i]]], 0, -3-i, -1, "left")
+
+  ?hpLogs.Count() > 7
+    hpLogs.RemoveAt(0)
+
+  // state is the same, don't log
+  ?mostRecentStates[0] = foe.state
+    return
+  mostRecentStates[1] = mostRecentStates[0]
+  mostRecentStates[0] = [foe.state, foe.time]
+
+  ?hp = currentHealth
+    return
+
+  ?hp < currentHealth
+    var hpLog = string.Format("{0}: {1} ({2})>{3} ({4})", hp-currentHealth, mostRecentStates[1][0], mostRecentStates[1][1], foe.state, foe.time)
+    ?hpLogs.Contains(hpLog) = false
+      hpLogs.Add(hpLog)
+    currentHealth = hp
+    return
+
+  ?hp > currentHealth
+    currentHealth = hp
 
 // --------------------------
 
@@ -377,4 +420,5 @@ LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 // log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()
 LogAllStates()
-LogAbovePlayer([["#yellow", foe.distance]], 0, -2, -1, "left")
+LogFoeDistance()
+LogStatesBeforeDamage()

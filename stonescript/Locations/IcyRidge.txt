@@ -1,12 +1,33 @@
 var log    = import SS/Log
 var strats = import SS/Strats
 
+var needShield = false
+
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
+
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
+  ?needShield = true & foe.time < 2
+    equip compound shield
+    return
+  :
+    needShield = false
+
+  ?foe.state = 33 & foe.time > 10
+    equip compound shield
+    needShield = true
+    return
+
   ?foe = boss
+    ?strats.Speedy()
+      return
+
+    ?foe.state = 33 & foe.time > 10
+      equip compound shield
+      return
+
     ?foe.distance > 12
       strats.UseWeaponIfDist("fissure", 18)
       equip fire crossbow

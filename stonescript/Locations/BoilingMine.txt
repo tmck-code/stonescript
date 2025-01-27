@@ -3,29 +3,41 @@ var strats = import SS/Strats
 
 func BoilingMine()
   log.LogStrat(0, "BoilingMine", "#green")
+
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
   ?foe = boss
-    // ?log.CheckDebuff("debuff_move_speed")
-      equipL aether wand
-      equipR aether wand *8
-    // :
-    // equip aether crossbow
-  :
-    ?!strats.BeFast(true, true)
-      strats.UseAvailableTwoHandedWeapon()
+    ?foe.distance > 12
+      equip ice crossbow
+      return
+    equipL aether wand
+    equipR aether wand *8
+    return
 
-      ?((foe = slave_master | foe = elemental) & foe.distance > 10)
-        equip aether crossbow
-      :?foe.distance > 20
-        equip aether crossbow
-      :?foe.distance > 10
-        equipL aether wand
-        equipR vigor wand
-      :
-        equipL big aether sword
-        equipR compound shield
+  ?strats.Speedy()
+    return
+
+  strats.UseAvailableTwoHandedWeapon()
+
+  ?((foe = slave_master | foe = elemental) & foe.distance > 10)
+    equip aether crossbow
+    return
+
+  ?foe.distance > 20
+    equip aether crossbow
+    return
+
+  ?strats.Dash()
+    return
+
+  ?foe.distance > 10
+    equipL aether wand
+    equipR vigor wand
+    return
+
+  equipL big aether sword
+  equipR compound shield
 
 ?loc = mine
   BoilingMine()

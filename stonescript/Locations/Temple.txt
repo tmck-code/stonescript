@@ -1,8 +1,23 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
+func Override()
+  return false
+  equipR mask
+  ?foe.distance > 15
+    equipL crossbow
+    return true
+  ?foe.distance > 5
+    equipL ice wand
+    return true
+  equipL ice hammer
+  return true
+
 func Temple()
   log.LogStrat(4, "Temple", "#green")
+
+  ?Override() = true
+    return
 
   ?strats.canUseBladeDS(5)
     strats.useBladeDS()
@@ -15,7 +30,7 @@ func Temple()
   ?strats.Speedy()
     return
 
-  ?foe.distance > 12
+  ?foe.distance > 20
     equip ice crossbow
     return
 
