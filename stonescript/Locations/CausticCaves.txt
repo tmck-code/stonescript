@@ -1,10 +1,22 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
+func Override()
+  equipR frost wand +10
+  equipL poison wand
+  ?foe = boss
+    activate potion
+  ?item.GetCooldown("wand_ice") = 0 & item.CanActivate()
+    activate R
+  return false
+
 var foeState = 0
 
 func Caves()
   log.LogStrat(4, "Caves "+loc.stars+"☆", "#green")
+
+  ?Override() = true
+    return
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
@@ -20,12 +32,14 @@ func Caves()
     equip ice crossbow
     return
 
-  ?strats.Dash()
-    return
+  // ?strats.Dash()
+  //   return
 
   ?foe.distance > 3
     equipL vigor wand
     equipR ice wand
+    ?item.GetCooldown("wand_frozen") = 0 & item.CanActivate("wand_frozen")
+      activate R
     return
 
   equipL ice hammer

@@ -1,5 +1,3 @@
-var log = import SS/Log
-
 // ----------------------------------------------
 
 func DictLookup(dict, k)
@@ -8,12 +6,21 @@ func DictLookup(dict, k)
       return dict[i][1]
   return "not found"
 
-func Demo()
-  var d = [
-    ["a", 1],
-    ["b", 2],
-    ["c", 3],
-  ]
+// ArraysEqual compares two arrays for equality.
+// returns true if the arrays are equal (all thir elements are equal),
+// false otherwise.
+func ArraysEqual(a, b)
+  ?Type(a) ! "array" | Type(b) ! "array"
+    return false
+  ?a.Count() ! b.Count()
+    return false
 
-  >`0,13,@log.Fmt([d])@
-  >`0,14,b>@log.Fmt([DictLookup(d, "b")])@
+  for i = 0 .. a.Count()-1
+    ?Type(a[i]) ! Type(b[i])
+      return false
+    ?Type(a[i]) = "array" & ArraysEqual(a[i], b[i]) = false
+      return false
+    ?a[i] ! b[i]
+      return false
+
+  return true

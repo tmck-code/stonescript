@@ -6,7 +6,7 @@ var gameEngine = import SS/GameEngine
 // enable auto-heal (via potions)
 strats._AutoPotion(45)
 // enable bonus loot with star stone
-strats._LootStar(30)
+// strats._LootStar(30)
 
 // trigger blade of the fallen god by pressing "right"
 strats._ListenForBladeTrigger(rightBegin)
@@ -25,5 +25,5 @@ import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
 
-?foe = boss & foe.distance <= 30
-  strats.MaskOfTheLost()
+// ?foe = boss & foe.distance <= 30
+//   strats.MaskOfTheLost()

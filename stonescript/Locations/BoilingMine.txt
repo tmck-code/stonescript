@@ -1,15 +1,27 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
+func Override()
+  equipR calamity wand
+  equipL calamity wand +5
+  // ?item.GetCooldown("wand_aether") = 0 & item.CanActivate("wand_aether")
+  activate L
+  activate R
+  // return true
+  return true
+
 func BoilingMine()
   log.LogStrat(0, "BoilingMine", "#green")
+
+  ?Override() = true
+    return
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
   ?foe = boss
     ?foe.distance > 12
-      equip ice crossbow
+      equip aether crossbow
       return
     equipL aether wand
     equipR aether wand *8
