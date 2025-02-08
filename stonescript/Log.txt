@@ -57,9 +57,18 @@ func LogTopRight(x, y_offset, messages)
     var x = screen.w - longest + (longest - string.Size(msg))
     >`@x@,@y_offset+i+1@,@color@,@msg@
 
-// formatting ----------------------------------------
+// ---------------------------------------------------
+// Format (Fmt) functions:
+// Format messages/stats/any info for logging
 
-func FmtValue(value)
+// FmtValue formats a value safely for logging. Recursively traverses
+// arrays to format all values within them.
+// Avoids "string.Join() can only join an array of strings"
+// e.g.
+// - individual values: FmtValue(1)                -> "1"
+// - mixed arrays:      FmtValue([1,2,3,"abc"])    -> "[1,2,3,abc]"
+// - nested arrays:     FmtValue([1,2,[3,4,"aa"]]) -> "[1,2,[3,4,aa]]"
+func _FmtValue(value, arr_sep)
   var msg = []
   ?Type(value) ! array
     return string.Format("{0}", value)
@@ -69,19 +78,25 @@ func FmtValue(value)
       msg.Add(FmtValue(value[i]))
     :
       msg.Add(string.Format("{0}", value[i]))
-  return "["+string.Join(",", msg)+"]"
+  return "["+string.Join(arr_sep, msg)+"]"
 
-func FmtWithSep(data, sep)
-  var strParts = []
-  for i = 0 .. data.Count()-1
-    strParts.Add(FmtValue(data[i]))
-  return string.Join(sep, strParts)
+func FmtValue(value)
+  return _FmtValue(value, ",")
+
+// FmtSafeJoin provides a "safe" way to join an array
+// of any type. It avoids the error:
+func FmtSafeJoin(sep, data)
+  ?Type(data) ! array
+    >`0,@screen.h-3@,#red,err: FmtSafeJoin(sep='@sep@' data='@data@')
+    >`0,@screen.h-2@,#red,- data type '@Type(data)@' != 'array'
+    return ""
+  return _FmtValue(data, sep)
 
 func Fmt(data)
-  return FmtWithSep(data, " ")
+  return FmtSafeJoin(" ", data)
 
 // returns an array of [color, message, remainingCooldown]
-func FormatCooldownLog(weapon)
+func FmtCooldownLog(weapon)
   var remaining = item.GetCooldown(weapon)
   var canUse = remaining <= 0 & item.CanActivate()
   var msg = string.Format("{0}: {1}", weapon, remaining)
@@ -97,15 +112,15 @@ func FormatCooldownLog(weapon)
   :
     return ["#green", msg, remaining]
 
-func FormatCooldownLogs(weapon_ids)
+func FmtCooldownLogs(weapon_ids)
   var logs = []
   for i = 0 .. weapon_ids.Count()-1
-    var formatted = FormatCooldownLog(weapon_ids[i])
+    var formatted = FmtCooldownLog(weapon_ids[i])
     ?formatted[2] > 0
       logs.Add(formatted)
   return logs
 
-func FormatSpecialWeaponName(weapon)
+func FmtSpecialWeaponName(weapon)
   ?weapon = "blade"
     return "Blade of the Fallen God"
   ?weapon = "bardiche"
@@ -122,15 +137,15 @@ func FormatSpecialWeaponName(weapon)
     return "Fissure Stone"
   return false
 
-func FormatCraftedWeaponName(weapon)
+func FmtCraftedWeaponName(weapon)
   var parts = string.Split(weapon, ",")
   return string.Join("\n", parts)
 
 func FormatWeaponName(weapon)
-  var fmt = FormatSpecialWeaponName(weapon)
+  var fmt = FmtSpecialWeaponName(weapon)
   ?fmt ! false
     return fmt
-  return FormatCraftedWeaponName(weapon)
+  return FmtCraftedWeaponName(weapon)
 
 // --------------------------------------------------
 // State Formatting
@@ -404,7 +419,6 @@ var orange = color.FromRGB(255,102,0)
 
 LogTopLeft([
   ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
-  ["#white",  "f", Fmt([foe.id])],
   ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
 ])
 
@@ -412,7 +426,7 @@ LogTopRight(-20, 0, [["#green", Fmt([foe.state, foe.time])]])
 LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 
 ?!bossFinished
-  LogTopRight(-15, 2, FormatCooldownLogs([
+  LogTopRight(-15, 2, FmtCooldownLogs([
   ^  "blade", "bardiche", "quarterstaff", "heavy_hammer",
   ^  "skeleton_arm", "mask", "fissure_stone",
   ^]))
