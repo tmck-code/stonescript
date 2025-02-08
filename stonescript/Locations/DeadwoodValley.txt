@@ -18,8 +18,8 @@ func DeadWoodValley()
       // :?foe.distance > 20
       //   equip aether crossbow
       :
-        equipL poison wand
-        equipR fire wand
-
+        equipR poison wand
+        equipL poison wand +10
+        
 ?loc = deadwood_valley
   DeadWoodValley()

@@ -3,35 +3,40 @@ var strats = import SS/Strats
 
 var needShield = false
 
+func QuickShield()
+  // about to be hit! equip the shield
+  ?foe.state = 33 & foe.time > 10
+    equip compound shield
+    needShield = true
+    return true
+  // was just hit a few frames ago, equip the shield
+  // for 2 frames during the next state, just in case (?)
+  ?needShield = true & foe.time < 2
+    equip compound shield
+    return true
+  // otherwise, disable the shield flag
+  :
+    needShield = false
+    return false
+
+
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
-  ?needShield = true & foe.time < 2
-    equip compound shield
-    return
-  :
-    needShield = false
-
-  ?foe.state = 33 & foe.time > 10
-    equip compound shield
-    needShield = true
-    return
-
   ?foe = boss
     ?strats.Speedy()
       return
-
-    ?foe.state = 33 & foe.time > 10
-      equip compound shield
+  
+    ?QuickShield()
       return
 
-    ?foe.distance > 12
-      strats.UseWeaponIfDist("fissure", 18)
-      equip fire crossbow
-      return
+    // ?foe.distance > 12
+    //   strats.UseWeaponIfDist("fissure", 18)
+    //   equip fire crossbow
+    //   return
 
     ?foe.distance <= 5
       strats.UseAvailableTwoHandedWeapon()
@@ -46,9 +51,9 @@ func IcyRidge()
   ?strats.Speedy()
     return
 
-  ?foe = ice_elemental | foe.distance > 10
-    equip fire crossbow
-    return
+  // ?foe = ice_elemental | foe.distance > 10
+  //   equip fire crossbow
+  //   return
 
   ?strats.Dash()
     return

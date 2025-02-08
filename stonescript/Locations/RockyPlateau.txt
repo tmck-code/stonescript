@@ -11,8 +11,8 @@ func Rocky()
     :?foe.buffs.string = aether
       equipL ice wand
     :?foe.buffs.string = ice
-      equipL poison wand
-    // :?foe.buffs.string = poison
+        equipR poison wand
+        equipL poison wand +10
     :
       equipL fire wand
 

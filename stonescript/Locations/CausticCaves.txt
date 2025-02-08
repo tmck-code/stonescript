@@ -10,21 +10,26 @@ func Caves()
     strats.useBladeDS()
 
   ?foe = boss
-    equipL vigor wand
-    equipR ice wand
+    equip ice crossbow
     return
 
-  ?strats.BeFast(true, true)
+  ?strats.Speedy()
     return
 
   ?hp*100/maxhp < 80 | foe.distance > 12
-    equip vigor crossbow
-  :?foe.distance <= 7
-    equipL ice hammer
-    equipR vigor sword
-  :
+    equip ice crossbow
+    return
+
+  ?strats.Dash()
+    return
+
+  ?foe.distance > 3
     equipL vigor wand
     equipR ice wand
+    return
+
+  equipL ice hammer
+  equipR vigor sword
 
 ?loc = caves
   Caves()
