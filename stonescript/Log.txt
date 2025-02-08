@@ -1,3 +1,5 @@
+var structs = import SS/Data/Structs
+
 func longestLength(l)
   var longest = 0
   for i = 0 .. l.Count()-1
@@ -68,7 +70,7 @@ func LogTopRight(x, y_offset, messages)
 // - individual values: FmtValue(1)                -> "1"
 // - mixed arrays:      FmtValue([1,2,3,"abc"])    -> "[1,2,3,abc]"
 // - nested arrays:     FmtValue([1,2,[3,4,"aa"]]) -> "[1,2,[3,4,aa]]"
-func _FmtValue(value, arr_sep)
+func _Fmt(value, arr_sep)
   var msg = []
   ?Type(value) ! array
     return string.Format("{0}", value)
@@ -81,16 +83,16 @@ func _FmtValue(value, arr_sep)
   return "["+string.Join(arr_sep, msg)+"]"
 
 func FmtValue(value)
-  return _FmtValue(value, ",")
+  return _Fmt(value, ",")
 
 // FmtSafeJoin provides a "safe" way to join an array
 // of any type. It avoids the error:
 func FmtSafeJoin(sep, data)
   ?Type(data) ! array
-    >`0,@screen.h-3@,#red,err: FmtSafeJoin(sep='@sep@' data='@data@')
+    >`0,@screen.h-3@,#red,⚠ FmtSafeJoin(sep='@sep@' data='@data@')
     >`0,@screen.h-2@,#red,- data type '@Type(data)@' != 'array'
     return ""
-  return _FmtValue(data, sep)
+  return _Fmt(data, sep)
 
 func Fmt(data)
   return FmtSafeJoin(" ", data)
@@ -120,6 +122,8 @@ func FmtCooldownLogs(weapon_ids)
       logs.Add(formatted)
   return logs
 
+// weapon formatting --------
+
 func FmtSpecialWeaponName(weapon)
   ?weapon = "blade"
     return "Blade of the Fallen God"
@@ -138,10 +142,16 @@ func FmtSpecialWeaponName(weapon)
   return false
 
 func FmtCraftedWeaponName(weapon)
+  // "Explosive Wand Fire wand wand_hidden_fire *10*max* +7/0 D
+  // wand_hidden_fire_lv2048_Fire,element_damage_wand_2_Epic7:5-1q103
+  //
+  // Fire Wand Fire wand *9* +7/0 dF
+  // wand_lv1024_Fire,element_damage_wand,dot_ohhit_Epic7:0-1q109
+
   var parts = string.Split(weapon, ",")
   return string.Join("\n", parts)
 
-func FormatWeaponName(weapon)
+func FmtWeaponName(weapon)
   var fmt = FmtSpecialWeaponName(weapon)
   ?fmt ! false
     return fmt
@@ -161,21 +171,6 @@ func FmtItemState(item_state, item_hand)
     return "cool"
   :
     return string.Format("?? {0}", item_state)
-
-func FmtItemStateVis(item_state)
-  // 1 is idle/checking for targets
-  ?item_state = 1
-    return "|     "
-  // 2 is cast/ pre-damage animation
-  :?item_state = 2
-    return "|==>  "
-  // 3 is perf/ post-damage animation
-  :?item_state = 3
-    return "|==> ~"
-  // 4 is cooldown, waiting until it can be used again
-  // (for regular attacks, abilities dont use it)
-  :?item_state = 4
-    return "xxxxxx"
 
 func FmtFoeState(foe_state)
   ?foe_state = 32
@@ -359,6 +354,7 @@ func LogAllBuffsAndDebuffs()
   LogAbovePlayer(playerDebuffs, -3, -1,  1, "right")
   LogAbovePlayer(foeBuffs,       4, -2, -1, "left")
   LogAbovePlayer(foeDebuffs,     4, -1,  1, "left")
+
 // --------------------------
 
 func LogFoeDistance()
@@ -368,12 +364,12 @@ func LogFoeDistance()
 
 // --------------------------
 
-var mostRecentStates = ["", ""]
+var mostRecentStates = [["","",""], ["","",""]]
 var currentHealth = maxhp
 var hpLogs = []
 
 ?loc.loop
-  mostRecentStates = ["", ""]
+  mostRecentStates = [["","",""], ["","",""]]
   currentHealth = maxhp
   hpLogs.Clear()
 
@@ -382,11 +378,11 @@ func LogStatesBeforeDamage()
     for i = 0 .. hpLogs.Count()-1
       LogAbovePlayer([["#red", hpLogs[i]]], 0, -3-i, -1, "left")
 
-  ?hpLogs.Count() > 7
+  ?hpLogs.Count() > 3
     hpLogs.RemoveAt(0)
 
   // state is the same, don't log
-  ?mostRecentStates[0] = foe.state
+  ?structs.ArraysEqual(mostRecentStates[0], [foe.state, foe.time])
     return
   mostRecentStates[1] = mostRecentStates[0]
   mostRecentStates[0] = [foe.state, foe.time]
@@ -429,6 +425,7 @@ LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
   LogTopRight(-15, 2, FmtCooldownLogs([
   ^  "blade", "bardiche", "quarterstaff", "heavy_hammer",
   ^  "skeleton_arm", "mask", "fissure_stone",
+  ^  "wand_fire",
   ^]))
 
 // log buffs and debuffs above the player
@@ -436,3 +433,6 @@ LogAllBuffsAndDebuffs()
 LogAllStates()
 LogFoeDistance()
 LogStatesBeforeDamage()
+
+// >`0,20,#green,@item.right@: cool: @item.GetCooldown("wand_fire")@, activate: @item.CanActivate("wand_fire")@
+// >`0,21,#green,@item.left@: cool: @item.GetCooldown("wand_fire")@, activate: @item.CanActivate("wand_fire")@
