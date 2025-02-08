@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ssrpg items.md",
+                "file": "Stone Story RPG.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ssrpg items"
+              "title": "Stone Story RPG"
             }
           }
         ]
@@ -40,7 +40,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -164,9 +165,9 @@
   },
   "active": "248ca234b2faaa58",
   "lastOpenFiles": [
-    "stonescript.md",
-    "Stone Story RPG.md",
+    "ssrpg locations.md",
     "ssrpg items.md",
-    "ssrpg locations.md"
+    "stonescript.md",
+    "Stone Story RPG.md"
   ]
 }
