@@ -20,67 +20,81 @@
 ### Crafting Recipes
 #crafting #recipes
 
-| id               | recipe item 1     | recipe item2      |
-| ---------------- | ----------------- | ----------------- |
-| [[#War Hammer]]  | `Sword`           | `Shield`          |
-| #heavy_crossbow  | `Sword`           | `Crossbow`        |
-| #repeating       | `Heavy Crossbow`  | `Crossbow`        |
-| #dash            | `Shield`          | `Crossbow`        |
-| #compound        | `Shield`          | `Dashing Shield`  |
-| #towering        | `Shield`          | `Quarterstaff`    |
-| #stone_crossbow  | `Heavy Crossbow`  | `Stone Wand`      |
-| #stone_crossbow  | `Crossbow`        | `Stone Sword`     |
-| #stone_hammer    | `War Hammer`      | `Stone Wand`      |
-| #stone_hammer    | `Sword`           | `Stone Shield`    |
-| #stone_hammer    | `Shield`          | `Stone Sword`     |
-| #stone_shield    | `Shield`          | `Stone Wand`      |
-| #stone_staff     | `Quarterstaff`    | `Stone Wand`      |
-| #stone_sword     | `Sword`           | `Stone Wand`      |
-| #rune_wand       | `Stone Wand`      | `Runestone`       |
-| #big_sword       | `Sword`           | `Quarterstaff`    |
-| #big_stone_sword | `Big Sword`       | `Stone Wand`      |
-| #big_stone_sword | `Sword`           | `Stone Staff`     |
-| #big_stone_sword | `Stone Sword`     | `Quarterstaff`    |
-| #big_rune_sword  | `Big Stone Sword` | `Runestone`       |
-| #big_rune_sword  | `Big Sword`       | `Rune Wand`       |
-| #big_rune_sword  | `Sword`           | `Rune Staff`      |
-| #big_rune_sword  | `Quarterstaff`    | `Rune Sword`      |
-| #rune_crossbow   | `Stone Crossbow`  | `Runestone`       |
-| #rune_crossbow   | `Heavy Crossbow`  | `Rune Wand`       |
-| #rune_crossbow   | `Crossbow`        | `Rune Sword`      |
-| #rune_hammer     | `Stone Hammer`    | `Runestone`       |
-| #rune_hammer     | `War Hammer`      | `Rune Wand`       |
-| #rune_hammer     | `Sword`           | `Rune Shield`     |
-| #rune_hammer     | `Shield`          | `Rune Sword`      |
-| #rune_shield     | `Stone Shield`    | `Runestone`       |
-| #rune_shield     | `Shield`          | `Rune Wand`       |
-| #rune_staff      | `Stone Staff`     | `Runestone`       |
-| #rune_staff      | `Quarterstaff`    | `Rune Wand`       |
-| #rune_sword      | `Stone Sword`     | `Runestone`       |
-| #rune_sword      | `Sword`           | `Rune Wand`       |
-| #bardiche        | `Shield`          | `Big Sword`       |
-| #bardiche        | `Sword`           | `Towering Shield` |
-| #heavy_hammer    | `War Hammer`      | `Quarterstaff`    |
+| weapon type | id               | recipe item 1     | recipe item2      |
+| ----------- | ---------------- | ----------------- | ----------------- |
+| bardiche    | #bardiche        | `Shield`          | `Big Sword`       |
+| bardiche    | #bardiche        | `Sword`           | `Towering Shield` |
+| crossbow    | #heavy_crossbow  | `Sword`           | `Crossbow`        |
+| crossbow    | #repeating       | `Heavy Crossbow`  | `Crossbow`        |
+| crossbow    | #stone_crossbow  | `Heavy Crossbow`  | `Stone Wand`      |
+| crossbow    | #stone_crossbow  | `Crossbow`        | `Stone Sword`     |
+| crossbow    | #rune_crossbow   | `Stone Crossbow`  | `Runestone`       |
+| crossbow    | #rune_crossbow   | `Heavy Crossbow`  | `Rune Wand`       |
+| crossbow    | #rune_crossbow   | `Crossbow`        | `Rune Sword`      |
+| hammer      | #war_hammer      | `Sword`           | `Shield`          |
+| hammer      | #stone_hammer    | `War Hammer`      | `Stone Wand`      |
+| hammer      | #stone_hammer    | `Sword`           | `Stone Shield`    |
+| hammer      | #stone_hammer    | `Shield`          | `Stone Sword`     |
+| hammer      | #rune_hammer     | `Stone Hammer`    | `Runestone`       |
+| hammer      | #rune_hammer     | `War Hammer`      | `Rune Wand`       |
+| hammer      | #rune_hammer     | `Sword`           | `Rune Shield`     |
+| hammer      | #rune_hammer     | `Shield`          | `Rune Sword`      |
+| hammer      | #heavy_hammer    | `War Hammer`      | `Quarterstaff`    |
+| shield      | #dash            | `Shield`          | `Crossbow`        |
+| shield      | #compound        | `Shield`          | `Dashing Shield`  |
+| shield      | #towering        | `Shield`          | `Quarterstaff`    |
+| shield      | #stone_shield    | `Shield`          | `Stone Wand`      |
+| shield      | #rune_shield     | `Stone Shield`    | `Runestone`       |
+| shield      | #rune_shield     | `Shield`          | `Rune Wand`       |
+| staff       | #stone_staff     | `Quarterstaff`    | `Stone Wand`      |
+| staff       | #rune_staff      | `Stone Staff`     | `Runestone`       |
+| staff       | #rune_staff      | `Quarterstaff`    | `Rune Wand`       |
+| sword       | #stone_sword     | `Sword`           | `Stone Wand`      |
+| wand        | #rune_wand       | `Stone Wand`      | `Runestone`       |
+| big sword   | #big_sword       | `Sword`           | `Quarterstaff`    |
+| big sword   | #big_stone_sword | `Big Sword`       | `Stone Wand`      |
+| big sword   | #big_stone_sword | `Sword`           | `Stone Staff`     |
+| big sword   | #big_stone_sword | `Stone Sword`     | `Quarterstaff`    |
+| big sword   | #big_rune_sword  | `Big Stone Sword` | `Runestone`       |
+| big sword   | #big_rune_sword  | `Big Sword`       | `Rune Wand`       |
+| big sword   | #big_rune_sword  | `Sword`           | `Rune Staff`      |
+| big sword   | #big_rune_sword  | `Quarterstaff`    | `Rune Sword`      |
+| sword       | #rune_sword      | `Stone Sword`     | `Runestone`       |
+| sword       | #rune_sword      | `Sword`           | `Rune Wand`       |
+
+
 
 ### Cooldown
 #cooldown
 
-| item                    | cooldown ID       |
+| Item                    | Cooldown ID       |
 | ----------------------- | ----------------- |
 | Æther Talisman          | `aether_talisman` |
 | Bardiche                | `bardiche`        |
 | Bashing Shield          | `bash`            |
 | Blade of the Fallen God | `blade`           |
 | Cinderwisp Devour       | `cinderwisp`      |
-| Cultist Mask            | `mask`            |
 | Dashing Shield          | `dash`            |
 | Fire Talisman           | `fire_talisman`   |
 | Hatchet                 | `hatchet`         |
 | Heavy Hammer            | `heavy_hammer`    |
+| Cultist Mask            | `mask`            |
 | Mind Stone              | `mind`            |
 | Quarterstaff            | `quarterstaff`    |
 | Skeleton Arm            | `skeleton_arm`    |
+| Grasping Staff          | `staff_aether`    |
+| Infernal Staff          | `staff_fire`      |
+| Eternity Staff          | `staff_ice`       |
+| Berserker Staff         | `staff_poison`    |
+| Acrobatic Staff         | `staff_stone`     |
+| Prevention Staff        | `staff_vigor`     |
 | Voidweaver Devour       | `voidweaver`      |
+| Calamity Wand           | `wand_aether`     |
+| Explosive Wand          | `wand_fire`       |
+| Frost Wand              | `wand_ice`        |
+| Plague Wand             | `wand_poison`     |
+| Gravity Wand            | `wand_stone`      |
+| Reset Wand              | `wand_vigor`      |
 
 ### affixes
 #affixes
@@ -102,7 +116,18 @@
 | ice     | **I** | *ice or chill*<br>chill afflicted by attacking                                                  |
 | ice     | **i** | *ice or chill*<br>chill afflicted by being hit                                                  |
 
+## Elements
 
+| element | symbol | get from                 | combo version | affixes | strong against | weak against |
+| ------- | ------ | ------------------------ | ------------- | ------- | -------------- | ------------ |
+| poison  | 🐍     | #CavesOfFear <br>#Temple | `plague`      |         |                |              |
+| vigor   | 🤍     | #MushroomForest          | `reset`       |         |                |              |
+| æther   | ⭐      | #HauntedHalls            | `calamity`    |         |                |              |
+| fire    | 🔥     | #BoilingMine             | `explosive`   |         |                |              |
+| ice     | ❄      | #IcyRidge                | `frost`       |         |                |              |
+| stone   | 🞈     | #DeadwoodCanyon          | `gravity`     |         |                |              |
+
+ 
 ## Items
 
 ---
