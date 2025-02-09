@@ -62,7 +62,21 @@
 | sword       | #rune_sword      | `Stone Sword`     | `Runestone`       |
 | sword       | #rune_sword      | `Sword`           | `Rune Wand`       |
 
+### Brewing
 
+
+| Ing. 1   | Ing. 2   | Name      | Effect                                                                             |
+| -------- | -------- | --------- | ---------------------------------------------------------------------------------- |
+| 20 Stone | -        | Strength  | For 10s (or 300f), your attacks stun for 0.5s (or 15f) and deal 3x damage to armor |
+| 20 Wood  | -        | Experience| For 30s (or 900f), gain +1 experience and +1 ki per enemy killed                   |
+| 20 Tar   | -        | Healing   | Heal health to 100%                                                                |
+| 20 Bronze| -        | Lightning | Deal 200 damage to all enemies on screen                                           |
+| 10 Tar   | 10 Bronze| Vampiric  | For 20s (or 600f), gain health equal to 20% damage dealt                           |
+| 10 Stone | 10 Bronze| Lucky     | For 6s (or 180f), your attacks have 100% critical chance                           |
+| 10 Wood  | 10 Bronze| Berserk   | For 10s (or 300f), you gain +15 attack speed                                       |
+| 10 Wood  | 10 Tar   | Cleansing | Heal half your health and clear all negative debuffs                               |
+| 10 Stone | 10 Tar   | Defensive | Heal half your health and gain armor equal to your max health                      |
+| 10 Wood  | 10 Stone | Invisibility	For 15s (or 450f), you gain 100% evasion                                         |
 
 ### Cooldown
 #cooldown

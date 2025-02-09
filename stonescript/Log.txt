@@ -425,7 +425,7 @@ LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
   LogTopRight(-15, 2, FmtCooldownLogs([
   ^  "blade", "bardiche", "quarterstaff", "heavy_hammer",
   ^  "skeleton_arm", "mask", "fissure_stone",
-  ^  "wand_fire",
+  ^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
   ^]))
 
 // log buffs and debuffs above the player

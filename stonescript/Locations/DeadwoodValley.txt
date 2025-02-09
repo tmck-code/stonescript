@@ -5,21 +5,21 @@ func DeadWoodValley()
   log.LogStrat(4, "DeadWoodValley", "#green")
 
   ?foe = boss
-    ?!strats.BeFast(true, true)
-      equipL crossbow *10 +5
-      equipR crossbow *10 +6
-  :
-    ?!strats.BeFast(true, true)
-      ?foe = scarab
-        strats.UseWeaponIfReady("bardiche", 10)
-        strats.UseWeaponIfReady("heavy_hammer", 10)
-        equipL big aether sword
-        equipR ice hammer
-      // :?foe.distance > 20
-      //   equip aether crossbow
-      :
-        equipR poison wand
-        equipL poison wand +10
+    equipL crossbow *10 +5
+    equipR crossbow *10 +6
+
+  ?strats.Speedy()
+    return
+
+  ?foe = scarab
+    strats.UseWeaponIfReady("bardiche", 10)
+    strats.UseWeaponIfReady("heavy_hammer", 10)
+    equipL big aether sword
+    equipR ice hammer
+    return
+
+  equipR poison wand
+  equipL poison wand +10
         
 ?loc = deadwood_valley
   DeadWoodValley()

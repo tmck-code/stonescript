@@ -1,4 +1,4 @@
-var CANCEL_ATTACK_ANIMATION = false
+var AAC_ENABLED = true
 
 func _ToggleRemoteCache(keybind)
   ?key = keybind
@@ -9,7 +9,9 @@ func _ToggleRemoteCache(keybind)
 func ToggleRemoteCache()
   _ToggleRemoteCache(upBegin)
 
-func CancelAttackAnimation()
+func _AttackAnimationCancel()
+  ?AAC_ENABLED = false
+    return
   ?item.left.state = 3
     equipL *0 wand //trash
     equipL @item.left@
@@ -17,16 +19,17 @@ func CancelAttackAnimation()
     equipR *0 shield //trash
     equip @item.right@
 
-func _ToggleCancelAttackAnimation(keybind)
-  ?key = keybind
-    CANCEL_ATTACK_ANIMATION = !CANCEL_ATTACK_ANIMATION
-    >0,10,CANCEL_ATTACK_ANIMATION: @CANCEL_ATTACK_ANIMATION@
-    ?CANCEL_ATTACK_ANIMATION
-      CancelAttackAnimation()
+func AAC()
+  _AttackAnimationCancel()
+
+func _ToggleAAC()
+  AAC_ENABLED = !AAC_ENABLED
+  >0,10,AAC_ENABLED: @AAC_ENABLED@
 
 // Use the "down" key to toggle cancelling the attack animation
-func ToggleCancelAttackAnimation()
-  _ToggleCancelAttackAnimation(downBegin)
+func ToggleAAC(keybind)
+  ?key = keybind
+    _ToggleAAC()
 
 // hold shift to show weapons
 func _ShowWeapons(keybind)

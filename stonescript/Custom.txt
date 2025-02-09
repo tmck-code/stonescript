@@ -3,6 +3,10 @@ import SS/Log
 var strats = import SS/Strats
 var gameEngine = import SS/GameEngine
 
+// enable faster attack speed
+gameEngine.AAC()
+gameEngine.ToggleAAC(downBegin)
+
 // enable auto-heal (via potions)
 strats._AutoPotion(45)
 // enable bonus loot with star stone
