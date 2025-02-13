@@ -2,13 +2,19 @@ var log = import SS/Log
 var strats = import SS/Strats
 
 func Override()
+  ?item.GetCooldown("wand_aether") = 0 & item.CanActivate("wand_aether")
+    equipR calamity wand
+    equipL calamity wand +5
+    activate L
+    activate R
+    return true
+  :?foe = boss | foe.count > 5
+    activate potion
+    return true
   equipR calamity wand
   equipL calamity wand +5
-  // ?item.GetCooldown("wand_aether") = 0 & item.CanActivate("wand_aether")
-  activate L
-  activate R
-  // return true
   return true
+
 
 func BoilingMine()
   log.LogStrat(0, "BoilingMine", "#green")
@@ -20,8 +26,16 @@ func BoilingMine()
     strats.useBladeDS()
 
   ?foe = boss
+    ?strats.MaskOfTheLost() = true
+      return
     ?foe.distance > 12
       equip aether crossbow
+      return
+    ?foe.distance < 16
+      activate potion
+      equipL poison wand
+      equipR aether wand
+      activate L
       return
     equipL aether wand
     equipR aether wand *8
@@ -30,20 +44,21 @@ func BoilingMine()
   ?strats.Speedy()
     return
 
-  strats.UseAvailableTwoHandedWeapon()
+  ?strats.UseAvailableTwoHandedWeapon()
+    return
 
   ?((foe = slave_master | foe = elemental) & foe.distance > 10)
     equip aether crossbow
     return
 
-  ?foe.distance > 20
+  ?foe.distance > 12
     equip aether crossbow
     return
 
-  ?strats.Dash()
-    return
+  // ?strats.Dash()
+  //   return
 
-  ?foe.distance > 10
+  ?foe.distance > 5
     equipL aether wand
     equipR vigor wand
     return

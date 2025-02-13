@@ -2,15 +2,16 @@ var log = import SS/Log
 var strats = import SS/Strats
 
 func Override()
-  equipL poison wand +11
-  equipR poison wand +10
-  //?foe = boss
-  activate potion
-  activate L
   ?item.GetCooldown("wand_plague") = 0 & item.CanActivate()
+    equipL poison wand +11
+    equipR poison wand +10
     activate potion
     activate R
     activate L
+    return true
+  ?foe = boss | foe.count > 5
+    activate potion
+    return true
   return true
 
 

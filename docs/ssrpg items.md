@@ -1,4 +1,4 @@
-## [[personal/code/StoneStoryRPG/Stone Story RPG|Stone Story RPG]]
+\## [[personal/code/StoneStoryRPG/Stone Story RPG|Stone Story RPG]]
 
 - [[#Crafting|Crafting]]
 	- [[#Crafting#Number of items needed for upgrade|Number of items needed for upgrade]]
@@ -81,34 +81,34 @@
 ### Cooldown
 #cooldown
 
-| Item                    | Cooldown ID       |
-| ----------------------- | ----------------- |
-| Æther Talisman          | `aether_talisman` |
-| Bardiche                | `bardiche`        |
-| Bashing Shield          | `bash`            |
-| Blade of the Fallen God | `blade`           |
-| Cinderwisp Devour       | `cinderwisp`      |
-| Dashing Shield          | `dash`            |
-| Fire Talisman           | `fire_talisman`   |
-| Hatchet                 | `hatchet`         |
-| Heavy Hammer            | `heavy_hammer`    |
-| Cultist Mask            | `mask`            |
-| Mind Stone              | `mind`            |
-| Quarterstaff            | `quarterstaff`    |
-| Skeleton Arm            | `skeleton_arm`    |
-| Grasping Staff          | `staff_aether`    |
-| Infernal Staff          | `staff_fire`      |
-| Eternity Staff          | `staff_ice`       |
-| Berserker Staff         | `staff_poison`    |
-| Acrobatic Staff         | `staff_stone`     |
-| Prevention Staff        | `staff_vigor`     |
-| Voidweaver Devour       | `voidweaver`      |
-| Calamity Wand           | `wand_aether`     |
-| Explosive Wand          | `wand_fire`       |
-| Frost Wand              | `wand_ice`        |
-| Plague Wand             | `wand_poison`     |
-| Gravity Wand            | `wand_stone`      |
-| Reset Wand              | `wand_vigor`      |
+| Category     | :rock: | Item                    | Cooldown ID       |
+| ------------ | :----: | ----------------------- | ----------------- |
+| special      |   ❓    | Mind Stone              | `mind`            |
+| special      |   ❓    | Hatchet                 | `hatchet`         |
+| lost item    |   🎁   | Blade of the Fallen God | `blade`           |
+| lost item    |   🎁   | Cultist Mask            | `mask`            |
+| lost item    |   🎁   | Skeleton Arm            | `skeleton_arm`    |
+| summon       |   👻   | Cinderwisp Devour       | `cinderwisp`      |
+| summon       |   👻   | Voidweaver Devour       | `voidweaver`      |
+| talisman     |   💍   | Æther Talisman          | `aether_talisman` |
+| talisman     |   💍   | Fire Talisman           | `fire_talisman`   |
+| staff        |   🦯   | Grasping Staff          | `staff_aether`    |
+| staff        |   🦯   | Infernal Staff          | `staff_fire`      |
+| staff        |   🦯   | Eternity Staff          | `staff_ice`       |
+| staff        |   🦯   | Berserker Staff         | `staff_poison`    |
+| staff        |   🦯   | Acrobatic Staff         | `staff_stone`     |
+| staff        |   🦯   | Prevention Staff        | `staff_vigor`     |
+| wand         |   🪄   | Calamity Wand           | `wand_aether`     |
+| wand         |   🪄   | Explosive Wand          | `wand_fire`       |
+| wand         |   🪄   | Frost Wand              | `wand_ice`        |
+| wand         |   🪄   | Plague Wand             | `wand_poison`     |
+| wand         |   🪄   | Gravity Wand            | `wand_stone`      |
+| wand         |   🪄   | Reset Wand              | `wand_vigor`      |
+| heavy weapon |   🪓   | Bardiche                | `bardiche`        |
+| heavy weapon |   🪓   | Heavy Hammer            | `heavy_hammer`    |
+| heavy weapon |   🪓   | Quarterstaff            | `quarterstaff`    |
+| shield       |   🛡   | Bashing Shield          | `bash`            |
+| shield       |   🛡   | Dashing Shield          | `dash`            |
 
 ### affixes
 #affixes

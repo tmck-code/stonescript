@@ -25,6 +25,7 @@ func Override()
   ?item.GetCooldown("wand_fire") = 0 & item.CanActivate("wand_fire")
     activate R
     activate L
+    return true
   return true
 
 func IcyRidge()
@@ -39,7 +40,7 @@ func IcyRidge()
   ?foe = boss
     ?strats.Speedy()
       return
-  
+
     ?QuickShield()
       return
 

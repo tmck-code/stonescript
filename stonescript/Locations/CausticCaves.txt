@@ -2,12 +2,13 @@ var log = import SS/Log
 var strats = import SS/Strats
 
 func Override()
-  equipR frost wand +10
-  equipL poison wand
   ?foe = boss
     activate potion
-  ?item.GetCooldown("wand_ice") = 0 & item.CanActivate()
+  ?item.GetCooldown("wand_ice") = 0 & item.CanActivate() & foe.distance < 10 & foe.count > 5
+    equipR frost wand +10
+    equipL tri
     activate R
+    return true
   return false
 
 var foeState = 0

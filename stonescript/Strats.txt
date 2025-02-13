@@ -41,7 +41,6 @@ func Dash()
   return _Dash(11, 16)
 
 // hoon around in-between the action
-// returns true if applied, false otherwise
 func _Speedy(dist)
   ?foe.distance > dist
     equipL star

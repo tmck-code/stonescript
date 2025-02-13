@@ -4,8 +4,8 @@ var strats = import SS/Strats
 var gameEngine = import SS/GameEngine
 
 // enable faster attack speed
-gameEngine.AAC()
-gameEngine.ToggleAAC(downBegin)
+// gameEngine.AAC()
+// gameEngine.ToggleAAC(downBegin)
 
 // enable auto-heal (via potions)
 strats._AutoPotion(45)
@@ -28,6 +28,3 @@ import SS/Locations/HauntedHalls
 import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
-
-// ?foe = boss & foe.distance <= 30
-//   strats.MaskOfTheLost()

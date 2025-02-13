@@ -1,0 +1,16 @@
+{
+  "immediateReplace": true,
+  "suggester": true,
+  "historyPriority": true,
+  "historyLimit": 100,
+  "history": [
+    ":ring:",
+    ":gift:",
+    ":question:",
+    ":ghost:",
+    ":shield:",
+    ":axe:",
+    ":probing_cane:",
+    ":magic_wand:"
+  ]
+}

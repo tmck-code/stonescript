@@ -3,9 +3,8 @@ var strats = import SS/Strats
 
 func Rocky()
   log.LogStrat(4, "Rocky", "#green")
-  equipR vigor wand
 
-  ?!strats.BeFast(true, false)
+  ?foe = boss
     ?foe.buffs.string = fire
       equipL aether wand
     :?foe.buffs.string = aether
@@ -14,7 +13,11 @@ func Rocky()
         equipR poison wand
         equipL poison wand +10
     :
-      equipL fire wand
+      // equipL fire wand
+      equip fire crossbow
+    return
+
+  equip shovel
 
 ?loc = rocky
   Rocky()

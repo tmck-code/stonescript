@@ -423,9 +423,14 @@ LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 
 ?!bossFinished
   LogTopRight(-15, 2, FmtCooldownLogs([
-  ^  "blade", "bardiche", "quarterstaff", "heavy_hammer",
-  ^  "skeleton_arm", "mask", "fissure_stone",
+  ^  "bardiche", "quarterstaff", "heavy_hammer",
+  ^  "bash", "dash",
+  ^  "mind", "hatchet",
+  ^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
+  ^  "skeleton_arm", "mask", "blade",
   ^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
+  ^  "talisman_aether", "talisman_fire",
+  ^  "cinderwisp", "voidweaver"
   ^]))
 
 // log buffs and debuffs above the player
@@ -433,6 +438,3 @@ LogAllBuffsAndDebuffs()
 LogAllStates()
 LogFoeDistance()
 LogStatesBeforeDamage()
-
-// >`0,20,#green,@item.right@: cool: @item.GetCooldown("wand_fire")@, activate: @item.CanActivate("wand_fire")@
-// >`0,21,#green,@item.left@: cool: @item.GetCooldown("wand_fire")@, activate: @item.CanActivate("wand_fire")@

@@ -6,32 +6,41 @@ var BOSS = false
 var i = 0
 
 func Override()
-  equipL frost wand +10
-  equipR vigor wand
-  ?foe = boss | foe.count > 5
-    activate potion
+  // equipL frost wand +10
   ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate()
+    equipR vigor wand
     activate R
     return true
-  return false
+  ?foe = boss | foe.count > 5
+    activate potion
+    return true
+  return true
 
 func HauntedHalls()
   ?loc.loop
     BOSS = false
   log.LogStrat(4, "HauntedHalls", "#green")
 
+  ?Override() = true
+    return
+
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
+    return
+
+  ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate()
+    equipR vigor wand
+    activate R
 
   ?foe = boss
     //  | BOSS = true
     BOSS = true
-    ?foe.distance > 25 & foe ! ghost
+    ?foe.distance > 8 & foe ! ghost
       equip vigor crossbow
       return
 
     equipL vigor wand
-    equipR talisman broken
+    equipR poison wand
     return
 
   ?strats.Speedy()
@@ -40,10 +49,13 @@ func HauntedHalls()
   ?Override() = true
     return
 
-  ?foe.distance > 12 & foe ! ghost
+  ?foe.distance > 8 & foe ! ghost
     equip vigor crossbow
     return
-  
+
+  ?strats.Dash()
+    return
+
   ?foe.distance > 5
     equipL vigor wand
     equipR poison wand
@@ -53,11 +65,11 @@ func HauntedHalls()
     equipL vigor wand
     return
 
-  ?foe ! immune_to_physical & foe.distance <= 5
-    strats.UseWeaponIfReady("heavy_hammer", 10)
-    equipL vigor hammer
-    equipR compound shield
-    return
+  // ?foe ! immune_to_physical & foe.distance <= 5
+  //   strats.UseWeaponIfReady("heavy_hammer", 10)
+  //   equipL vigor hammer
+  //   equipR compound shield
+  //   return
 
   equipL poison wand
   equipR vigor wand
