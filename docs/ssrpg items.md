@@ -132,14 +132,14 @@
 
 ## Elements
 
-| element | symbol | get from                 | combo version | affixes | strong against | weak against |
-| ------- | ------ | ------------------------ | ------------- | ------- | -------------- | ------------ |
-| poison  | 🐍     | #CavesOfFear <br>#Temple | `plague`      |         |                |              |
-| vigor   | 🤍     | #MushroomForest          | `reset`       |         |                |              |
-| æther   | ⭐      | #HauntedHalls            | `calamity`    |         |                |              |
-| fire    | 🔥     | #BoilingMine             | `explosive`   |         |                |              |
-| ice     | ❄      | #IcyRidge                | `frost`       |         |                |              |
-| stone   | 🞈     | #DeadwoodCanyon          | `gravity`     |         |                |              |
+| \o/ | element | ability     | get from               | affixes | strong against | weak against |
+| --- | ------- | ----------- | ---------------------- | ------- | -------------- | ------------ |
+| 🐍  | poison  | `plague`    | #CavesOfFear ~ #Temple |         |                |              |
+| 🤍  | vigor   | `reset`     | #MushroomForest        |         |                |              |
+| ⭐   | æther   | `calamity`  | #HauntedHalls          |         |                |              |
+| 🔥  | fire    | `explosive` | #BoilingMine           |         |                |              |
+| ❄   | ice     | `frost`     | #IcyRidge              |         |                |              |
+| 🞈  | stone   | `gravity`   | #DeadwoodCanyon        |         |                |              |
 
  
 ## Items

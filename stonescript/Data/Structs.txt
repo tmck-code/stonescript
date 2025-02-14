@@ -1,10 +1,27 @@
-// ----------------------------------------------
+// maps/dictionaries ----------------------------
+//
+// a "dict" is an array, containing array tuples of key-value pairs.
+// e.g. [["k1", "v1"], ["k2", "v2"], ...]
 
 func DictLookup(dict, k)
-  for i = 0 .. dict.Count()-1
-    ?dict[i][0] = k
-      return dict[i][1]
+  for pair : dict
+    ?pair[0] = k
+      return pair[1]
   return "not found"
+
+func _CollectFromDict(dict, i)
+  var a = []
+  for entry : dict
+    a.Add(entry[i])
+  return a
+
+func DictKeys(dict)
+  return _CollectFromDict(dict, 0)
+
+func DictValues(dict)
+  return _CollectFromDict(dict, 1)
+
+// arrays ---------------------------------------
 
 // ArraysEqual compares two arrays for equality.
 // returns true if the arrays are equal (all thir elements are equal),
@@ -24,3 +41,5 @@ func ArraysEqual(a, b)
       return false
 
   return true
+
+// linked lists ----------------------------------

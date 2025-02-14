@@ -100,7 +100,6 @@ func Fmt(data)
 // returns an array of [color, message, remainingCooldown]
 func FmtCooldownLog(weapon)
   var remaining = item.GetCooldown(weapon)
-  var canUse = remaining <= 0 & item.CanActivate()
   var msg = string.Format("{0}: {1}", weapon, remaining)
   ?!item.CanActivate()
     return ["#red", msg, remaining]
@@ -421,17 +420,16 @@ LogTopLeft([
 LogTopRight(-20, 0, [["#green", Fmt([foe.state, foe.time])]])
 LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 
-?!bossFinished
-  LogTopRight(-15, 2, FmtCooldownLogs([
-  ^  "bardiche", "quarterstaff", "heavy_hammer",
-  ^  "bash", "dash",
-  ^  "mind", "hatchet",
-  ^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
-  ^  "skeleton_arm", "mask", "blade",
-  ^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
-  ^  "talisman_aether", "talisman_fire",
-  ^  "cinderwisp", "voidweaver"
-  ^]))
+LogTopRight(-15, 2, FmtCooldownLogs([
+^  "bardiche", "quarterstaff", "heavy_hammer",
+^  "bash", "dash",
+^  "mind", "hatchet",
+^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
+^  "skeleton_arm", "mask", "blade",
+^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
+^  "talisman_aether", "talisman_fire",
+^  "cinderwisp", "voidweaver"
+^]))
 
 // log buffs and debuffs above the player
 LogAllBuffsAndDebuffs()

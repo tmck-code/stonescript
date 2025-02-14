@@ -1,18 +1,14 @@
 var log = import SS/Log
 var strats = import SS/Strats
+import SS/Checks/CanUse
 
 func Override()
-  ?item.GetCooldown("wand_aether") = 0 & item.CanActivate("wand_aether")
-    equipR calamity wand
-    equipL calamity wand +5
-    activate L
-    activate R
+  equipR calamity wand +5
+  ?strats.UseWandAbility("calamity", "L")
     return true
   :?foe = boss | foe.count > 5
     activate potion
     return true
-  equipR calamity wand
-  equipL calamity wand +5
   return true
 
 

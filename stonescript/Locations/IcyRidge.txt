@@ -20,9 +20,9 @@ func QuickShield()
     return false
 
 func Override()
-  equipL fire wand *9
-  equipR fire wand *10
-  ?item.GetCooldown("wand_fire") = 0 & item.CanActivate("wand_fire")
+  ?item.GetCooldown("wand_fire") = 0 & item.CanActivate()
+    equipL fire wand *9
+    equipR fire wand *10
     activate R
     activate L
     return true
@@ -37,11 +37,23 @@ func IcyRidge()
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
-  ?foe = boss
-    ?strats.Speedy()
+  ?foe.count > 5
+    ?strats.MaskOfTheLost() = true
       return
 
-    ?QuickShield()
+  ?foe = boss
+    ?strats.Speedy() = true
+      return
+
+    ?QuickShield() = true
+      return
+
+    activate potion
+
+    ?item.GetCooldown("wand_fire") = 0 & item.CanActivate()
+      equipL fire wand *9
+      equipR fire wand *10
+      activate R
       return
 
     ?foe.distance > 12
@@ -57,19 +69,23 @@ func IcyRidge()
 
     equipL fire wand *9
     equipR fire wand *10
-    ?item.GetCooldown("wand_fire") = 0 & item.CanActivate("wand_fire")
-      activate R
-      activate L
     return
 
-  ?strats.Speedy()
+  ?strats.Speedy() = true
+    return
+
+  ?item.GetCooldown("wand_fire") = 0 & item.CanActivate()
+    equipL fire wand *9
+    equipR fire wand *10
+    activate R
+    activate L
     return
 
   ?foe = ice_elemental | foe.distance > 10
     equip fire crossbow
     return
 
-  ?strats.Dash()
+  ?strats.Dash() = true
     return
 
   :?foe.distance <= 5

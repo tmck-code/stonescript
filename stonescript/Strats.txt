@@ -1,4 +1,5 @@
 // global variables
+var CanUse = import SS/Checks/CanUse
 var LAST_WEAPON_ACTIVATION = 0
 
 // auto-use potion when hp is low
@@ -69,6 +70,36 @@ func Pickpocket()
 
 // weapons ---------------------------------------------------
 
+var MAX_WAND_ABILITY_DISTANCE = 20
+var MIN_WAND_ABILITY_FOES = 1
+
+var WandAbilityFoeCheck = new SS/Checks/Foes
+
+WandAbilityFoeCheck.WatchDistance(MAX_WAND_ABILITY_DISTANCE)
+WandAbilityFoeCheck.WatchCount(MIN_WAND_ABILITY_FOES)
+
+func UseWandAbility(ability, hand)
+  >o0,3,#white,@ability@
+  ?!CanUse.AbilityOfWand(ability)
+    >o0,3,#red,@ability@
+    return false
+
+  ?!WandAbilityFoeCheck.Match()
+    >o0,3,#yellow,@ability@
+    return false
+
+  >o0,3,#green,@ability@
+
+  ?hand = "L"
+    equipL @ability@ wand
+    activate L
+    return true
+  :?hand = "R"
+    equipR @ability@ wand
+    activate R
+    return true
+  return false
+
 // Use the "right" key to trigger the blade of the fallen god
 func _ListenForBladeTrigger(keybind)
   ?key = keybind
@@ -125,8 +156,8 @@ func BigBlade(min_foes)
   return false
 
 func MaskOfTheLost()
-  ?item.GetCooldown("mask") = 0
-    equip mask
+  ?item.GetCooldown("mask") = 0 & item.CanActivate()
+    equipR mask
     activate R
     return true
   return false

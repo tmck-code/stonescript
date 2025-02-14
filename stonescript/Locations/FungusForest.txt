@@ -2,17 +2,14 @@ var log = import SS/Log
 var strats = import SS/Strats
 
 func Override()
-  ?item.GetCooldown("wand_plague") = 0 & item.CanActivate()
-    equipL poison wand +11
-    equipR poison wand +10
-    activate potion
-    activate R
-    activate L
+  equipL poison wand +11
+  equipR poison wand +10
+  ?strats.UseWandAbility("plague", "L")
     return true
-  ?foe = boss | foe.count > 5
+  ?foe = boss | foe.count > 2
     activate potion
     return true
-  return true
+  return false
 
 
 func FungusForest()
@@ -25,17 +22,6 @@ func FungusForest()
     strats.useBladeDS()
 
   ?foe = boss
-    ?strats.Speedy()
-      return
-
-    ?foe.distance >= 3
-      ?item.GetCooldown("wand_poison") = 0 & item.CanActivate()
-        activate potion
-        equipR poison wand
-        activate R
-      equip poison crossbow
-      return
-
     ?foe.distance <= 3 & item.GetCooldown("heavy_hammer") = 0 & item.CanActivate()
       equip heavy hammer
       activate R
@@ -43,18 +29,13 @@ func FungusForest()
       equipL poison sword
       return
 
-    equipR compound shield
-    equipL poison sword
+    equip poison crossbow
     return
 
   ?strats.Speedy()
     return
-
-  ?item.GetCooldown("wand_poison") = 0 & item.CanActivate()
-    activate potion
-    equipR poison wand
-    equipL fire wand
-    activate R
+  
+  ?strats.UseWandAbility("plague", "L")
     return
 
   ?foe.distance > 12

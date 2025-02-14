@@ -6,14 +6,18 @@ var BOSS = false
 var i = 0
 
 func Override()
-  // equipL frost wand +10
-  ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate()
-    equipR vigor wand
-    activate R
-    return true
-  ?foe = boss | foe.count > 5
+  ?foe = boss | foe.count > 2
     activate potion
     return true
+  ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate()
+    equipL frost wand +10
+    equipR vigor wand
+    activate potion
+    activate R
+    return true
+
+  equipL frost wand +10
+  equipR vigor wand
   return true
 
 func HauntedHalls()
@@ -26,6 +30,9 @@ func HauntedHalls()
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
+    return
+  
+  ?strats.MaskOfTheLost()
     return
 
   ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate()
