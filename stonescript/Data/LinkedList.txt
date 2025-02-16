@@ -1,0 +1,17 @@
+var CURRENT_INDEX = 0
+var SIZE = 0
+var LIST = []
+
+func Init(values)
+  ?Type(values) = "array"
+    LIST = values
+    SIZE = values.Count()
+  :
+    return
+
+func _Rot(n)
+  CURRENT_INDEX = (CURRENT_INDEX + n) % SIZE
+  return LIST[CURRENT_INDEX]
+
+func Rot(n)
+  return _Rot(1)

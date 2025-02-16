@@ -3,14 +3,20 @@ var strats = import SS/Strats
 import SS/Checks/CanUse
 
 func Override()
-  equipR calamity wand +5
-  ?strats.UseWandAbility("calamity", "L")
-    return true
-  :?foe = boss | foe.count > 5
-    activate potion
-    return true
-  return true
+  ?foe = boss
+    equipR ice wand
+    strats.UseWandAbility("frost", "R")
+  :?foe.distance < 15
+    equipR ice wand
+  :
+    equipR tri
 
+  ?foe = boss
+    ?strats.UseWandAbility("calamity", "L")
+      return true
+  :
+    equipL calamity wand
+  return false
 
 func BoilingMine()
   log.LogStrat(0, "BoilingMine", "#green")
@@ -18,36 +24,30 @@ func BoilingMine()
   ?Override() = true
     return
 
-  ?strats.canUseBladeDS(2)
-    strats.useBladeDS()
+  // ?strats.canUseBladeDS(2)
+  //   strats.useBladeDS()
 
   ?foe = boss
     ?strats.MaskOfTheLost() = true
       return
-    ?foe.distance > 12
-      equip aether crossbow
-      return
-    ?foe.distance < 16
-      activate potion
-      equipL poison wand
-      equipR aether wand
-      activate L
-      return
-    equipL aether wand
-    equipR aether wand *8
+    equip aether crossbow
+    return
+    equipL poison wand
+    equipR aether wand
     return
 
   ?strats.Speedy()
     return
 
-  ?strats.UseAvailableTwoHandedWeapon()
+  ?foe.distance > 22
+    equipL tri
     return
 
   ?((foe = slave_master | foe = elemental) & foe.distance > 10)
     equip aether crossbow
     return
 
-  ?foe.distance > 12
+  ?foe.distance > 8
     equip aether crossbow
     return
 
@@ -59,8 +59,8 @@ func BoilingMine()
     equipR vigor wand
     return
 
-  equipL big aether sword
-  equipR compound shield
+  equipL aether sword +8
+  equipR aether hammer
 
 ?loc = mine
   BoilingMine()

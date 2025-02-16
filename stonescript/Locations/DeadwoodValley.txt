@@ -26,6 +26,5 @@ func DeadWoodValley()
   equipL big aether sword
   equipR ice hammer
 
-        
 ?loc = deadwood_valley
   DeadWoodValley()

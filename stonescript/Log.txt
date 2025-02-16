@@ -123,38 +123,61 @@ func FmtCooldownLogs(weapon_ids)
 
 // weapon formatting --------
 
-func FmtSpecialWeaponName(weapon)
-  ?weapon = "blade"
-    return "Blade of the Fallen God"
-  ?weapon = "bardiche"
-    return "Bardiche"
-  ?weapon = "quarterstaff"
-    return "Quarterstaff"
-  ?weapon = "heavy_hammer"
-    return "Heavy Hammer"
-  ?weapon = "skeleton_arm"
-    return "Skeleton Arm"
-  ?weapon = "mask"
-    return "Mask"
-  ?weapon = "fissure_stone"
-    return "Fissure Stone"
-  return false
+// hold shift to show weapons
 
-func FmtCraftedWeaponName(weapon)
+func FmtItemIDBasic(item_id)
+  return string.Join("\n", string.Split(item_id, ","))
+
+var strings = import SS/Data/Strings
+
+func _ShowWeapons(keybind)
+  var matches = strings.FindAllIndexes(item.left.id, "_")
+  ?key = keybind
+    >`0,14,#yellow,l:(@Fmt(matches)@)\n  @FmtItemIDBasic(item.left.id)@\n\nr:@FmtItemIDBasic(item.right.id)@
+
+func ShowWeapons()
+  _ShowWeapons(ability1)
+
+func FmtWeaponID(weapon_id)
   // "Explosive Wand Fire wand wand_hidden_fire *10*max* +7/0 D
   // wand_hidden_fire_lv2048_Fire,element_damage_wand_2_Epic7:5-1q103
   //
   // Fire Wand Fire wand *9* +7/0 dF
   // wand_lv1024_Fire,element_damage_wand,dot_ohhit_Epic7:0-1q109
 
-  var parts = string.Split(weapon, ",")
-  return string.Join("\n", parts)
+  var parts = string.Split(weapon_id, ",")
+  // split up the ID into the 2 main parts,
+  // "wand_hidden_fire_lv2048_Fire,element_damage_wand_2_Epic7:5-1q103"
+  // -> ["wand_hidden_fire_lv2048_Fire", "element_damage_wand_2_Epic7:5-1q103"]
+  ?parts.Count() < 2
+    >`0,22,#yellow,c: @parts@
+    return
+  var craftInfo = parts[0]
+  var enchantInfo = parts[1]
+  >`0,22,#yellow,c: @craftInfo@
+  >`0,23,#yellow,e: @enchantInfo@
 
-func FmtWeaponName(weapon)
-  var fmt = FmtSpecialWeaponName(weapon)
-  ?fmt ! false
-    return fmt
-  return FmtCraftedWeaponName(weapon)
+  // split up craft info into 3 parts
+  // "wand_hidden_fire_lv2048_Fire"
+  // -> ["wand_hidden_fire", "lv2048", "Fire"]
+  var parts = string.Split(craftInfo, "_")
+  ?parts.Count() < 3
+    >`0,24,#yellow,c: @parts@
+    return
+  var weapon = parts[0]
+  var lvl = parts[1]
+  var element = parts[2]
+
+  // split up enchant info into 2 parts
+  // "element_damage_wand_2_Epic7:5-1q103"
+  // -> ["element_damage_wand_2_Epic7", "5-1q103"]
+  var parts = string.Split(enchantInfo, ":")
+  var enchant = parts[0]
+  var suffix = parts[1]
+
+  var enchantParts = string.Split(enchant, "_")
+
+  return string.Join("\n", parts)
 
 // --------------------------------------------------
 // State Formatting
@@ -401,38 +424,37 @@ func LogStatesBeforeDamage()
 
 // --------------------------
 
-var bossFinished
-?time <= 10
-  bossFinished = false
-:?foe = boss
-  ?foe.hp <= 100
-    bossFinished = true
-  :
-    bossFinished = false
+var AAC_ENABLED = true
+var CL_ORANGE = color.FromRGB(255,102,0)
 
-var orange = color.FromRGB(255,102,0)
+func LogAAC(aac_enabled)
+  AAC_ENABLED = aac_enabled
 
-LogTopLeft([
-  ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
-  ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
-])
+func WriteLogs()
+  LogTopLeft([
+    ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
+    ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
+    ["#yellow", "AAC", Fmt([AAC_ENABLED])],
+  ])
 
-LogTopRight(-20, 0, [["#green", Fmt([foe.state, foe.time])]])
-LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
+  LogTopRight(-20, 0, [["#green", Fmt([foe.state, foe.time])]])
+  LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
 
-LogTopRight(-15, 2, FmtCooldownLogs([
-^  "bardiche", "quarterstaff", "heavy_hammer",
-^  "bash", "dash",
-^  "mind", "hatchet",
-^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
-^  "skeleton_arm", "mask", "blade",
-^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
-^  "talisman_aether", "talisman_fire",
-^  "cinderwisp", "voidweaver"
-^]))
+  LogTopRight(-15, 2, FmtCooldownLogs([
+  ^  "bardiche", "quarterstaff", "heavy_hammer",
+  ^  "bash", "dash",
+  ^  "mind", "hatchet",
+  ^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
+  ^  "skeleton_arm", "mask", "blade",
+  ^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
+  ^  "talisman_aether", "talisman_fire",
+  ^  "cinderwisp", "voidweaver"
+  ^]))
 
-// log buffs and debuffs above the player
-LogAllBuffsAndDebuffs()
-LogAllStates()
-LogFoeDistance()
-LogStatesBeforeDamage()
+  // log buffs and debuffs above the player
+  LogAllBuffsAndDebuffs()
+  LogAllStates()
+  LogFoeDistance()
+  LogStatesBeforeDamage()
+
+  // FmtWeaponID(item.left.id)

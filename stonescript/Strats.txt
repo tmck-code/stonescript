@@ -88,6 +88,11 @@ func UseWandAbility(ability, hand)
     >o0,3,#yellow,@ability@
     return false
 
+  ?armor < 14
+    >o0,3,#white,@ability@
+    activate potion
+    return false
+
   >o0,3,#green,@ability@
 
   ?hand = "L"
@@ -156,7 +161,7 @@ func BigBlade(min_foes)
   return false
 
 func MaskOfTheLost()
-  ?item.GetCooldown("mask") = 0 & item.CanActivate()
+  ?item.GetCooldown("mask") = 0 & item.CanActivate() & foe.distance <= 20
     equipR mask
     activate R
     return true

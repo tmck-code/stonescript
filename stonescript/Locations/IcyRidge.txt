@@ -20,13 +20,20 @@ func QuickShield()
     return false
 
 func Override()
-  ?item.GetCooldown("wand_fire") = 0 & item.CanActivate()
-    equipL fire wand *9
-    equipR fire wand *10
-    activate R
-    activate L
-    return true
-  return true
+  equipL explosive wand
+  equipR vigor wand
+  // ?foe.distance > 20 & (foe ! boss & foe ! ice wall)
+  //   equipR tri
+  ?foe = boss & foe.time > 400
+    ?item.GetCooldown("wand_fire") = 0
+    ^ & item.CanActivate()
+    ^ & armor > 14
+      activate L
+    ?item.GetCooldown("wand_vigor") = 0
+    ^ & item.CanActivate()
+    ^ & armor > 14
+      activate R
+  return false
 
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
@@ -45,6 +52,9 @@ func IcyRidge()
     ?strats.Speedy() = true
       return
 
+    ?strats.MaskOfTheLost() = true
+      return
+
     ?QuickShield() = true
       return
 
@@ -61,43 +71,23 @@ func IcyRidge()
       equip fire crossbow
       return
 
-    ?foe.distance <= 5
-      strats.UseAvailableTwoHandedWeapon()
-      equipL fire hammer
-      equipR compound shield
-      return
-
-    equipL fire wand *9
-    equipR fire wand *10
+    equipL fire sword +8
+    equipR compound shield
     return
 
   ?strats.Speedy() = true
     return
 
-  ?item.GetCooldown("wand_fire") = 0 & item.CanActivate()
-    equipL fire wand *9
-    equipR fire wand *10
-    activate R
-    activate L
-    return
-
-  ?foe = ice_elemental | foe.distance > 10
+  ?foe = ice_elemental | foe.distance > 15 | foe = ice wall
     equip fire crossbow
     return
 
   ?strats.Dash() = true
     return
 
-  :?foe.distance <= 5
-    strats.UseAvailableTwoHandedWeapon()
-    equipL fire hammer
-    equipR compound shield
-    return
-
-  equipL fire wand *9
-  equipR fire wand *10
-  ?item.GetCooldown("wand_fire") = 0 & item.CanActivate("wand_fire")
-    activate R
+  equipL fire sword +8
+  equipR compound shield
+  return
 
 ?loc = icy_ridge
   IcyRidge()

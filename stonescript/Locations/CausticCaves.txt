@@ -1,14 +1,16 @@
 var log = import SS/Log
 var strats = import SS/Strats
+var canUse = import SS/Checks/CanUse
 
 func Override()
-  equipL frost wand +10
+  ?foe = boss
+    ?strats.UseWandAbility("frost", "L")
+      return true
+  equipL frost wand
   equipR vigor wand
-  ?foe = boss | foe.count > 3
-    activate potion
-  ?strats.UseWandAbility("frost", "L")
-    return true
-  return true
+  ?foe.distance > 15 & foe ! boss
+    equipR tri
+  return false
 
 var foeState = 0
 
@@ -18,29 +20,32 @@ func Caves()
   ?Override() = true
     return
 
-  ?strats.canUseBladeDS(2)
-    strats.useBladeDS()
+  // ?strats.canUseBladeDS(2)
+  //   strats.useBladeDS()
 
-  ?foe = boss
+  ?foe = boss & foe = bolesh
+    ?foe.time > 300
+      activate potion
     equip ice crossbow
     return
 
   ?strats.Speedy()
     return
 
-  ?hp*100/maxhp < 80 | foe.distance > 12
+  ?foe.distance > 25
+    equipL tri
+    return
+
+  ?hp*100/maxhp < 80 | foe.distance > 8
     equip ice crossbow
     return
 
   // ?strats.Dash()
   //   return
 
-  ?foe.distance > 3
-    equipL vigor wand
-    equipR ice wand
-    ?item.GetCooldown("wand_frozen") = 0 & item.CanActivate("wand_frozen")
-      activate R
-    return
+  ?foe.distance >= 2
+    equipL frost wand +10
+    equipR vigor wand
 
   equipL ice hammer
   equipR vigor sword

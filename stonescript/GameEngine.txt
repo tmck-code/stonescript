@@ -22,6 +22,9 @@ func _AttackAnimationCancel()
 func AAC()
   _AttackAnimationCancel()
 
+func AACEnabled()
+  return AAC_ENABLED
+
 func _ToggleAAC()
   AAC_ENABLED = !AAC_ENABLED
   >0,10,AAC_ENABLED: @AAC_ENABLED@
@@ -30,12 +33,3 @@ func _ToggleAAC()
 func ToggleAAC(keybind)
   ?key = keybind
     _ToggleAAC()
-
-// hold shift to show weapons
-func _ShowWeapons(keybind)
-  ?key = keybind
-    >`0,10,#yellow,@item.left.id@
-    >`0,11,#yellow,@item.right.id@
-
-func ShowWeapons()
-  _ShowWeapons(ability1)

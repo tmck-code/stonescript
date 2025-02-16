@@ -4,20 +4,48 @@ var strats = import SS/Strats
 func Rocky()
   log.LogStrat(4, "Rocky", "#green")
 
-  ?foe = boss
-    ?foe.buffs.string = fire
-      equipL aether wand
-    :?foe.buffs.string = aether
-      equipL ice wand
-    :?foe.buffs.string = ice
-        equipR poison wand
-        equipL poison wand +10
-    :
-      // equipL fire wand
-      equip fire crossbow
+  ?foe ! boss | foe.distance > 30
+    equipL tri // shovel
+    equipR star
     return
 
-  equip shovel
+  ?foe = phase3
+    ?strats.MaskOfTheLost()
+      return true
+
+  ?foe.buffs.string = aether
+    equipR vigor sword +7
+    ?strats.UseWandAbility("reset", "L")
+      return true
+    equipL vigor wand
+    return true
+  :?foe.buffs.string = fire
+    equipR aether sword +7
+    ?strats.UseWandAbility("calamity", "L")
+      return true
+    equipL aether wand
+    return true
+  :?foe.buffs.string = ice
+    equipR fire sword +6
+    ?strats.UseWandAbility("explosion", "L")
+      return true
+    equipL fire wand
+    return true
+  :?foe.buffs.string = poison
+    equipR ice sword +6
+    ?strats.UseWandAbility("frost", "L")
+      return true
+    equipL ice wand
+    return true
+  :?foe.buffs.string = vigor
+    equipR poison sword +8
+    ?strats.UseWandAbility("plague", "L")
+      return true
+    equipL poison wand
+    return true
+
+  equipR vigor sword +7
+  equipL poison sword +8
 
 ?loc = rocky
   Rocky()

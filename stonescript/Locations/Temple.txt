@@ -3,15 +3,22 @@ var strats = import SS/Strats
 
 func Override()
   return false
-  equipR mask
-  ?foe.distance > 15
-    equipL crossbow
-    return true
-  ?foe.distance > 5
-    equipL ice wand
-    return true
-  equipL ice hammer
-  return true
+  ?foe = boss | foe.count > 5
+    equipR calamity wand
+    strats.UseWandAbility("calamity", "R")
+  :?foe.distance < 15 & foe.count > 5
+    equipR calamity wand
+  :
+    equipR tri
+
+  ?foe.count > 5
+    ?strats.UseWandAbility("frost", "L")
+      return true
+  :
+    equipR calamity wand
+    equipL frost wand
+  return false
+
 
 func Temple()
   log.LogStrat(4, "Temple", "#green")
@@ -19,32 +26,30 @@ func Temple()
   ?Override() = true
     return
 
-  ?strats.canUseBladeDS(5)
+  ?strats.canUseBladeDS(3)
     strats.useBladeDS()
 
   ?foe = boss
-    strats.UseAvailableTwoHandedWeapon()
+    activate potion
     equip ice crossbow
     return
 
   ?strats.Speedy()
     return
 
-  ?foe.distance > 20
+  ?foe.distance < 22 & foe.distance > 8
     equip ice crossbow
     return
 
-  ?strats.Dash()
-    return
+  // ?strats.Dash()
+  //   return
 
-  ?foe.distance > 5
+  ?foe.distance > 2
+    equipL vigor wand
     equipR ice wand
-    equipL poison wand
   :
-    strats.UseAvailableTwoHandedWeapon()
+    equipL ice sword
     equipR ice wand
-    equipL ice hammer
-
 
 ?loc = temple
   Temple()

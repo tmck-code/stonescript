@@ -1,0 +1,34 @@
+// checks ---------------------------------------
+// cooldown checks
+
+var structs = import SS/Data/Structs
+
+var _WAND_ABILITIES_MAP = [
+  ["plague",    "poison"],
+  ["reset",     "vigor"],
+  ["calamity",  "aether"],
+  ["explosive", "fire"],
+  ["frost",     "ice"],
+  ["gravity",   "stone"],
+]
+
+var _WAND_ABILITIES = structs.DictKeys(_WAND_ABILITIES_MAP)
+var _WANDS          = structs.DictValues(_WAND_ABILITIES_MAP)
+
+func _matchWand(ability, default)
+  var i = _WAND_ABILITIES.IndexOf(ability)
+  ?i ! -1
+    return _WANDS[i]
+  return default
+
+// public functions -----------------------------
+
+func AnyWandAbility()
+  return item.CanActivate() & armor >= 14
+
+func WandAbility(wand_element)
+  return item.GetCooldown("wand_" + wand_element) = 0
+    ^ & item.CanActivate()
+
+func AbilityOfWand(ability)
+  return WandAbility(_matchWand(ability, "??"))

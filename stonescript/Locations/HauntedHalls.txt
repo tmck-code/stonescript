@@ -6,18 +6,18 @@ var BOSS = false
 var i = 0
 
 func Override()
-  ?foe = boss | foe.count > 2
-    activate potion
-    return true
-  ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate()
-    equipL frost wand +10
-    equipR vigor wand
-    activate potion
-    activate R
-    return true
-
-  equipL frost wand +10
-  equipR vigor wand
+  equipL vigor wand
+  ?foe = boss | foe.distance <= 20
+    equipR poison wand
+  :
+    ?foe.distance > 10
+      equipR tri
+  ?foe = boss
+    ?strats.UseWandAbility("reset", "L")
+      return true
+    :
+      ?strats.UseWandAbility("plague", "R")
+        return true
   return true
 
 func HauntedHalls()
@@ -28,19 +28,14 @@ func HauntedHalls()
   ?Override() = true
     return
 
-  ?strats.canUseBladeDS(2)
-    strats.useBladeDS()
-    return
+  // ?strats.canUseBladeDS(2)
+  //   strats.useBladeDS()
+  //   return
   
   ?strats.MaskOfTheLost()
     return
 
-  ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate()
-    equipR vigor wand
-    activate R
-
   ?foe = boss
-    //  | BOSS = true
     BOSS = true
     ?foe.distance > 8 & foe ! ghost
       equip vigor crossbow
@@ -53,33 +48,25 @@ func HauntedHalls()
   ?strats.Speedy()
     return
 
-  ?Override() = true
+  ?foe.distance > 12
+    ?foe = ghost
+      ?strats.UseWandAbility("reset", "L")
+        return
+    :
+      equip vigor crossbow
+      return
+
+  ?foe.count < 8 & foe ! ghost
+    ?strats.Dash()
+      return
+
+  ?foe.distance > 10
+    equipL tri
+    equipR vigor wand
     return
 
-  ?foe.distance > 8 & foe ! ghost
-    equip vigor crossbow
-    return
-
-  ?strats.Dash()
-    return
-
-  ?foe.distance > 5
-    equipL vigor wand
-    equipR poison wand
-    ?item.GetCooldown("wand_vigor") = 0 & item.CanActivate() & foe.count > 5
-      activate potion
-      activate L
-    equipL vigor wand
-    return
-
-  // ?foe ! immune_to_physical & foe.distance <= 5
-  //   strats.UseWeaponIfReady("heavy_hammer", 10)
-  //   equipL vigor hammer
-  //   equipR compound shield
-  //   return
-
-  equipL poison wand
-  equipR vigor wand
+  equipL vigor wand
+  equipR poison wand
 
 ?loc = halls
   HauntedHalls()

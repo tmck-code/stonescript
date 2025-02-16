@@ -4,13 +4,13 @@ var strats = import SS/Strats
 func Override()
   equipL poison wand +11
   equipR poison wand +10
-  ?strats.UseWandAbility("plague", "L")
+  ?foe = boss & foe = phase2
+    ?strats.UseWandAbility("plague", "L")
+      return true
+  ?foe.distance > 20 & foe ! boss
+    equipR tri
     return true
-  ?foe = boss | foe.count > 2
-    activate potion
-    return true
-  return false
-
+  return true
 
 func FungusForest()
   log.LogStrat(4, "FungusForest", "#green")
@@ -18,17 +18,10 @@ func FungusForest()
   ?Override() = true
     return
 
-  ?strats.canUseBladeDS(3)
-    strats.useBladeDS()
+  // ?strats.canUseBladeDS(3)
+  //   strats.useBladeDS()
 
   ?foe = boss
-    ?foe.distance <= 3 & item.GetCooldown("heavy_hammer") = 0 & item.CanActivate()
-      equip heavy hammer
-      activate R
-      equipR compound shield
-      equipL poison sword
-      return
-
     equip poison crossbow
     return
 

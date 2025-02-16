@@ -1,0 +1,7 @@
+func FindAllIndexes(s, substr)
+  var indexes = []
+  s = string.Break(s, 1)
+  for i = 0 .. s.Count() - 1
+    ?s[i] = substr
+      indexes.Add(i)
+  return indexes

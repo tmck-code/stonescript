@@ -1,0 +1,24 @@
+var gameEngine = import SS/GameEngine
+
+func OnPressed()
+  gameEngine._ToggleAAC()
+
+var BUTTON_AAC = ui.AddButton()
+
+func ButtonAAC()
+  ?loc.begin | loc.loop
+    BUTTON_AAC.anchor = bottom_left
+    BUTTON_AAC.dock = bottom_left
+    BUTTON_AAC.y = BUTTON_AAC.y - 2
+    BUTTON_AAC.text = AAC
+    BUTTON_AAC.h = 3
+    BUTTON_AAC.w = 5
+    BUTTON_AAC.SetPressed(OnPressed)
+  
+  ?gameEngine.AACEnabled()
+     BUTTON_AAC.bcolor = #green
+  :
+    BUTTON_AAC.bcolor = #red
+
+func render()
+  ButtonAAC()

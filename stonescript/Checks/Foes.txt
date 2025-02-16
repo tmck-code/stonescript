@@ -1,0 +1,52 @@
+var FOE_DISTANCE = 0
+var FOE_COUNT = 0
+
+var WATCH_DISTANCE = false
+var WATCH_COUNT = false
+
+func WatchDistance(distance)
+  WATCH_DISTANCE = true
+  FOE_DISTANCE = distance
+
+func WatchCount(count)
+  WATCH_COUNT = true
+  FOE_COUNT = count
+
+// combined -------------------------------------
+
+func Match()
+  return DistanceLte() & CountGte()
+
+// distance -------------------------------------
+
+func DistanceLt()
+  return foe.distance < FOE_DISTANCE
+
+func DistanceLte()
+  return foe.distance <= FOE_DISTANCE
+
+func DistanceGt()
+  return foe.distance > FOE_DISTANCE
+
+func DistanceGte()
+  return foe.distance >= FOE_DISTANCE
+
+func DistanceEq()
+  return foe.distance = FOE_DISTANCE
+
+// count ----------------------------------------
+
+func CountLt()
+  return foe.count < FOE_COUNT
+
+func CountLte()
+  return foe.count <= FOE_COUNT
+
+func CountGt()
+  return foe.count > FOE_COUNT
+
+func CountGte()
+  return foe.count >= FOE_COUNT
+
+func CountEq()
+  return foe.count = FOE_COUNT
