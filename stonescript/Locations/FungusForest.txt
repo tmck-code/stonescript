@@ -1,27 +1,21 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
-func Override()
-  equipL poison wand +11
-  equipR poison wand +10
-  ?foe = boss & foe = phase2
-    ?strats.UseWandAbility("plague", "L")
-      return true
-  ?foe.distance > 20 & foe ! boss
-    equipR tri
-    return true
-  return true
+// func Override()
+//   equipL poison wand +11
+//   equipR poison wand +10
+//   return false
 
 func FungusForest()
   log.LogStrat(4, "FungusForest", "#green")
 
-  ?Override() = true
-    return
-
-  // ?strats.canUseBladeDS(3)
-  //   strats.useBladeDS()
+  ?strats.canUseBladeDS(3)
+    strats.useBladeDS()
 
   ?foe = boss
+    ?foe = phase2
+      ?strats.UseWandAbility("plague", "L")
+        return true
     equip poison crossbow
     return
 
@@ -35,8 +29,8 @@ func FungusForest()
     equip poison crossbow
     return
 
-  // ?strats.Dash()
-  //   return
+  ?strats.Dash()
+    return
 
   ?foe.distance >= 5
     equipR poison wand

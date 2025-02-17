@@ -3,10 +3,13 @@ var gameEngine = import SS/GameEngine
 func OnPressed()
   gameEngine._ToggleAAC()
 
-var BUTTON_AAC = ui.AddButton()
+var BUTTON_AAC = 0
 
 func ButtonAAC()
-  ?loc.begin | loc.loop
+  ?loc.loop
+    return
+  ?loc.begin
+    BUTTON_AAC = ui.AddButton()
     BUTTON_AAC.anchor = bottom_left
     BUTTON_AAC.dock = bottom_left
     BUTTON_AAC.y = BUTTON_AAC.y - 2

@@ -4,27 +4,45 @@ var strats = import SS/Strats
 func DeadWoodValley()
   log.LogStrat(4, "DeadWoodValley", "#green")
 
-  ?foe = boss
+  ?foe = boss & foe = peona
     // equipL crossbow *10 +5
     // equipR crossbow *10 +6
+    ?foe = phase2
+      ?strats.MaskOfTheLost()
+        return
     equip repeating crossbow
     return
+  :?foe = boss & foe ! peona & foe ! xyloalgia
+    ?strats.UseWandAbility("calamity", "L")
+      return
+    ?strats.UseWandAbility("explosive", "L")
+      return
+
+  ?strats.canUseBladeDS(4)
+    strats.useBladeDS()
 
   ?strats.Speedy()
     return
 
   ?foe ! scarab
-    equipR poison wand
-    equipL poison wand +10
+    equip aether crossbow
+    return
+
+  ?strats.UseWandAbility("calamity", "L")
     return
 
   ?strats.Dash()
     return
 
+  ?foe.distance > 5 & foe ! scarab
+    equipR poison wand
+    equipL poison wand +10
+    return
+
   strats.UseWeaponIfReady("bardiche", 10)
   strats.UseWeaponIfReady("heavy_hammer", 10)
-  equipL big aether sword
-  equipR ice hammer
+  equipL poison sword +10
+  equipR vigor sword +11
 
 ?loc = deadwood_valley
   DeadWoodValley()

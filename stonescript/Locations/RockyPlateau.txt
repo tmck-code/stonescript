@@ -1,10 +1,20 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
+func ShouldUseElement(element, element_weapon_choice)
+  // check if foe is immune
+  ?foe.buffs.string = element | foe = element
+    // then check if foe is _not_ immune to the weapon choice
+    ?foe.buffs.string ! element_weapon_choice & foe ! element_weapon_choice
+      >`0,25,#yellow,foe is immune to @element@ but not @element_weapon_choice@
+      return true
+  >`0,25,#red,foe is immune to @element@ and @element_weapon_choice@
+  return false
+
 func Rocky()
   log.LogStrat(4, "Rocky", "#green")
 
-  ?foe ! boss | foe.distance > 30
+  ?foe ! boss | foe.distance > 10
     equipL tri // shovel
     equipR star
     return
@@ -13,39 +23,39 @@ func Rocky()
     ?strats.MaskOfTheLost()
       return true
 
-  ?foe.buffs.string = aether
-    equipR vigor sword +7
+  ?ShouldUseElement("aether", "vigor")
+    equipR vigor sword
     ?strats.UseWandAbility("reset", "L")
       return true
     equipL vigor wand
     return true
-  :?foe.buffs.string = fire
-    equipR aether sword +7
+  :?ShouldUseElement("fire", "aether")
+    equipR aether sword
     ?strats.UseWandAbility("calamity", "L")
       return true
     equipL aether wand
     return true
-  :?foe.buffs.string = ice
-    equipR fire sword +6
+  :?ShouldUseElement("ice", "fire")
+    equipR fire sword
     ?strats.UseWandAbility("explosion", "L")
       return true
     equipL fire wand
     return true
-  :?foe.buffs.string = poison
-    equipR ice sword +6
+  :?ShouldUseElement("poison", "ice")
+    equipR ice sword
     ?strats.UseWandAbility("frost", "L")
       return true
-    equipL ice wand
+    equipL ice hammer
     return true
-  :?foe.buffs.string = vigor
+  :?ShouldUseElement("vigor", "poison")
     equipR poison sword +8
     ?strats.UseWandAbility("plague", "L")
       return true
     equipL poison wand
     return true
 
-  equipR vigor sword +7
-  equipL poison sword +8
+  equip heavy hammer
+  strats.UseWeaponIfReady("heavy_hammer", 12)
 
 ?loc = rocky
   Rocky()

@@ -74,6 +74,8 @@ func _Fmt(value, arr_sep)
   var msg = []
   ?Type(value) ! array
     return string.Format("{0}", value)
+  ?value.Count() = 0
+    return "[]"
 
   for i = 0 .. value.Count()-1
     ?Type(value) = array
@@ -455,6 +457,9 @@ func WriteLogs()
   LogAllBuffsAndDebuffs()
   LogAllStates()
   LogFoeDistance()
-  LogStatesBeforeDamage()
+  // LogStatesBeforeDamage()
 
   // FmtWeaponID(item.left.id)
+  >`0,15,#yellow,@string.Join("\n", string.Break(foe, 30))@
+  >`0,20,#green,@string.Join("\n", string.Break(foe.buffs.string, 40))@
+  >`0,22,#red,@string.Join("\n", string.Break(foe.debuffs.string, 40))@
