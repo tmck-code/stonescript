@@ -41,7 +41,7 @@ func LogLowerRight(x, y, color, message)
   y = y + screen.h
   >`@x@,@y@,@color@,@message@
 
-func LogTopRight(x, y_offset, messages)
+func LogTopRight(y_offset, messages)
   ?messages.Count() = 0
     return
   var longest = 0
@@ -247,7 +247,12 @@ var lastLeftItem = ""
 var lastRightItem = ""
 var lastFoe = ""
 
-func LogAllStates()
+func LogItemStates()
+  // item name    > left name   right name
+  // state (time) > 1 (2)        1 (2)
+  //              > 2 (30)       2 (30)
+  //              > 3 (0)        3 (0)
+  //              > 4 (5)        4 (5)
 
   ?lastLeftItem ! item.left.id | string.Size(item.left.id) = 0
     seenItemStatesLeft.Clear()
@@ -276,9 +281,12 @@ func LogAllStates()
     foeStateTimes.Clear()
     lastFoe = foe.id
   :
-    LogTopRight(-15, 8, [["#yellow", foe.id]])
+    var foe_name = []
+    for line : string.Break(foe, 20)
+      foe_name.Add(["#yellow", line])
+    LogTopRight(5, foe_name)
     var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
-    LogTopRight(-15, 9, foeLines)
+    LogTopRight(5+foe_name.Count(), foeLines)
 
 func cleanBuffString(b, buff_type)
   var idx = string.IndexOf(b, buff_type)
@@ -348,7 +356,7 @@ func FmtBuffs(buff_string, buff_type, colour)
       continue
 
     b = cleanBuffString(b, buff_type)
-    msgs.Add([colour, string.Format("{0} {1}:{2}", c, b, t) ])
+    msgs.Add([colour, string.Format("{0} {1}:{2}", c, b, t)])
     continue
 
   ?msgs.Count() = 0
@@ -439,10 +447,10 @@ func WriteLogs()
     ["#yellow", "AAC", Fmt([AAC_ENABLED])],
   ])
 
-  LogTopRight(-20, 0, [["#green", Fmt([foe.state, foe.time])]])
-  LogTopRight(-20, 1, [["#green", Fmt([FmtBossHealth()]) ]])
+  LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])
+  LogTopRight(1, [["#green", Fmt([FmtBossHealth()]) ]])
 
-  LogTopRight(-15, 2, FmtCooldownLogs([
+  LogTopRight(2, FmtCooldownLogs([
   ^  "bardiche", "quarterstaff", "heavy_hammer",
   ^  "bash", "dash",
   ^  "mind", "hatchet",
@@ -455,11 +463,8 @@ func WriteLogs()
 
   // log buffs and debuffs above the player
   LogAllBuffsAndDebuffs()
-  LogAllStates()
+  LogItemStates()
   LogFoeDistance()
   // LogStatesBeforeDamage()
 
   // FmtWeaponID(item.left.id)
-  >`0,15,#yellow,@string.Join("\n", string.Break(foe, 30))@
-  >`0,20,#green,@string.Join("\n", string.Break(foe.buffs.string, 40))@
-  >`0,22,#red,@string.Join("\n", string.Break(foe.debuffs.string, 40))@
