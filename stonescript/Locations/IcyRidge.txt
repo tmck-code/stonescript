@@ -2,6 +2,9 @@ var log    = import SS/Log
 var strats = import SS/Strats
 
 var needShield = false
+var IS_FINAL_BOSS_STAGE = false
+?loc.loop = true
+  IS_FINAL_BOSS_STAGE = false
 
 func QuickShield()
   // about to be hit! equip the shield
@@ -19,73 +22,56 @@ func QuickShield()
     needShield = false
     return false
 
-func Override()
-  equipL explosive wand
-  equipR vigor wand
-  // ?foe.distance > 20 & (foe ! boss & foe ! ice wall)
-  //   equipR tri
-  ?foe = boss & foe.time > 400
-    ?item.GetCooldown("wand_fire") = 0
-    ^ & item.CanActivate()
-    ^ & armor > 14
-      activate L
-    ?item.GetCooldown("wand_vigor") = 0
-    ^ & item.CanActivate()
-    ^ & armor > 14
-      activate R
-  return false
-
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
-
-  ?Override()
-    return
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
-  ?foe.count > 5
-    ?strats.MaskOfTheLost() = true
-      return
+  ?foe = yeti & !IS_FINAL_BOSS_STAGE
+    IS_FINAL_BOSS_STAGE = true
 
-  ?foe = boss
+  ?IS_FINAL_BOSS_STAGE & foe.time > 400
     ?strats.Speedy() = true
       return
 
-    ?strats.MaskOfTheLost() = true
-      return
+    ?foe.armor <= 0
+      ?strats.MaskOfTheLost() = true
+        return
+    ?hp < 50
+      ?strats.UseWandAbility("explosive", "L")
+        return
+      ?strats.UseWandAbility("calamity", "L")
+        return
+      ?strats.UseWandAbility("reset", "L")
+        return
 
-    ?QuickShield() = true
-      return
-
-    activate potion
-
-    ?item.GetCooldown("wand_fire") = 0 & item.CanActivate()
-      equipL fire wand *9
-      equipR fire wand *10
-      activate R
-      return
-
-    ?foe.distance > 12
-      strats.UseWeaponIfDist("fissure", 18)
-      equip fire crossbow
-      return
-
-    equipL fire sword +8
-    equipR compound shield
+    equip fire wand +12
+    equipR fire wand +11
     return
 
-  ?strats.Speedy() = true
+  ?strats._Speedy(19) = true
     return
 
-  ?foe = ice_elemental | foe.distance > 15 | foe = ice wall
+  ?foe = ice_elemental | foe.distance > 18
     equip fire crossbow
+    return
+  
+  ?foe.distance > 12
+    equipL tri
+    equipR fire wand +12
+    return
+
+
+  ?foe.distance > 5
+    equipR fire wand +11
+    equipL fire wand +12
     return
 
   ?strats.Dash() = true
     return
 
-  equipL fire sword +8
+  equipL fire sword
   equipR compound shield
   return
 

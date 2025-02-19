@@ -22,8 +22,9 @@ func FungusForest()
   ?strats.Speedy()
     return
   
-  ?strats.UseWandAbility("plague", "L")
-    return
+  ?foe.count > 13
+    ?strats.UseWandAbility("plague", "L")
+      return
 
   ?foe.distance > 12
     equip poison crossbow
@@ -41,7 +42,7 @@ func FungusForest()
     return
 
   equipL poison sword
-  equipR compound
+  equipR poison hammer
 
 ?loc = fungus_forest
   FungusForest()
