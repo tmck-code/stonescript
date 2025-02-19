@@ -14,3 +14,29 @@
 | Control     | ability2  | ability2Begin | ability2End |
 | Z           | bumpL     | bumpLBegin    | bumpLEnd    |
 | C           | bumpR     | bumpRBegin    | bumpREnd    |
+
+## Supported Unicode
+
+```
+var AsciiPalette = ascii
+⚿§†☤❄☼☆♂♀°☺ʘ◙◘⏹
+❤♦♣♠♪♫ ↑→↓←▲▶▼◀
+@$%&€£￥₩!¡?¿:;*
+,….·•'＂´`¯-_┊|
+≡=≠≈~÷+±≤≥<>«»^
+/\[]{}()░▒▓█▄▀
+ABCDEFGHIJKLM
+NOPQRSTUVWXYZ
+abcdefghijklm
+nopqrstuvwxyz 
+0123456789
+ãäâáàåÄÅÁÀëêéèÉ
+ïîíìõöôóòÖñüûúù
+ÜýçÇÑ Ææœ∞
+αβγ∆δεέζηΘιλ
+μξπρΣστΦφψΩω
+┌┬┐╔╦╗╒╤╕╓╥╖⌐ ¬ 
+├┼┤╠╬╣╞╪╡╟╫╢║ │ 
+└┴┘╚╩╝╘╧╛╙╨╜═ ─
+asciiend
+```

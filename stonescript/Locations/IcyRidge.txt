@@ -3,8 +3,10 @@ var strats = import SS/Strats
 
 var needShield = false
 var IS_FINAL_BOSS_STAGE = false
+var BOSS_TIME = 0
 ?loc.loop = true
   IS_FINAL_BOSS_STAGE = false
+  BOSS_TIME = 0
 
 func QuickShield()
   // about to be hit! equip the shield
@@ -30,45 +32,41 @@ func IcyRidge()
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
     IS_FINAL_BOSS_STAGE = true
-
-  ?IS_FINAL_BOSS_STAGE & foe.time > 400
+    
+  ?IS_FINAL_BOSS_STAGE
+    BOSS_TIME = BOSS_TIME + 1
     ?strats.Speedy() = true
       return
 
-    ?foe.armor <= 0
+    ?foe.armor <= 0 & BOSS_TIME > 400
       ?strats.MaskOfTheLost() = true
         return
-    ?hp < 50
+
+    ?foe = ice_wall
+      equip fire crossbow
+      return
+
+    ?armor < 60 & BOSS_TIME > 400
       ?strats.UseWandAbility("explosive", "L")
         return
-      ?strats.UseWandAbility("calamity", "L")
+      ?strats.UseWandAbility("plague", "R")
         return
-      ?strats.UseWandAbility("reset", "L")
-        return
+      // ?strats.UseWandAbility("reset", "L")
+      //   return
 
-    equip fire wand +12
-    equipR fire wand +11
+    equip fire crossbow
     return
 
   ?strats._Speedy(19) = true
     return
 
-  ?foe = ice_elemental | foe.distance > 18
+  ?foe = ice_elemental | foe.distance > 12
     equip fire crossbow
     return
-  
-  ?foe.distance > 12
-    equipL tri
-    equipR fire wand +12
-    return
-
 
   ?foe.distance > 5
     equipR fire wand +11
-    equipL fire wand +12
-    return
-
-  ?strats.Dash() = true
+    equipL fire wand +13
     return
 
   equipL fire sword
