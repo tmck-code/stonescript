@@ -382,6 +382,14 @@ func LogAllBuffsAndDebuffs()
   var foeBuffs = FmtBuffs(foe.buffs.string, "buff", "#green")
   var foeDebuffs = FmtBuffs(foe.debuffs.string, "debuff", "#red")
 
+  for part : string.Split(foe, " ")
+    var immunity = string.Sub(part, string.Size("immune_to_"))
+    ?part = "immune"
+      foeBuffs.Add([
+      ^  "#yellow",
+      ^  string.Format("{0} {1}:{2}", "x", immunity, "∞"),
+      ^])
+ 
   LogAbovePlayer(playerBuffs,   -3, -2, -1, "right")
   LogAbovePlayer(playerDebuffs, -3, -1,  1, "right")
   LogAbovePlayer(foeBuffs,       4, -2, -1, "left")
