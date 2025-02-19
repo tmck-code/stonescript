@@ -38,6 +38,8 @@ func IcyRidge()
     ?strats.Speedy() = true
       return
 
+    activate potion
+
     ?foe.armor <= 0 & BOSS_TIME > 400
       ?strats.MaskOfTheLost() = true
         return

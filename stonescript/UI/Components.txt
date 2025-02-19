@@ -6,9 +6,7 @@ func OnPressed()
 var BUTTON_AAC = 0
 
 func ButtonAAC()
-  ?loc.loop
-    return
-  ?loc.begin
+  ?loc.begin | loc.loop
     BUTTON_AAC = ui.AddButton()
     BUTTON_AAC.anchor = bottom_left
     BUTTON_AAC.dock = bottom_left
