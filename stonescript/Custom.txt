@@ -3,7 +3,9 @@ var log = import SS/Log
 var strats = import SS/Strats
 var gameEngine = import SS/GameEngine
 var Components = import SS/UI/Components
+var Buffs = import SS/Checks/Buffs
 
+Buffs._UpdateBuffs()
 Components.render()
 
 // enable AAC (Attack Animation Cancel) ---------
@@ -14,7 +16,6 @@ log.LogAAC(gameEngine.AACEnabled())
 
 // auto-actions -----------------------------------
 strats._AutoPotion(45)                    // enable auto-heal (via potions)
-strats._LootStar(30)                      // enable bonus loot with star stone
 strats._ListenForBladeTrigger(rightBegin) // trigger blade of the fallen god by pressing "right"
 log._ShowWeapons(ability1)         // show weapons by holding "shift"
 gameEngine._ToggleRemoteCache(upBegin)    // toggle remote caching of scripts by pressing "up"
@@ -28,5 +29,7 @@ import SS/Locations/HauntedHalls
 import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
+
+strats._LootStar(30)                      // enable bonus loot with star stone
 
 log.WriteLogs()

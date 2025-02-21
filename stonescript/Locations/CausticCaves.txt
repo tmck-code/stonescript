@@ -2,13 +2,15 @@ var log = import SS/Log
 var strats = import SS/Strats
 var canUse = import SS/Checks/CanUse
 
+var buffs = import SS/Checks/Buffs
+
 
 var BUTTON_MORE_MAX_DISTANCE = 0
 var BUTTON_LESS_MAX_DISTANCE = 0
 var BUTTON_MORE_MIN_DISTANCE = 0
 var BUTTON_LESS_MIN_DISTANCE = 0
-var MAX_DISTANCE = 20
-var MIN_DISTANCE = 2
+var MAX_DISTANCE = 10
+var MIN_DISTANCE = 3
 
 func DecreaseMaxDistance()
   MAX_DISTANCE = MAX_DISTANCE - 1
@@ -85,7 +87,7 @@ var foeState = 0
 func Caves()
   log.LogStrat(4, "Caves "+loc.stars+"☆", "#green")
 
-  ?strats.canUseBladeDS(2)
+  ?strats.canUseBladeDS(1)
     strats.useBladeDS()
 
   ?foe = spider_boss
@@ -93,35 +95,47 @@ func Caves()
 
   ?IS_FINAL_BOSS_STAGE
     BOSS_TIME = BOSS_TIME + 1
-    ?BOSS_TIME > 800
-      ?armor < 14
-        activate potion
-      ?strats.UseWandAbility("explosive", "L")
+    ?BOSS_TIME > 400 & foe.hp > 0
+      ?strats.MaskOfTheLost()
         return
-      ?strats.UseWandAbility("frost", "R")
-        return
+      // ?strats.UseWandAbility("explosive", "L")
+      //   return
+      // ?strats.UseWandAbility("plague", "R")
+      //   return
+      // ?foe.buffs.string = damage
+      // ?buffs.GetFoeBuffLevel("damage") >= 2
+      //   ?strats.UseWandAbility("reset", "R")
+      //     return
     equip ice crossbow
     return
+    ?buffs.GetFoeDebuffLevel("chill") >= 2
+      equip ice crossbow
+      return
+    :
+      equipR ice wand
+      equipL fire wand +11 df
+      return
 
-  ?strats.Speedy()
+  ?strats._Speedy(22)
     return
 
   ?foe.count > 8
     ?armor > 14
       ?strats.UseWandAbility("calamity", "L")
         return
-    :
-      equip ice wand
-      equip frost wand
-      return
 
-  ?foe.distance >= MAX_DISTANCE & foe.count < 8
+  equipL ice wand
+  equipR tri
+  return
+
+  // ?foe.distance >= MAX_DISTANCE | foe.hp > 80 | foe = tiny_spider
+  ?foe.distance > MAX_DISTANCE | foe.hp > 80
     equip ice crossbow
     return
 
   ?foe.distance >= MIN_DISTANCE
     equipL ice wand
-    equipR vigor wand
+    equipR tri
     return
 
   equipL ice hammer

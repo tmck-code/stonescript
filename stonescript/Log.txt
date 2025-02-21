@@ -9,9 +9,7 @@ func longestLength(l)
 func LogStrat(y, l, colour)
   >`0,0,@colour@,strat: @l@
 
-// e.g. LogStrat(["#red", "attack"], 0, "right", -1)
-// umm, does that example seem correct?
-
+// e.g. LogAbovePlayer(["#red", "attack"], 0, 0, "right")
 func LogAbovePlayer(l, x_offset, y_offset, increment, alignment)
   ?l.Count() = 0
     return
@@ -21,7 +19,7 @@ func LogAbovePlayer(l, x_offset, y_offset, increment, alignment)
     var msg = l[i][1]
     var y = (i*increment)+y_offset
     ?alignment = "right"
-      >o@x_offset-string.Size(msg))@,@y@,@colour@,@msg@
+      >o@x_offset-string.Size(msg)@,@y@,@colour@,@msg@
     :?alignment = "left"
       >o@x_offset@,@y@,@colour@,@msg@
 
@@ -98,6 +96,16 @@ func FmtSafeJoin(sep, data)
 
 func Fmt(data)
   return FmtSafeJoin(" ", data)
+
+func AddColourToLogs(logs, colour)
+  ?logs.Count() = 0
+    return []
+  var newLogs = []
+  for i = 0 .. logs.Count()-1
+    var l = logs[i]
+    newLogs.Add([colour, l])
+    // >`0,0,#yellow,adding colour @colour@ to @l@
+  return newLogs
 
 // returns an array of [color, message, remainingCooldown]
 func FmtCooldownLog(weapon)
@@ -284,6 +292,8 @@ func LogItemStates()
     var foe_name = []
     for line : string.Break(foe, 20)
       foe_name.Add(["#yellow", line])
+    for line : string.Split(foe.buffs.string, 20)
+      foe_name.Add(["#green", line])
     LogTopRight(5, foe_name)
     var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
     LogTopRight(5+foe_name.Count(), foeLines)
@@ -307,9 +317,8 @@ func cleanBuffString(b, buff_type)
   return string.Sub(b, idx+(buffLen+1))
 
 // Formats a string of buffs or debuffs, returning 
-// - an array of [color, message] tuples,
-// - the longest message size, to use for right-aligning messages
-func FmtBuffs(buff_string, buff_type, colour)
+// - an array of individual buffs or debuffs,
+func FmtBuffs(buff_string, buff_type)
   var bfs = []
   var msgs = []
 
@@ -325,12 +334,10 @@ func FmtBuffs(buff_string, buff_type, colour)
       bfs = string.Split(buff_string, ",")
 
   var t = ""
+  var lvl = ""
   var b = ""
-  var c = ""
+  var symbol = ""
   var buffTypeLen = string.Size(buff_type)
-  // var debuffLen = string.Size("debuff")
-  // var buffLen = string.Size("buff")
-
   ?bfs.Count() = 0
     return []
 
@@ -344,8 +351,9 @@ func FmtBuffs(buff_string, buff_type, colour)
 
     ?string.IndexOf(bfs[i], ":") ! -1
       var parts = string.Split(bfs[i], ":")
-      c = parts[0]
+      symbol = parts[0]
       b = parts[1]
+      lvl = parts[2]
       t = parts[3]
     :
       // otherwise, the buff is formatted as
@@ -356,7 +364,7 @@ func FmtBuffs(buff_string, buff_type, colour)
       continue
 
     b = cleanBuffString(b, buff_type)
-    msgs.Add([colour, string.Format("{0} {1}:{2}", c, b, t)])
+    msgs.Add(string.Format("{0}·{1} {2}:{3}", symbol, lvl, b, t))
     continue
 
   ?msgs.Count() = 0
@@ -365,10 +373,10 @@ func FmtBuffs(buff_string, buff_type, colour)
   return msgs
 
 func FmtBossHealth()
+  var hpPercent = 0
   ?foe = boss & foe.hp > 0
-    return string.Format("{0}/{1} {2}%", foe.hp, foe.maxhp, foe.hp*100/foe.maxhp)
-  :
-    return string.Format("{0}/{1} {2}%", foe.hp, foe.maxhp, 0)
+    hpPercent = foe.hp*100/foe.maxhp
+  return string.Format("{0}/{1} {2}%", foe.hp, foe.maxhp, hpPercent)
 
 
 // --------------------------
@@ -376,11 +384,11 @@ func FmtBossHealth()
 
 func LogAllBuffsAndDebuffs()
   // [colour,msg] tuples
-  var playerBuffs = FmtBuffs(buffs.string, "buff", "#green")
-  var playerDebuffs = FmtBuffs(debuffs.string, "debuff", "#red")
+  var playerBuffs = AddColourToLogs(FmtBuffs(buffs.string, "buff"), "#green")
+  var playerDebuffs = AddColourToLogs(FmtBuffs(debuffs.string, "debuff"), "#red")
 
-  var foeBuffs = FmtBuffs(foe.buffs.string, "buff", "#green")
-  var foeDebuffs = FmtBuffs(foe.debuffs.string, "debuff", "#red")
+  var foeBuffs = AddColourToLogs(FmtBuffs(foe.buffs.string, "buff"), "#green")
+  var foeDebuffs = AddColourToLogs(FmtBuffs(foe.debuffs.string, "debuff"), "#red")
 
   for part : string.Split(foe, " ")
     ?part = "immune"

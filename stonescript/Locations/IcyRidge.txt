@@ -1,5 +1,8 @@
 var log    = import SS/Log
 var strats = import SS/Strats
+var buffs = import SS/Checks/Buffs
+
+buffs._UpdateBuffs()
 
 var needShield = false
 var IS_FINAL_BOSS_STAGE = false
@@ -7,6 +10,10 @@ var BOSS_TIME = 0
 ?loc.loop = true
   IS_FINAL_BOSS_STAGE = false
   BOSS_TIME = 0
+
+>`0,10,#white,BOSS_TIME @IS_FINAL_BOSS_STAGE@ @BOSS_TIME@
+>`0,11,#white,dot: @buffs.GetFoeBuffLevel("dot")@
+
 
 func QuickShield()
   // about to be hit! equip the shield
@@ -27,12 +34,12 @@ func QuickShield()
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
 
-  ?strats.canUseBladeDS(2)
+  ?strats.canUseBladeDS(1)
     strats.useBladeDS()
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
     IS_FINAL_BOSS_STAGE = true
-    
+
   ?IS_FINAL_BOSS_STAGE
     BOSS_TIME = BOSS_TIME + 1
     ?strats.Speedy() = true
@@ -44,7 +51,7 @@ func IcyRidge()
       ?strats.MaskOfTheLost() = true
         return
 
-    ?foe = ice_wall
+    ?foe = ice_pillar
       equip fire crossbow
       return
 
@@ -55,11 +62,24 @@ func IcyRidge()
         return
       // ?strats.UseWandAbility("reset", "L")
       //   return
-
-    equip fire crossbow
-    return
+    ?buffs.GetFoeDebuffLevel("dot") < 1
+      equipR fire wand
+      equipL fire wand +11 df
+      return
+    :
+      equip fire crossbow
+      return
 
   ?strats._Speedy(19) = true
+    return
+
+  ?foe.count > 8
+    equipR fire talisman
+    equipL fire wand +13
+
+  ?foe = ice_pillar & foe.count < 4
+    equipR fire wand
+    equipL fire wand +11 df
     return
 
   ?foe = ice_elemental | foe.distance > 12
@@ -67,7 +87,7 @@ func IcyRidge()
     return
 
   ?foe.distance > 5
-    equipR fire wand +11
+    equipR fire wand +11 df
     equipL fire wand +13
     return
 

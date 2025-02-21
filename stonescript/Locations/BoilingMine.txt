@@ -24,8 +24,8 @@ func BoilingMine()
   ?Override() = true
     return
 
-  // ?strats.canUseBladeDS(2)
-  //   strats.useBladeDS()
+  ?strats.canUseBladeDS(3)
+    strats.useBladeDS()
 
   ?foe = boss
     ?strats.MaskOfTheLost() = true
@@ -42,6 +42,10 @@ func BoilingMine()
   ?foe.distance > 22
     equipL tri
     return
+
+  ?foe.count > 8
+    ?strats.UseWandAbility("calamity", "L")
+      return true
 
   ?((foe = slave_master | foe = elemental) & foe.distance > 10)
     equip aether crossbow
