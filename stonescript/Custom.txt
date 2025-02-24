@@ -1,7 +1,14 @@
 // import shared strategies & utils --------------
+var gameEngine = import SS/GameEngine
+
+?gameEngine.CustomStonescriptEnabled() = false
+  >`0,0,#red,Custom Stonescripts disabled
+  return
+// :
+//   >`0,0,#green,Custom Stonescripts enabled
+
 var log = import SS/Log
 var strats = import SS/Strats
-var gameEngine = import SS/GameEngine
 var Components = import SS/UI/Components
 var Buffs = import SS/Checks/Buffs
 
@@ -11,14 +18,18 @@ Components.render()
 // enable AAC (Attack Animation Cancel) ---------
 // enable faster attack speed
 gameEngine.AAC()
-gameEngine.ToggleAAC(downBegin)
 log.LogAAC(gameEngine.AACEnabled())
 
 // auto-actions -----------------------------------
-strats._AutoPotion(45)                    // enable auto-heal (via potions)
-strats._ListenForBladeTrigger(rightBegin) // trigger blade of the fallen god by pressing "right"
-log._ShowWeapons(ability1)         // show weapons by holding "shift"
-gameEngine._ToggleRemoteCache(upBegin)    // toggle remote caching of scripts by pressing "up"
+strats._AutoPotion(45)                        // enable auto-heal (via potions)
+strats._LootStar(30)                          // enable bonus loot with star stone
+
+// keybinds ---------------------------------------
+strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
+log._ShowWeapons(ability1)                    // show weapons by holding "shift"
+gameEngine.ToggleAAC(downBegin)
+gameEngine.ToggleRemoteCache(upBegin)        // toggle remote caching of scripts by pressing "up"
+gameEngine.ToggleCustomStonescript(leftBegin) // toggle custom stonescript by pressing "left"
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau
@@ -30,6 +41,5 @@ import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
 
-strats._LootStar(30)                      // enable bonus loot with star stone
 
 log.WriteLogs()

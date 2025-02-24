@@ -1,15 +1,20 @@
-var AAC_ENABLED = true
+// each feature should provide at least 3 methods:
+// - <FeatureName>Enabled() -> bool        > returns if the feature is enabled
+// - _<FeatureName>Toggle() -> void       > toggles the feature
+// - <FeatureName>Toggle(keybind) -> void  > toggles the feature when the keybind is pressed
 
-func _ToggleRemoteCache(keybind)
+// remote caching --------------------------------
+
+func ToggleRemoteCache(keybind)
   ?key = keybind
     sys.cacheRemoteFiles = !sys.cacheRemoteFiles
     >0,10,Remote caching @sys.cacheRemoteFiles@
 
-// Use the "up" key to toggle remote caching of scripts on & off
-func ToggleRemoteCache()
-  _ToggleRemoteCache(upBegin)
+// Attack Animation Cancel ------------------------
 
-func _AttackAnimationCancel()
+var AAC_ENABLED = true
+
+func AAC()
   ?AAC_ENABLED = false
     return
   ?item.left.state = 3
@@ -19,17 +24,28 @@ func _AttackAnimationCancel()
     equipR *0 shield //trash
     equip @item.right@
 
-func AAC()
-  _AttackAnimationCancel()
-
 func AACEnabled()
   return AAC_ENABLED
 
-func _ToggleAAC()
+func _AACToggle()
   AAC_ENABLED = !AAC_ENABLED
   >0,10,AAC_ENABLED: @AAC_ENABLED@
 
-// Use the "down" key to toggle cancelling the attack animation
-func ToggleAAC(keybind)
+func AACToggle(keybind)
   ?key = keybind
     _ToggleAAC()
+
+// Loading Custom Stonescript ---------------------
+
+var CUSTOM_STONESCRIPT_ENABLED = true
+
+func CustomStonescriptEnabled()
+  return CUSTOM_STONESCRIPT_ENABLED
+
+func _ToggleCustomStonescript()
+  CUSTOM_STONESCRIPT_ENABLED = !CUSTOM_STONESCRIPT_ENABLED
+  >0,10,CUSTOM_STONESCRIPT_ENABLED: @CUSTOM_STONESCRIPT_ENABLED@
+
+func ToggleCustomStonescript(keybind)
+  ?key = keybind
+    _ToggleCustomStonescript()

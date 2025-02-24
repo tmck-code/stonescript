@@ -1,9 +1,7 @@
 var gameEngine = import SS/GameEngine
 
-func OnPressed()
-  gameEngine._ToggleAAC()
-
 var BUTTON_AAC = 0
+var BUTTON_LOAD_CUSTOM_STONESCRIPT = 0
 
 func ButtonAAC()
   ?loc.begin | loc.loop
@@ -14,12 +12,36 @@ func ButtonAAC()
     BUTTON_AAC.text = AAC
     BUTTON_AAC.h = 3
     BUTTON_AAC.w = 5
-    BUTTON_AAC.SetPressed(OnPressed)
+    BUTTON_AAC.SetPressed(gameEngine._ToggleAAC)
   
   ?gameEngine.AACEnabled()
      BUTTON_AAC.bcolor = #green
   :
     BUTTON_AAC.bcolor = #red
 
+func ToggleCustomStonescript(btn)
+  ?gameEngine.CustomStonescriptEnabled()
+    btn.bcolor = #red
+  :
+    btn.bcolor = #green
+  gameEngine._ToggleCustomStonescript()
+
+func ButtonLoadCustomStonescript()
+  ?loc.begin | loc.loop
+    BUTTON_LOAD_CUSTOM_STONESCRIPT = ui.AddButton()
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.anchor = bottom_left
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.dock = bottom_left
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.y = BUTTON_LOAD_CUSTOM_STONESCRIPT.y -5
+
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.text = "Custom"
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.h = 3
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.w = 7
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.SetPressed(ToggleCustomStonescript)
+    ?gameEngine.CustomStonescriptEnabled()
+      BUTTON_LOAD_CUSTOM_STONESCRIPT.bcolor = #green
+    :
+      BUTTON_LOAD_CUSTOM_STONESCRIPT.bcolor = #red
+
 func render()
   ButtonAAC()
+  ButtonLoadCustomStonescript()

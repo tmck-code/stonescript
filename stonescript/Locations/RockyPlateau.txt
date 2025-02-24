@@ -1,14 +1,24 @@
 var log = import SS/Log
 var strats = import SS/Strats
+var buffs = import SS/Checks/Buffs
+
+func FoeImmuneTo(element)
+  ?string.IndexOf(foe.buffs.string, string.Format("adaptive_defense_{0}", element)) > 0
+    return true
+  ?string.IndexOf(foe.buffs.string, element) > 0
+    return true
+  return false
 
 func ShouldUseElement(element, element_weapon_choice)
   // check if foe is immune
-  ?foe.buffs.string = element | foe = element
+  ?FoeImmuneTo(element)
     // then check if foe is _not_ immune to the weapon choice
-    ?foe.buffs.string ! element_weapon_choice & foe ! element_weapon_choice
+    ?!FoeImmuneTo(element_weapon_choice)
       >`0,25,#yellow,foe is immune to @element@ but not @element_weapon_choice@
       return true
-  >`0,25,#red,foe is immune to @element@ and @element_weapon_choice@
+    :
+      >`0,25,#red,foe is immune to @element@ and @element_weapon_choice@: @foe.buffs.string@
+  // >`0,25,#green,@string.IndexOf(foe.buffs.string, "❤")@
   return false
 
 func Rocky()
@@ -22,40 +32,54 @@ func Rocky()
   ?foe = phase3
     ?strats.MaskOfTheLost()
       return true
+  
+  ?armor > 14
+    ?strats.UseWandAbility("explode", "L")
+      return
 
-  ?ShouldUseElement("aether", "vigor")
-    equipR vigor sword
-    ?strats.UseWandAbility("reset", "L")
-      return true
-    equipL vigor wand
-    return true
-  :?ShouldUseElement("fire", "aether")
-    equipR aether sword
-    ?strats.UseWandAbility("calamity", "L")
-      return true
-    equipL aether wand
-    return true
-  :?ShouldUseElement("ice", "fire")
-    equipR fire sword
-    ?strats.UseWandAbility("explosion", "L")
-      return true
-    equipL fire wand
-    return true
-  :?ShouldUseElement("poison", "ice")
+  ?!FoeImmuneTo("poison")
+    equipL poison sword dP
+  ?!FoeImmuneTo("ice")
     equipR ice sword
-    ?strats.UseWandAbility("frost", "L")
-      return true
-    equipL ice hammer
-    return true
-  :?ShouldUseElement("vigor", "poison")
-    equipR poison sword +8
-    ?strats.UseWandAbility("plague", "L")
-      return true
-    equipL poison wand
-    return true
+  ?!FoeImmuneTo("fire")
+    equipL fire sword
+  ?!FoeImmuneTo("aether")
+    equipR aether sword
+  ?!FoeImmuneTo("vigor") & !FoeImmuneTo("❤")
+    equipR vigor sword dL
 
-  equip heavy hammer
-  strats.UseWeaponIfReady("heavy_hammer", 12)
+  // :?ShouldUseElement("fire", "aether")
+  //   equipR aether sword
+  //   ?strats.UseWandAbility("calamity", "L")
+  //     return true
+  //   equipL aether wand
+  //   return true
+  // :?ShouldUseElement("ice", "fire")
+  //   equipR fire sword
+  //   ?strats.UseWandAbility("explosion", "L")
+  //     return true
+  //   equipL fire wand
+  //   return true
+  // :?ShouldUseElement("poison", "ice")
+  //   equipR ice sword
+  //   ?strats.UseWandAbility("frost", "L")
+  //     return true
+  //   equipL ice hammer
+  //   return true
+  // :?ShouldUseElement("vigor", "poison")
+  //   equipR poison sword dP
+  //   ?strats.UseWandAbility("plague", "L")
+  //     return true
+  //   equipL poison wand
+  //   return true
+
+  ?foe.armor > 0
+    equip heavy hammer +11
+    strats.UseWeaponIfReady("heavy_hammer", 12)
+    return
+  // :
+  //   equipL vigor sword dL
+  //   equipR poison sword dP
 
 ?loc = rocky
   Rocky()

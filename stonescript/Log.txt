@@ -292,8 +292,6 @@ func LogItemStates()
     var foe_name = []
     for line : string.Break(foe, 20)
       foe_name.Add(["#yellow", line])
-    for line : string.Split(foe.buffs.string, 20)
-      foe_name.Add(["#green", line])
     LogTopRight(5, foe_name)
     var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
     LogTopRight(5+foe_name.Count(), foeLines)

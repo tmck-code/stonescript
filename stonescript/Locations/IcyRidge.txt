@@ -7,12 +7,11 @@ buffs._UpdateBuffs()
 var needShield = false
 var IS_FINAL_BOSS_STAGE = false
 var BOSS_TIME = 0
-?loc.loop = true
-  IS_FINAL_BOSS_STAGE = false
-  BOSS_TIME = 0
+// ?loc.loop = true
+//   IS_FINAL_BOSS_STAGE = false
+//   BOSS_TIME = 0
 
->`0,10,#white,BOSS_TIME @IS_FINAL_BOSS_STAGE@ @BOSS_TIME@
->`0,11,#white,dot: @buffs.GetFoeBuffLevel("dot")@
+// >`0,10,#white,BOSS_TIME @IS_FINAL_BOSS_STAGE@ @BOSS_TIME@
 
 
 func QuickShield()

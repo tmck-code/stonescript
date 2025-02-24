@@ -80,7 +80,7 @@ var BOSS_TIME = 0
   IS_FINAL_BOSS_STAGE = false
   BOSS_TIME = 0
 
->`0,10,#white,BOSS_TIME @IS_FINAL_BOSS_STAGE@ @BOSS_TIME@
+// >`0,10,#white,BOSS_TIME @IS_FINAL_BOSS_STAGE@ @BOSS_TIME@
 
 var foeState = 0
 
