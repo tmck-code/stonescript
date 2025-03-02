@@ -5,7 +5,7 @@
 
 // remote caching --------------------------------
 
-func ToggleRemoteCache(keybind)
+func RemoteCacheToggle(keybind)
   ?key = keybind
     sys.cacheRemoteFiles = !sys.cacheRemoteFiles
     >0,10,Remote caching @sys.cacheRemoteFiles@
@@ -33,7 +33,7 @@ func _AACToggle()
 
 func AACToggle(keybind)
   ?key = keybind
-    _ToggleAAC()
+    _AACToggle()
 
 // Loading Custom Stonescript ---------------------
 
@@ -42,10 +42,10 @@ var CUSTOM_STONESCRIPT_ENABLED = true
 func CustomStonescriptEnabled()
   return CUSTOM_STONESCRIPT_ENABLED
 
-func _ToggleCustomStonescript()
+func _CustomStonescriptToggle()
   CUSTOM_STONESCRIPT_ENABLED = !CUSTOM_STONESCRIPT_ENABLED
   >0,10,CUSTOM_STONESCRIPT_ENABLED: @CUSTOM_STONESCRIPT_ENABLED@
 
-func ToggleCustomStonescript(keybind)
+func CustomStonescriptToggle(keybind)
   ?key = keybind
-    _ToggleCustomStonescript()
+    _CustomStonescriptToggle()

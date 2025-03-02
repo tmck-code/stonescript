@@ -6,8 +6,18 @@ func longestLength(l)
     longest = math.Max(longest, string.Size(l[i]))
   return longest
 
+
+var ELEMENT_NAMES =   ["vigor", "ice", "fire", "poison", "aether", "stone"]
+var ELEMENT_SYMBOLS = ["❤",     "❄",   "φ",    "∞",       "*",     "ʘ"]
+
+func ElementSymbol(elementName)
+  var i = ELEMENT_NAMES.IndexOf(string.ToLower(elementName))
+  ?i ! -1
+    return ELEMENT_SYMBOLS[i]
+  return "?"
+
 func LogStrat(y, l, colour)
-  >`0,0,@colour@,strat: @l@
+  >`0,@y@,@colour@,strat: @l@
 
 // e.g. LogAbovePlayer(["#red", "attack"], 0, 0, "right")
 func LogAbovePlayer(l, x_offset, y_offset, increment, alignment)
@@ -23,12 +33,13 @@ func LogAbovePlayer(l, x_offset, y_offset, increment, alignment)
     :?alignment = "left"
       >o@x_offset@,@y@,@colour@,@msg@
 
-func LogTopLeft(l)
+func LogTopLeft(y_offset, l)
+  ?l.Count() = 0
+    return
   for i = 0 .. l.Count()-1
     var colour = l[i][0]
-    var k = l[i][1]
-    var value = l[i][2]
-    >`0,@i+1@,@colour@,@k@: @value@
+    var msg = l[i][1]
+    >`0,@y_offset+i+1@,@colour@,@msg@
 
 func LogLowerLeft(x, y, color, message)
   y = y + screen.h
@@ -85,14 +96,30 @@ func _Fmt(value, arr_sep)
 func FmtValue(value)
   return _Fmt(value, ",")
 
-// FmtSafeJoin provides a "safe" way to join an array
-// of any type. It avoids the error:
 func FmtSafeJoin(sep, data)
+  var msg = []
   ?Type(data) ! array
     >`0,@screen.h-3@,#red,⚠ FmtSafeJoin(sep='@sep@' data='@data@')
     >`0,@screen.h-2@,#red,- data type '@Type(data)@' != 'array'
     return ""
-  return _Fmt(data, sep)
+  
+  ?data.Count() = 0
+    return ""
+  for i = 0 .. data.Count()-1
+    ?Type(data[i]) = array
+      msg.Add(_Fmt(data[i], sep))
+    :
+      msg.Add(string.Format("{0}", data[i]))
+  return string.Join(sep, msg)
+
+// FmtSafeJoin provides a "safe" way to join an array
+// of any type. It avoids the error:
+// func FmtSafeJoin(sep, data)
+//   ?Type(data) ! array
+//     >`0,@screen.h-3@,#red,⚠ FmtSafeJoin(sep='@sep@' data='@data@')
+//     >`0,@screen.h-2@,#red,- data type '@Type(data)@' != 'array'
+//     return ""
+//   return _Fmt(data, sep)
 
 func Fmt(data)
   return FmtSafeJoin(" ", data)
@@ -110,25 +137,25 @@ func AddColourToLogs(logs, colour)
 // returns an array of [color, message, remainingCooldown]
 func FmtCooldownLog(weapon)
   var remaining = item.GetCooldown(weapon)
-  var msg = string.Format("{0}: {1}", weapon, remaining)
+  var msg = string.Format("{0,4} {1}", remaining, weapon)
   ?!item.CanActivate()
-    return ["#red", msg, remaining]
+    return [["#red", msg], remaining]
   :?remaining > 200
-    return ["#red", msg, remaining]
+    return [["#red", msg], remaining]
   :?remaining > 100 & remaining <= 200
     // orange
-    return [color.FromRGB(255,102,0), msg, remaining]
+    return [[color.FromRGB(255,102,0), msg], remaining]
   :?remaining > 0
-    return ["#yellow", msg, remaining]
+    return [["#yellow", msg], remaining]
   :
-    return ["#green", msg, remaining]
+    return [["#green", msg], remaining]
 
 func FmtCooldownLogs(weapon_ids)
   var logs = []
   for i = 0 .. weapon_ids.Count()-1
     var formatted = FmtCooldownLog(weapon_ids[i])
-    ?formatted[2] > 0
-      logs.Add(formatted)
+    ?formatted[1] > 0
+      logs.Add(formatted[0])
   return logs
 
 // weapon formatting --------
@@ -143,7 +170,8 @@ var strings = import SS/Data/Strings
 func _ShowWeapons(keybind)
   var matches = strings.FindAllIndexes(item.left.id, "_")
   ?key = keybind
-    >`0,14,#yellow,l:(@Fmt(matches)@)\n  @FmtItemIDBasic(item.left.id)@\n\nr:@FmtItemIDBasic(item.right.id)@
+    >`0,4,#yellow,l:(@Fmt(matches)@)\n  @FmtItemIDBasic(item.left.id)@\n\nr:@FmtItemIDBasic(item.right.id)@
+    >`0,14,#white,f:@string.Join("\n", string.Break(foe, 20))@
 
 func ShowWeapons()
   _ShowWeapons(ability1)
@@ -188,6 +216,54 @@ func FmtWeaponID(weapon_id)
   var enchantParts = string.Split(enchant, "_")
 
   return string.Join("\n", parts)
+
+
+// --------------------------------------------------
+var ELEMENT_FILTERS = ["Poison", "Vigor", "AEther", "Fire", "Ice", "stone",]
+var SEARCH_FILTERS = [
+^  "Poison", "Vigor", "Aether", "Fire", "Ice",
+^  "arachnid", "serpent", "insect", "machine", "humanoid", "elemental",
+^  "boss", "phase1", "phase2", "phase3",
+^  "spawner", "flying", "slow", "ranged", "explode", "swarm",
+^  "unpushable", "undamageable", "magic_resist", "magic_vulnerability",
+^  "immune_to_stun", "immune_to_ranged", "immune_to_debuff_damage", "immune_to_physical",
+^]
+
+// returns an array of [foeName, foeID, element, filters, immunities]
+func FmtFoeName(foe_name)
+  ?string.Size(foe_name) = 0
+    return ["", "", "", "", ""]
+  var parts = string.Split(foe_name, " ")
+  var tagIdx = -1
+
+  for i = 0 .. parts.Count()-1
+    ?ELEMENT_FILTERS.Contains(parts[i])
+      tagIdx = i
+      break
+
+  var foe_id = parts[0]
+  ?tagIdx = -1
+    return [foe_id, "", "", parts, ""]
+  var nameParts = []
+  var filterParts = []
+  var foeName = ""
+  var element = parts[tagIdx]
+  var immunities = []
+
+  ?tagIdx - 1 >= 1
+    for j = 1 .. tagIdx-1
+      nameParts.Add(parts[j])
+    foeName = string.Join(" ", nameParts)
+
+  ?(tagIdx+1) < parts.Count()-1
+    for j = tagIdx+1 .. parts.Count()-1
+      ?string.IndexOf(parts[j], "immune_to_") = 0
+        immunities.Add(parts[j])
+      :
+        filterParts.Add(parts[j])
+  var allParts = [foeName, foe_id, ElementSymbol(element), string.Join(":", filterParts), string.Join(":", immunities)]
+
+  return allParts
 
 // --------------------------------------------------
 // State Formatting
@@ -269,9 +345,9 @@ func LogItemStates()
   :
     var leftItemLines = CollectStates(item, item.left.state, item.left.time, seenItemStatesLeft, itemStateTimesLeft)
     ?leftItemLines.Count() > 0
-      >`0,4,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+      >`0,5,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
       for i = 0 .. leftItemLines.Count()-1
-        >`0,@i+5@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
+        >`0,@i+6@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
 
   ?lastRightItem ! item.right.id | string.Size(item.right.id) = 0
     seenItemStatesRight.Clear()
@@ -280,21 +356,18 @@ func LogItemStates()
   :
     var rightItemLines = CollectStates(item, item.right.state, item.right.time, seenItemStatesRight, itemStateTimesRight)
     ?rightItemLines.Count() > 0
-      >`6,4,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+      >`6,5,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
       for i = 0 .. rightItemLines.Count()-1
-        >`6,@i+5@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
+        >`6,@i+6@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
 
+func LogFoeStates(x_offset)
   ?lastFoe ! foe.id | string.Size(foe.id) = 0
     seenFoeStates.Clear()
     foeStateTimes.Clear()
     lastFoe = foe.id
   :
-    var foe_name = []
-    for line : string.Break(foe, 20)
-      foe_name.Add(["#yellow", line])
-    LogTopRight(5, foe_name)
     var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
-    LogTopRight(5+foe_name.Count(), foeLines)
+    LogTopRight(x_offset, foeLines)
 
 func cleanBuffString(b, buff_type)
   var idx = string.IndexOf(b, buff_type)
@@ -372,8 +445,13 @@ func FmtBuffs(buff_string, buff_type)
 
 func FmtBossHealth()
   var hpPercent = 0
-  ?foe = boss & foe.hp > 0
-    hpPercent = foe.hp*100/foe.maxhp
+  ?foe = boss
+    ?foe.hp > 0
+      hpPercent = foe.hp*100/foe.maxhp
+    :
+      return ""
+  :
+    return ""
   return string.Format("{0}/{1} {2}%", foe.hp, foe.maxhp, hpPercent)
 
 
@@ -407,6 +485,18 @@ func LogFoeDistance()
   ?foe.distance = 9999
     return
   LogAbovePlayer([["#yellow", foe.distance]], 0, -2, -1, "left")
+
+// --------------------------
+
+func LogPickupDistance()
+  ?pickup.distance = 9999
+    return
+  LogAbovePlayer([["#yellow", string.Format("{0}:{1}", pickup, pickup.distance)]], 0, -1, -1, "left")
+
+func LogHarvestDistance()
+  ?harvest.distance = 9999
+    return
+  LogAbovePlayer([["#yellow", string.Format("{0}:{1}", harvest, harvest.distance)]], 0, 0, -1, "left")
 
 // --------------------------
 
@@ -451,20 +541,38 @@ func LogStatesBeforeDamage()
 var AAC_ENABLED = true
 var CL_ORANGE = color.FromRGB(255,102,0)
 
+// --------------------------
+
 func LogAAC(aac_enabled)
   AAC_ENABLED = aac_enabled
 
 func WriteLogs()
-  LogTopLeft([
-    ["#white",  "t", Fmt([totaltime, time.FormatCasual(totaltime, true)])],
-    ["#blue",   "key", Fmt([string.Break(key, 15)[0]])],
-    ["#yellow", "AAC", Fmt([AAC_ENABLED])],
+  LogTopLeft(1, [
+    ["#white",  string.Format("{0}: {1}", "t", Fmt([totaltime, time.FormatCasual(totaltime, true)]))],
+    ["#blue",   string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))],
+    ["#yellow", string.Format("{0}: {1}", "AAC", Fmt([AAC_ENABLED]))],
   ])
 
-  LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])
-  LogTopRight(1, [["#green", Fmt([FmtBossHealth()]) ]])
+  // LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])
 
-  LogTopRight(2, FmtCooldownLogs([
+  // log buffs and debuffs above the player
+  LogAllBuffsAndDebuffs()
+  LogItemStates()
+  LogFoeDistance()
+  LogPickupDistance()
+  LogHarvestDistance()
+  var FoeInfo = FmtFoeName(foe)
+  var FoeInfoFmt = [
+  ^  ["#green", string.Format("'{0}'", FoeInfo[0])],
+  ^  ["#white", string.Format("{0} {1}", FoeInfo[1], FoeInfo[2])],
+  ^  ["#green", Fmt([FmtBossHealth()])],
+  ^  ["#white", Fmt([FoeInfo[3]])],
+  ^  ["#yellow", Fmt([FoeInfo[4]])],
+  ]
+  LogTopRight(0, FoeInfoFmt)
+  LogFoeStates(7)
+
+  LogTopLeft(10, FmtCooldownLogs([
   ^  "bardiche", "quarterstaff", "heavy_hammer",
   ^  "bash", "dash",
   ^  "mind", "hatchet",
@@ -474,11 +582,11 @@ func WriteLogs()
   ^  "talisman_aether", "talisman_fire",
   ^  "cinderwisp", "voidweaver"
   ^]))
-
-  // log buffs and debuffs above the player
-  LogAllBuffsAndDebuffs()
-  LogItemStates()
-  LogFoeDistance()
   // LogStatesBeforeDamage()
 
   // FmtWeaponID(item.left.id)
+  // >`0,13,#white,id: @FoeInfo[0]@
+  // >`0,14,#white,name: @FoeInfo[1]@
+  // >`0,15,#white,element: @FoeInfo[2]@
+  // >`0,16,#white,tag: @FoeInfo[3]@
+  // >`0,17,#white,immunities: @FoeInfo[4]@

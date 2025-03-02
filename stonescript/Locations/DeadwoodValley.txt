@@ -2,30 +2,30 @@ var log = import SS/Log
 var strats = import SS/Strats
 var GO = false
 func DeadWoodValley()
-  log.LogStrat(4, "DeadWoodValley", "#green")
-  >`0,12,#red,@foe.id@ @string.Equals(foe.id, "poena")@
+  log.LogStrat(1, "DeadWoodValley", "#green")
 
   ?string.Equals(foe.id, "poena")
     >`0,12,#red,poena!!!
+    ?strats.Speedy()
+      return
     ?foe.state = 32 | foe.state = 33
-      equipR compound shield
       activate potion
       equipL reset wand +10
       activate L
-      equipL crossbow +9
+      equipL frost wand
+      activate L
+      equipR compound shield
+      equipL ice hammer +10
       GO = true
       return
 
     ?GO
       ?strats.MaskOfTheLost()
         return
-      ?strats.UseWandAbility("calamity", "L")
-        return
-      ?strats.UseWandAbility("explosive", "R")
-        return
       ?strats.UseWandAbility("plague", "R")
         return
-      equip heavy hammer +11
+      equipL ice hammer +10
+      equipR compound shield
       return
 
       equip repeating crossbow +9
@@ -33,8 +33,9 @@ func DeadWoodValley()
 
     equip repeating crossbow +9
     return
+
   :?foe = boss & foe = xyloalgia
-    equip poison crossbow
+    equip fire crossbow
     return
 
   ?strats.canUseBladeDS(2)
@@ -51,16 +52,16 @@ func DeadWoodValley()
   //   ?strats.UseWandAbility("calamity", "L")
   //     return
 
-  ?strats.Dash()
-    return
+  // ?strats.Dash()
+  //   return
 
   ?foe.distance > 5 & foe ! scarab
     equipR poison wand
     equipL poison wand +10
     return
 
-  equipL poison sword +10
-  equipR vigor sword +11
+  equipL poison sword dP
+  equipR vigor sword dL
 
 ?loc = deadwood_valley
   DeadWoodValley()

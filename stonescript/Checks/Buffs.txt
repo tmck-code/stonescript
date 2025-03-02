@@ -1,0 +1,158 @@
+var log = import SS/Log
+
+var PLAYER_BUFFS = []
+var PLAYER_DEBUFFS = []
+var FOE_BUFFS = []
+var FOE_DEBUFFS = []
+
+var PLAYER_BUFF_STRINGS = []
+var PLAYER_DEBUFF_STRINGS = []
+var FOE_BUFF_STRINGS = []
+var FOE_DEBUFF_STRINGS = []
+
+var lastUpdate = 0
+
+func cleanBuffString(b, buff_type)
+  var idx = string.IndexOf(b, buff_type)
+  var buffLen = string.Size(buff_type)
+  ?idx = -1
+    return b
+  
+  // it's a buff_: [idx: 0, len: ->]
+  ?idx = 0
+    return string.Sub(b, buffLen+1)
+  // there's a _ before the buff name
+  ?string.IndexOf(b, "_", idx-1) ! idx-1
+    return b
+  // it's a _debuff: [idx: suffix, len: total - length of suffix]
+  ?idx-1 = string.Size(b)-(buffLen+1)
+    return string.Sub(b, 0, idx-1)
+  // it's a _debuff_ in the middle: [idx: suffix, len: total - length of suffix]
+  return string.Sub(b, idx+(buffLen+1))
+
+// Formats a string of buffs or debuffs, returning 
+// - an array of individual buffs or debuffs,
+func FmtBuffs(buff_string, buff_type)
+  var bfs = []
+  var msgs = []
+
+  // check if there are any buffs
+  ?string.Size(buff_string) = 0 | string.Equals(buff_string, ",")
+    return []
+  :
+    // if there is only one buff, it won't have a comma
+    ?string.IndexOf(buff_string, ",") = -1
+      bfs = [buff_string]
+    :
+      // split the string into an array of buffs
+      bfs = string.Split(buff_string, ",")
+
+  var t = ""
+  var lvl = ""
+  var b = ""
+  var symbol = ""
+  var buffTypeLen = string.Size(buff_type)
+  ?bfs.Count() = 0
+    return []
+
+  // for each buff
+  for i = 0 .. bfs.Count()-1
+    b = ""
+    // if the buff is formatted as
+    // "buff:buff_name:level:time_remaining"
+    ?string.Size(bfs[i]) = 0
+      continue
+
+    ?string.IndexOf(bfs[i], ":") ! -1
+      var parts = string.Split(bfs[i], ":")
+      symbol = parts[0]
+      b = parts[1]
+      lvl = parts[2]
+      t = parts[3]
+    :
+      // otherwise, the buff is formatted as
+      // "buff_string:time_remaining"
+      b = bfs[i]
+      t = ""
+    ?string.Size(b) = 0
+      continue
+
+    b = cleanBuffString(b, buff_type)
+    msgs.Add([symbol, int.Parse(lvl), b, int.Parse(t)])
+    continue
+
+  ?msgs.Count() = 0
+    return []
+  return msgs
+
+func _UpdateBuffs()
+  ?loc.begin | loc.loop
+    lastUpdate = 0
+  ?totaltime < lastUpdate
+    return
+  lastUpdate = totaltime
+
+  PLAYER_BUFFS = FmtBuffs(buffs.string, "buff")
+  PLAYER_DEBUFFS = FmtBuffs(debuffs.string, "debuff")
+  FOE_BUFFS = FmtBuffs(foe.buffs.string, "buff")
+  FOE_DEBUFFS = FmtBuffs(foe.debuffs.string, "debuff")
+
+  ?PLAYER_BUFFS.Count() > 0
+    for i : PLAYER_BUFFS
+      PLAYER_BUFF_STRINGS.Add(i[2])
+  ?PLAYER_DEBUFFS.Count() > 0
+    for i : PLAYER_DEBUFFS
+      PLAYER_DEBUFF_STRINGS.Add(i[2])
+  ?FOE_BUFFS.Count() > 0
+    for i : FOE_BUFFS
+      FOE_BUFF_STRINGS.Add(i[2])
+  ?FOE_DEBUFFS.Count() > 0  
+    for i : FOE_DEBUFFS
+      FOE_DEBUFF_STRINGS.Add(i[2])
+
+func GetFoeBuff(name)
+  ?FOE_BUFFS.Count() = 0
+    return []
+  for i : FOE_BUFFS
+    ?string.Equals(i[2], name)
+      return i
+
+func GetFoeBuffLevel(name)
+  ?FOE_BUFFS.Count() = 0
+    return 0
+  for i : FOE_BUFFS
+    ?string.Equals(i[2], name)
+      return i[1]
+  return 0
+
+func GetFoeBuffTime(name)
+  ?FOE_BUFFS.Count() = 0
+    return 0
+  for i : FOE_BUFFS
+    ?string.Equals(i[2], name)
+      return i[3]
+  return 0
+
+func GetFoeDebuff(name)
+  ?FOE_DEBUFFS.Count() = 0
+    return []
+  for i : FOE_DEBUFFS
+    ?string.Equals(i[2], name)
+      return i
+
+func GetFoeDebuffLevel(name)
+  ?FOE_DEBUFFS.Count() = 0
+    return 0
+
+  for i : FOE_DEBUFFS
+    ?string.Equals(i[2], name)
+      return i[1]
+  return 0
+
+func GetFoeDebuffTime(name)
+  ?FOE_DEBUFFS.Count() = 0
+    return 0
+  for i : FOE_DEBUFFS
+    ?string.Equals(i[2], name)
+      return i[3]
+  return 0

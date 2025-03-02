@@ -11,21 +11,19 @@ func FoeImmuneTo(element)
 
 func ShouldUseElement(element, element_weapon_choice)
   // check if foe is immune
-  ?FoeImmuneTo(element)
-    // then check if foe is _not_ immune to the weapon choice
-    ?!FoeImmuneTo(element_weapon_choice)
-      >`0,25,#yellow,foe is immune to @element@ but not @element_weapon_choice@
-      return true
-    :
-      >`0,25,#red,foe is immune to @element@ and @element_weapon_choice@: @foe.buffs.string@
-  // >`0,25,#green,@string.IndexOf(foe.buffs.string, "❤")@
+  ?FoeImmuneTo(element) & !FoeImmuneTo(element_weapon_choice)
+    >`0,25,#yellow,foe is immune to @element@ but not @element_weapon_choice@
+    return true
   return false
 
 func Rocky()
   log.LogStrat(4, "Rocky", "#green")
 
   ?foe ! boss | foe.distance > 10
-    equipL tri // shovel
+    ?harvest = Boulder & harvest.distance < 3
+      equip shovel
+      return
+    equipL tri
     equipR star
     return
 
@@ -37,16 +35,24 @@ func Rocky()
     ?strats.UseWandAbility("explode", "L")
       return
 
-  ?!FoeImmuneTo("poison")
-    equipL poison sword dP
-  ?!FoeImmuneTo("ice")
-    equipR ice sword
-  ?!FoeImmuneTo("fire")
-    equipL fire sword
-  ?!FoeImmuneTo("aether")
-    equipR aether sword
-  ?!FoeImmuneTo("vigor") & !FoeImmuneTo("❤")
+  var r_equipped = false
+  var l_equipped = false
+  ?!FoeImmuneTo("vigor") & !FoeImmuneTo("❤") & !r_equipped
     equipR vigor sword dL
+    r_equipped = true
+  ?!FoeImmuneTo("poison") & !l_equipped
+    equipL poison sword dP
+    l_equipped = true
+  ?!FoeImmuneTo("ice") & !r_equipped
+    equipR ice sword
+    r_equipped = true
+  ?!FoeImmuneTo("fire") & !l_equipped
+    equipL fire sword
+    l_equipped = true
+  ?!FoeImmuneTo("aether") & !r_equipped
+    equipR aether sword
+    r_equipped = true
+
 
   // :?ShouldUseElement("fire", "aether")
   //   equipR aether sword

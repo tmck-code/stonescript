@@ -87,7 +87,7 @@ var foeState = 0
 func Caves()
   log.LogStrat(4, "Caves "+loc.stars+"☆", "#green")
 
-  ?strats.canUseBladeDS(0)
+  ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
   ?foe = spider_boss
@@ -118,10 +118,6 @@ func Caves()
 
   ?strats._Speedy(22)
     return
-
-  equipL ice wand
-  equipR tri
-  return
 
   ?foe.count > 8
     ?armor > 14

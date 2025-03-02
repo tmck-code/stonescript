@@ -27,9 +27,9 @@ strats._LootStar(30)                          // enable bonus loot with star sto
 // keybinds ---------------------------------------
 strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
 log._ShowWeapons(ability1)                    // show weapons by holding "shift"
-gameEngine.ToggleAAC(downBegin)
-gameEngine.ToggleRemoteCache(upBegin)        // toggle remote caching of scripts by pressing "up"
-gameEngine.ToggleCustomStonescript(leftBegin) // toggle custom stonescript by pressing "left"
+gameEngine.AACToggle(downBegin)
+gameEngine.RemoteCacheToggle(upBegin)        // toggle remote caching of scripts by pressing "up"
+gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pressing "left"
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau

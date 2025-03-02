@@ -3,68 +3,100 @@ var log = import SS/Log
 var strats = import SS/Strats
 
 var BOSS = false
-var i = 0
+?loc.begin | loc.loop
+  BOSS = false
 
-func Override()
-  equipL vigor wand
-  ?foe = boss | foe.distance <= 20
-    equipR poison wand
-  :
-    ?foe.distance > 10
-      equipR tri
-  ?foe = boss
-    ?strats.UseWandAbility("reset", "L")
-      return true
-    :
-      ?strats.UseWandAbility("plague", "R")
-        return true
-  return true
+func FoeImmuneTo(element)
+  ?string.IndexOf(foe.buffs.string, string.Format("adaptive_defense_{0}", element)) > 0
+    return true
+  ?string.IndexOf(foe.buffs.string, element) > 0
+    return true
+  return false
 
 func HauntedHalls()
   ?loc.loop
     BOSS = false
-  log.LogStrat(4, "HauntedHalls", "#green")
+  log.LogStrat(1, "HauntedHalls", "#green")
 
-
-  // ?strats.canUseBladeDS(2)
-  //   strats.useBladeDS()
-  //   return
+  ?strats.canUseBladeDS(6)
+    strats.useBladeDS()
+    return
   
-  ?strats.MaskOfTheLost()
+  // ?strats.MaskOfTheLost()
+  //   return
+
+  ?foe = boss & foe ! skeleton_boss
+    equipL vigor wand
+    equipR poison wand
+    ?armor > 14
+      ?strats.UseWandAbility("plague", "L")
+        return
     return
 
-  ?foe = boss
+  ?foe = skeleton_boss & BOSS = true & foe.hp = 0
+    BOSS = false
+    return
+
+  ?foe = skeleton_boss & !BOSS
     BOSS = true
-    ?foe.distance > 8 & foe ! ghost
-      equip vigor crossbow
+    return
+
+  ?BOSS
+    ?strats.UseWandAbility("plague", "R")
+      return
+    ?strats.MaskOfTheLost()
       return
 
-    equipL vigor wand +12
-    equipR poison wand
+    ?(foe.state = 32 | foe.state = 33) & boss = phase2
+      equipL vigor wand
+      equipR compound shield
+      return
+    ?foe = ghost
+      equip vigor wand +12
+      equipR poison wand
+      return
+
+    ?!foe.debuffs.string = chill
+      equipR ice wand dI
+      equipL fire wand +11 df
+      return
+
+    ?boss = phase2
+      activate potion
+    ?strats.UseWandAbility("plague", "R")
+      return
+    ?strats.UseWandAbility("explosive", "L")
+      return
+
+    equip vigor crossbow
     return
 
-  ?strats.Speedy()
+  ?strats._Speedy(22)
     return
 
   ?foe.distance > 12
     ?foe = ghost
-      ?strats.UseWandAbility("reset", "L")
-        return
+      equipL vigor wand
+      equipR poison wand
     :
       equip vigor crossbow
+      return
+
+  ?foe.count > 10
+    ?strats.UseWandAbility("calamity", "L")
       return
 
   ?foe.count < 8 & foe ! ghost
     ?strats.Dash()
       return
 
-  ?foe.distance > 10
-    equipL tri
-    equipR vigor wand +12
-    return
+  // ?foe.distance > 20
+  //   equipL tri
+  //   equipR vigor wand +12
+  //   return
 
   equipL vigor wand +12
-  equipR poison wand
+  equipR fire wand +13
 
 ?loc = halls
   HauntedHalls()

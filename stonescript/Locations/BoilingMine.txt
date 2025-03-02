@@ -2,38 +2,20 @@ var log = import SS/Log
 var strats = import SS/Strats
 import SS/Checks/CanUse
 
-func Override()
-  ?foe = boss
-    equipR ice wand
-    strats.UseWandAbility("frost", "R")
-  :?foe.distance < 15
-    equipR ice wand
-  :
-    equipR tri
-
-  ?foe = boss
-    ?strats.UseWandAbility("calamity", "L")
-      return true
-  :
-    equipL calamity wand
-  return false
-
 func BoilingMine()
-  log.LogStrat(0, "BoilingMine", "#green")
-
-  ?Override() = true
-    return
+  log.LogStrat(1, "BoilingMine", "#green")
 
   ?strats.canUseBladeDS(3)
     strats.useBladeDS()
 
   ?foe = boss
-    ?strats.MaskOfTheLost() = true
+    ?strats.MaskOfTheLost()
+      return
+    ?strats.UseWandAbility("plague", "R")
+      return
+    ?strats.UseWandAbility("explosive", "L")
       return
     equip aether crossbow
-    return
-    equipL poison wand
-    equipR aether wand
     return
 
   ?strats.Speedy()
@@ -43,9 +25,13 @@ func BoilingMine()
     equipL tri
     return
 
-  ?foe.count > 8
-    ?strats.UseWandAbility("calamity", "L")
-      return true
+  ?foe.count > 12
+    ?armor > 14
+      ?strats.UseWandAbility("calamity", "L")
+        return true
+    :
+      equipL aether talisman
+      activate L
 
   ?((foe = slave_master | foe = elemental) & foe.distance > 10)
     equip aether crossbow
