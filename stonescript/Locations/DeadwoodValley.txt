@@ -8,14 +8,18 @@ func DeadWoodValley()
     >`0,12,#red,poena!!!
     ?strats.Speedy()
       return
-    ?foe.state = 32 | foe.state = 33
-      activate potion
+    ?foe.state = 32 & foe.time > 40
+      ?armor < 28
+        activate potion
       equipL reset wand +10
       activate L
+      return
+    ?foe.state = 33
       equipL frost wand
       activate L
-      equipR compound shield
-      equipL ice hammer +10
+      // equipR compound shield
+      // equipL ice hammer +10
+      equip repeating crossbow +9
       GO = true
       return
 
@@ -24,9 +28,9 @@ func DeadWoodValley()
         return
       ?strats.UseWandAbility("plague", "R")
         return
-      equipL ice hammer +10
-      equipR compound shield
-      return
+      // equipL ice hammer +10
+      // equipR compound shield
+      // return
 
       equip repeating crossbow +9
       return
