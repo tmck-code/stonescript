@@ -98,10 +98,10 @@ func Caves()
     ?BOSS_TIME > 400 & foe.hp > 0
       ?strats.MaskOfTheLost()
         return
-      // ?strats.UseWandAbility("explosive", "L")
-      //   return
-      // ?strats.UseWandAbility("plague", "R")
-      //   return
+      ?strats.UseWandAbility("explosive", "L")
+        return
+      ?strats.UseWandAbility("plague", "R")
+        return
       // ?foe.buffs.string = damage
       // ?buffs.GetFoeBuffLevel("damage") >= 2
       //   ?strats.UseWandAbility("reset", "R")
@@ -116,7 +116,7 @@ func Caves()
       equipL fire wand +11 df
       return
 
-  ?strats._Speedy(22)
+  ?strats._Speedy(20)
     return
 
   ?foe.count > 8

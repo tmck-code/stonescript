@@ -18,7 +18,7 @@ func HauntedHalls()
     BOSS = false
   log.LogStrat(1, "HauntedHalls", "#green")
 
-  ?strats.canUseBladeDS(6)
+  ?strats.canUseBladeDS(4)
     strats.useBladeDS()
     return
   
@@ -77,7 +77,7 @@ func HauntedHalls()
   ?foe.distance > 12
     ?foe = ghost
       equipL vigor wand
-      equipR poison wand
+      equipR reset wand +10
     :
       equip vigor crossbow
       return
@@ -96,7 +96,7 @@ func HauntedHalls()
   //   return
 
   equipL vigor wand +12
-  equipR fire wand +13
+  equipR reset wand +10
 
 ?loc = halls
   HauntedHalls()

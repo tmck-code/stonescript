@@ -20,47 +20,47 @@
 ### Crafting Recipes
 #crafting #recipes
 
-| weapon type | id               | recipe item 1     | recipe item2      |
-| ----------- | ---------------- | ----------------- | ----------------- |
-| bardiche    | #bardiche        | `Shield`          | `Big Sword`       |
-| bardiche    | #bardiche        | `Sword`           | `Towering Shield` |
-| crossbow    | #heavy_crossbow  | `Sword`           | `Crossbow`        |
-| crossbow    | #repeating       | `Heavy Crossbow`  | `Crossbow`        |
-| crossbow    | #stone_crossbow  | `Heavy Crossbow`  | `Stone Wand`      |
-| crossbow    | #stone_crossbow  | `Crossbow`        | `Stone Sword`     |
-| crossbow    | #rune_crossbow   | `Stone Crossbow`  | `Runestone`       |
-| crossbow    | #rune_crossbow   | `Heavy Crossbow`  | `Rune Wand`       |
-| crossbow    | #rune_crossbow   | `Crossbow`        | `Rune Sword`      |
-| hammer      | #war_hammer      | `Sword`           | `Shield`          |
-| hammer      | #stone_hammer    | `War Hammer`      | `Stone Wand`      |
-| hammer      | #stone_hammer    | `Sword`           | `Stone Shield`    |
-| hammer      | #stone_hammer    | `Shield`          | `Stone Sword`     |
-| hammer      | #rune_hammer     | `Stone Hammer`    | `Runestone`       |
-| hammer      | #rune_hammer     | `War Hammer`      | `Rune Wand`       |
-| hammer      | #rune_hammer     | `Sword`           | `Rune Shield`     |
-| hammer      | #rune_hammer     | `Shield`          | `Rune Sword`      |
-| hammer      | #heavy_hammer    | `War Hammer`      | `Quarterstaff`    |
-| shield      | #dash            | `Shield`          | `Crossbow`        |
-| shield      | #compound        | `Shield`          | `Dashing Shield`  |
-| shield      | #towering        | `Shield`          | `Quarterstaff`    |
-| shield      | #stone_shield    | `Shield`          | `Stone Wand`      |
-| shield      | #rune_shield     | `Stone Shield`    | `Runestone`       |
-| shield      | #rune_shield     | `Shield`          | `Rune Wand`       |
-| staff       | #stone_staff     | `Quarterstaff`    | `Stone Wand`      |
-| staff       | #rune_staff      | `Stone Staff`     | `Runestone`       |
-| staff       | #rune_staff      | `Quarterstaff`    | `Rune Wand`       |
-| sword       | #stone_sword     | `Sword`           | `Stone Wand`      |
-| wand        | #rune_wand       | `Stone Wand`      | `Runestone`       |
-| big sword   | #big_sword       | `Sword`           | `Quarterstaff`    |
-| big sword   | #big_stone_sword | `Big Sword`       | `Stone Wand`      |
-| big sword   | #big_stone_sword | `Sword`           | `Stone Staff`     |
-| big sword   | #big_stone_sword | `Stone Sword`     | `Quarterstaff`    |
-| big sword   | #big_rune_sword  | `Big Stone Sword` | `Runestone`       |
-| big sword   | #big_rune_sword  | `Big Sword`       | `Rune Wand`       |
-| big sword   | #big_rune_sword  | `Sword`           | `Rune Staff`      |
-| big sword   | #big_rune_sword  | `Quarterstaff`    | `Rune Sword`      |
-| sword       | #rune_sword      | `Stone Sword`     | `Runestone`       |
-| sword       | #rune_sword      | `Sword`           | `Rune Wand`       |
+| id               | weapon type | weapon subtype | recipe item 1     | recipe item2      |
+| ---------------- | ----------- | -------------- | ----------------- | ----------------- |
+| #bardiche        | bardiche    |                | `Shield`          | `Big Sword`       |
+| #bardiche        | bardiche    |                | `Sword`           | `Towering Shield` |
+| #heavy_crossbow  | crossbow    | heavy          | `Sword`           | `Crossbow`        |
+| #repeating       | crossbow    | repeating      | `Heavy Crossbow`  | `Crossbow`        |
+| #stone_crossbow  | crossbow    | stone          | `Heavy Crossbow`  | `Stone Wand`      |
+| #stone_crossbow  | crossbow    | stone          | `Crossbow`        | `Stone Sword`     |
+| #rune_crossbow   | crossbow    | rune           | `Stone Crossbow`  | `Runestone`       |
+| #rune_crossbow   | crossbow    | rune           | `Heavy Crossbow`  | `Rune Wand`       |
+| #rune_crossbow   | crossbow    | rune           | `Crossbow`        | `Rune Sword`      |
+| #war_hammer      | hammer      | war            | `Sword`           | `Shield`          |
+| #stone_hammer    | hammer      | stone          | `War Hammer`      | `Stone Wand`      |
+| #stone_hammer    | hammer      | stone          | `Sword`           | `Stone Shield`    |
+| #stone_hammer    | hammer      | stone          | `Shield`          | `Stone Sword`     |
+| #rune_hammer     | hammer      | rune           | `Stone Hammer`    | `Runestone`       |
+| #rune_hammer     | hammer      | rune           | `War Hammer`      | `Rune Wand`       |
+| #rune_hammer     | hammer      | rune           | `Sword`           | `Rune Shield`     |
+| #rune_hammer     | hammer      | rune           | `Shield`          | `Rune Sword`      |
+| #heavy_hammer    | hammer      | heavy          | `War Hammer`      | `Quarterstaff`    |
+| #dash            | shield      | dash           | `Shield`          | `Crossbow`        |
+| #compound        | shield      | compound       | `Shield`          | `Dashing Shield`  |
+| #towering        | shield      | towering       | `Shield`          | `Quarterstaff`    |
+| #stone_shield    | shield      | stone          | `Shield`          | `Stone Wand`      |
+| #rune_shield     | shield      | rune           | `Stone Shield`    | `Runestone`       |
+| #rune_shield     | shield      | rune           | `Shield`          | `Rune Wand`       |
+| #stone_staff     | staff       | stone          | `Quarterstaff`    | `Stone Wand`      |
+| #rune_staff      | staff       | rune           | `Stone Staff`     | `Runestone`       |
+| #rune_staff      | staff       | rune           | `Quarterstaff`    | `Rune Wand`       |
+| #stone_sword     | sword       | stone          | `Sword`           | `Stone Wand`      |
+| #rune_sword      | sword       | rune           | `Stone Sword`     | `Runestone`       |
+| #rune_sword      | sword       | rune           | `Sword`           | `Rune Wand`       |
+| #big_sword       | sword (big) |                | `Sword`           | `Quarterstaff`    |
+| #big_stone_sword | sword (big) | stone          | `Big Sword`       | `Stone Wand`      |
+| #big_stone_sword | sword (big) | stone          | `Sword`           | `Stone Staff`     |
+| #big_stone_sword | sword (big) | stone          | `Stone Sword`     | `Quarterstaff`    |
+| #big_rune_sword  | sword (big) | rune           | `Big Stone Sword` | `Runestone`       |
+| #big_rune_sword  | sword (big) | rune           | `Big Sword`       | `Rune Wand`       |
+| #big_rune_sword  | sword (big) | rune           | `Sword`           | `Rune Staff`      |
+| #big_rune_sword  | sword (big) | rune           | `Quarterstaff`    | `Rune Sword`      |
+| #rune_wand       | wand        | rune           | `Stone Wand`      | `Runestone`       |
 
 ### Brewing
 

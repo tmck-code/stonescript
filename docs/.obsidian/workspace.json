@@ -48,9 +48,23 @@
               "icon": "lucide-file",
               "title": "ssrpg items"
             }
+          },
+          {
+            "id": "f3a6cf6e54b91063",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ssrpg items.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ssrpg items"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -107,7 +121,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "5700c6a1614eb789",
@@ -174,16 +189,37 @@
               "icon": "lucide-list",
               "title": "Outline of Stone Story RPG"
             }
+          },
+          {
+            "id": "6aaece4a1dde8656",
+            "type": "leaf",
+            "state": {
+              "type": "Saved Queries View",
+              "state": {},
+              "icon": "feather-mouse-pointer",
+              "title": "Saved Queries"
+            }
+          },
+          {
+            "id": "8d542766110f5886",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {},
+              "icon": "spreadsheet",
+              "title": "Advanced Tables"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -192,7 +228,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "09f3e27d605ff549",
+  "active": "f3a6cf6e54b91063",
   "lastOpenFiles": [
     "ssrpg locations.md",
     "ssrpg items.md",

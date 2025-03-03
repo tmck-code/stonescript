@@ -45,10 +45,24 @@ func LogLowerLeft(x, y, color, message)
   y = y + screen.h
   >`@x@,@y@,@color@,@message@
 
-func LogLowerRight(x, y, color, message)
-  x = x + screen.w
-  y = y + screen.h
-  >`@x@,@y@,@color@,@message@
+func LogLowerRight(y_offset, messages)
+  ?messages.Count() = 0
+    return
+  var longest = 0
+  for i = 0 .. messages.Count()-1
+    longest = math.Max(longest, string.Size(messages[i][1]))
+  var msg
+  var color
+  for i = 0 .. messages.Count()-1
+    color = messages[i][0]
+    msg = messages[i][1]
+    // x pos = 
+    //   width (go to right of screen)
+    // - longest string (make sure they all fit)
+    // + offset (align to the right)
+    var x = screen.w - longest + (longest - string.Size(msg))
+    var y = screen.h - messages.Count() + i - y_offset
+    >`@x@,@y@,@color@,@msg@
 
 func LogTopRight(y_offset, messages)
   ?messages.Count() = 0
@@ -571,6 +585,9 @@ func WriteLogs()
   ]
   LogTopRight(0, FoeInfoFmt)
   LogFoeStates(7)
+  LogLowerRight(1, [
+  ^ ["#yellow", string.Format("{0}/{1}", item.GetTreasureCount(), item.GetTreasureLimit())], 
+  ^])
 
   LogTopLeft(10, FmtCooldownLogs([
   ^  "bardiche", "quarterstaff", "heavy_hammer",
