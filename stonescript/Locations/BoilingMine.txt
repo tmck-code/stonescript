@@ -5,14 +5,14 @@ import SS/Checks/CanUse
 func BoilingMine()
   log.LogStrat(1, "BoilingMine", "#green")
 
-  ?strats.canUseBladeDS(3)
+  ?strats.canUseBladeDS(1)
     strats.useBladeDS()
 
   ?foe = boss
     ?strats.MaskOfTheLost()
       return
-    ?strats.UseWandAbility("plague", "R")
-      return
+    // ?strats.UseWandAbility("plague", "R")
+    //   return
     ?strats.UseWandAbility("explosive", "L")
       return
     equip aether crossbow
@@ -21,17 +21,20 @@ func BoilingMine()
   ?strats.Speedy()
     return
 
-  ?foe.distance > 22
+  ?foe.distance > 27
     equipL tri
     return
 
   ?foe.count > 12
     ?armor > 14
-      ?strats.UseWandAbility("calamity", "L")
-        return true
-    :
-      equipL aether talisman
-      activate L
+      strats.UseWandAbility("calamity", "L")
+    //     return true
+    // :
+    //   equipL aether talisman
+    //   activate L
+
+  ?strats.Dash()
+    return
 
   ?((foe = slave_master | foe = elemental) & foe.distance > 10)
     equip aether crossbow
@@ -41,16 +44,13 @@ func BoilingMine()
     equip aether crossbow
     return
 
-  // ?strats.Dash()
-  //   return
-
   ?foe.distance > 5
     equipL aether wand
     equipR vigor wand
     return
 
   equipL aether sword +8
-  equipR aether hammer
+  equipR aether hammer +8
 
 ?loc = mine
   BoilingMine()
