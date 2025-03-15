@@ -40,69 +40,51 @@ func IcyRidge()
     IS_FINAL_BOSS_STAGE = true
 
   ?foe = giant_ice_elemental
+    ?strats.Speedy()
+      return
+    ?summon.GetId() ! "cinderwisp" & item.CanActivate()
+      equipL fire talisman
+      activate L
+      return
     ?foe.debuffs.string ! damage
       equipR poison wand
       equipL fire wand +13
       return
-    equipR fire wand +13
+    equip fire crossbow
     return
 
   ?IS_FINAL_BOSS_STAGE
     BOSS_TIME = BOSS_TIME + 1
-
-    activate potion
-
     ?foe = ice_wall
       equip fire crossbow
-      return
-
-    ?strats.Speedy()
       return
 
     ?BOSS_TIME > 400
       ?foe = yeti
         ?strats.MaskOfTheLost()
           return
-      
-      ?foe.hp > 3000 & foe.hp < 3200
-        ?strats.UseWandAbility("frost", "L")
-          return
+        ?armor > 30
+          ?strats.UseWandAbility("explosive", "L")
+            return
+          ?strats.UseWandAbility("plague", "R")
+            return
 
-      ?foe.hp < 3000
-        ?strats.UseWandAbility("explosive", "L")
-          return
-        ?strats.UseWandAbility("plague", "R")
-          return
+    equip fire crossbow
+    // equip fire staff
+    return
 
-    ?strats.Dash()
-      return
+    // ?strats.Dash()
+    //   return
 
     ?buffs.GetFoeDebuffLevel("dot") < 1
       equipR poison wand
-      equipL fire wand +13
+      equipL fire wand
       return
     :
-      equipR fire sword
-      equipL fire hammer
+      equip fire crossbow
       return
 
-  ?strats.Speedy()
-    return
-
-  // ?foe.count > 8
-  //   equipR fire talisman
-  //   equipL fire wand +13
-  ?foe = ice_elemental
-    equipL fire talisman
-    activate L
-    equip fire crossbow
-    return
-  
-  ?foe.distance > 15
-    equip fire crossbow
-    return
-
-  ?strats.Dash()
+  ?strats._Speedy(22, false)
     return
 
   ?foe = ice_pillar & foe.count < 4
@@ -110,11 +92,21 @@ func IcyRidge()
     equipL fire wand +13
     return
 
+  ?foe.distance > 12
+    equip fire crossbow
+    return
+  
+  equipR poison wand
+  equipL fire wand
 
   ?foe.distance > 12
-    equipR poison wand
-    equipL fire wand +13
+    // equipR poison wand
+    // equipL fire wand +13
+    equip fire staff
     return
+
+  // ?strats.Dash()
+  //   return
 
   equipL fire sword
   equipR compound shield

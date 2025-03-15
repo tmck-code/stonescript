@@ -350,7 +350,7 @@ var foeStateTimes = []
   seenFoeStates.Clear()
   foeStateTimes.Clear()
 
-var c1 = "#ff4400"
+var c1 = "#44ff00"
 var c2 = "#8888ff"
 var c
 var n
@@ -359,8 +359,7 @@ var n
 
 func getColor()
   ?time % 2 = 0
-    n = math.sin(time*0.2) / 2 + 0.5
-    c = color.Lerp(c1, c2, n)
+    c = color.Lerp(c1, c2, math.sin(time*0.1) / 2 + 0.5)
   return c
 
 func CollectStates(state_name, state_value, state_time, seen_states, state_times)
@@ -610,10 +609,10 @@ func WriteLogs()
   ^  "cinderwisp", "voidweaver"
   ^]))
   LogTopLeft(1, [
-    ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames()]))],
+    ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
     ["#white",  string.Format("{0}: {1}", "p", Fmt([pos.x, screen.FromWorldX(pos.x), screen.FromWorldZ(pos.z - pos.y)]))],
     ["#blue",   string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))],
-    ["#yellow", string.Format("{0}: {1}", "AAC", Fmt([AAC_ENABLED]))],
+    // ["#yellow", string.Format("{0}: {1}", "AAC", Fmt([AAC_ENABLED]))],
   ])
 
   // LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])

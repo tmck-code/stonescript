@@ -31,45 +31,47 @@ func DeadWoodValley()
       activate L
       return
     ?foe.state = 33
-      equipL frost wand
-      activate L
-      equipR compound shield
-      equipL ice hammer +10
-      equip repeating crossbow +9
+      equip repeating crossbow
       GO = true
       return
 
     ?GO
       ?strats.MaskOfTheLost()
         return
-      ?strats.UseWandAbility("plague", "R")
+      ?strats.UseWandAbility("plague", "L")
         return
-      equip repeating crossbow +9
+      equip repeating crossbow
       return
 
-    equip repeating crossbow +9
+    equip repeating crossbow
     return
 
   :?foe = boss & foe = xyloalgia
     ?foe.distance > 5
-      ?strats.Speedy()
-        return
-      ?strats.UseWandAbility("explosive", "L")
+      ?strats.Dash()
         return
     ?strats.MaskOfTheLost()
       return
     :
       equipL poison hammer dP +11
-      equipR vigor sword
+      equipR ice hammer
       return
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
-  ?strats._Speedy(20)
+  ?foe = wasp | foe = wasp_nest
+    ?foe.distance > 22
+      equipR tri
+      return
+    equip repeating crossbow
+    // equip fire crossbow
     return
 
-  ?foe ! scarab
+  ?strats._Speedy(22, true)
+    return
+
+  ?foe ! scarab & foe.distance > 8
     equip poison crossbow
     return
 
@@ -77,16 +79,12 @@ func DeadWoodValley()
     equipR tri
     return
 
-  // ?foe.count > 8
-  //   ?strats.UseWandAbility("calamity", "L")
-  //     return
-
   // ?strats.Dash()
   //   return
 
   // equipL poison sword dP
-  equipL big stone sword +11
-  equipR ice hammer
+  equipL ice hammer
+  equipR big vigor sword
 
 ?loc = deadwood_valley
   DeadWoodValley()

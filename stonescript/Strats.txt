@@ -42,20 +42,21 @@ func Dash()
   return _Dash(11, 16)
 
 // hoon around in-between the action
-func _Speedy(dist)
+func _Speedy(dist, useStar)
   ?foe.distance > dist
-    equipL star
-    equipR tri
+    equipL tri
+    ?useStar
+      equipR star
     >o-6,4,#green,>>
     return true
   >o-6,4,#red,>>
   return false
 
 func Speedy()
-  return _Speedy(30)
+  return _Speedy(30, true)
 
 func BeFast(do_speedy, do_dash)
-  return (do_speedy & _Speedy(30)) | (do_dash & _Dash(11, 16))
+  return (do_speedy & _Speedy(30, true)) | (do_dash & _Dash(11, 16))
 
 func Pickpocket()
   ?item.CanActivate()

@@ -5,36 +5,50 @@ var strats = import SS/Strats
 func Temple()
   log.LogStrat(1, "Temple", "#green")
 
-  ?strats.canUseBladeDS(3)
+  ?strats.canUseBladeDS(8)
     strats.useBladeDS()
 
-  ?foe = boss
-    ?foe = acronian_cultist
-      ?strats.Speedy()
-        return
-      :
-        equipL ice sword
-        equipR ice hammer
-        return
+  ?foe = boss & foe = acronian_cultist
+    ?strats.Speedy()
+      return
+    ?strats.Dash()
+      return
+    equipL ice sword
+    equipR ice hammer
+    return
+
+  ?foe = boss & foe = nagaraja
     activate potion
+    // ?strats.UseWandAbility("frost", "L")
+    //   return
+    ?strats.UseWandAbility("explosive", "L")
+      return
+    ?hp < 10
+      equip vigor crossbow
+      return
     equip ice crossbow
     return
 
-  ?strats.Speedy()
+  ?strats._Speedy(22, false)
     return
 
-  ?foe.distance > 15
+  ?foe.distance > 12
     equip ice crossbow
     return
-  ?foe.distance > 8
-    equipL vigor wand
-    equipR ice wand
-    return
 
-  ?strats.Dash()
-    return
+  ?foe.count <= 4
+    ?strats.Dash()
+      return
+
+  // ?foe.distance > 10
+  //   equipL vigor wand
+  //   equipR ice wand
+  //   return
+
+  // ?strats.Dash()
+  //   return
   equipL ice sword
-  equipR ice hammer
+  equipR vigor sword
 
 ?loc = temple
   Temple()

@@ -76,9 +76,8 @@ func HauntedHalls()
     return
 
   ?BOSS
-    ?strats.UseWandAbility("plague", "R")
-      return
-    ?strats.MaskOfTheLost()
+    ?foe.armor > 0
+      equip heavy crossbow
       return
 
     ?(foe.state = 32 | foe.state = 33) & boss = phase2
@@ -97,16 +96,16 @@ func HauntedHalls()
 
     ?boss = phase2
       activate potion
-    ?strats.UseWandAbility("plague", "R")
-      return
-    ?strats.UseWandAbility("explosive", "L")
-      return
+      ?strats.UseWandAbility("plague", "R")
+        return
+      ?strats.UseWandAbility("explosive", "L")
+        return
 
     // equip vigor crossbow
     equip repeating crossbow
     return
 
-  ?strats.Speedy()
+  ?strats._Speedy(22, false)
     return
 
   ?foe.distance > 18

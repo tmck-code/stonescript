@@ -16,10 +16,10 @@ Buffs._UpdateBuffs()
 Components.render()
 
 // keybinds -------------------------------------
-// strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
+strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
 log._ShowWeapons(ability1)                    // show weapons by holding "shift"
 // gameEngine.AACToggle(downBegin)               // toggle AAC by pressing "down"
-gameEngine.AACFastToggle(rightBegin)          // toggle fast AAC by pressing "right"
+// gameEngine.AACFastToggle(rightBegin)          // toggle fast AAC by pressing "right"
 gameEngine.RemoteCacheToggle(upBegin)         // toggle remote caching of scripts by pressing "up"
 gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pressing "left"
 

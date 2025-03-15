@@ -52,7 +52,7 @@ func Caves()
       equipL fire wand +11 df
       return
 
-  ?strats._Speedy(20)
+  ?strats._Speedy(20, true)
     return
 
   ?foe.count > 8

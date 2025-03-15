@@ -16,14 +16,14 @@ func BoilingMine()
     ?foe.armor <= 0
       ?strats.UseWandAbility("plague", "R")
         return
+      ?strats.UseWandAbility("explosive", "L")
+        return
       equip repeating crossbow
       return
     ?strats.MaskOfTheLost()
       return
     // ?strats.UseWandAbility("plague", "R")
     //   return
-    ?strats.UseWandAbility("explosive", "L")
-      return
     equip aether crossbow
     return
 
