@@ -2,10 +2,11 @@ var log = import SS/Log
 var strats = import SS/Strats
 var buffs = import SS/Checks/Buffs
 
-func FoeImmuneTo(element)
-  ?string.IndexOf(foe.buffs.string, string.Format("adaptive_defense_{0}", element)) > 0
+func FoeImmuneTo(element, index)
+  // >`0,@13+index@,#yellow,@element@: @string.IndexOf(foe.buffs.string, element)@ @foe.buffs.string = element@
+  ?string.IndexOf(foe.buffs.string, string.Format("adaptive_defense_{0}", element)) ! -1
     return true
-  ?string.IndexOf(foe.buffs.string, element) > 0
+  ?string.IndexOf(foe.buffs.string, element) ! -1
     return true
   return false
 
@@ -20,9 +21,9 @@ func Rocky()
   log.LogStrat(4, "Rocky", "#green")
 
   ?foe ! boss | foe.distance > 10
-    ?harvest = Boulder & harvest.distance < 3
-      equip shovel
-      return
+    // ?harvest = Boulder & harvest.distance < 3
+    //   equip shovel
+    //   return
     equipL tri
     equipR star
     return
@@ -30,62 +31,73 @@ func Rocky()
   ?foe = phase3
     ?strats.MaskOfTheLost()
       return true
-  
+
   ?armor > 14
     ?strats.UseWandAbility("explode", "L")
       return
 
-  var r_equipped = false
-  var l_equipped = false
-  ?!FoeImmuneTo("vigor") & !FoeImmuneTo("❤") & !r_equipped
-    equipR vigor sword dL
-    r_equipped = true
-  ?!FoeImmuneTo("poison") & !l_equipped
-    equipL poison sword dP
-    l_equipped = true
-  ?!FoeImmuneTo("ice") & !r_equipped
-    equipR ice sword
-    r_equipped = true
-  ?!FoeImmuneTo("fire") & !l_equipped
-    equipL fire sword
-    l_equipped = true
-  ?!FoeImmuneTo("aether") & !r_equipped
-    equipR aether sword
-    r_equipped = true
+  // var immunities = [
+  // ^  string.Format("{0,-6}:{1}", "vigor", FoeImmuneTo("vigor")),
+  // ^  string.Format("{0,-6}:{1}", "❤", FoeImmuneTo("❤")),
+  // ^  string.Format("{0,-6}:{1}", "poison", FoeImmuneTo("poison")),
+  // ^  string.Format("{0,-6}:{1}", "ice", FoeImmuneTo("ice")),
+  // ^  string.Format("{0,-6}:{1}", "fire", FoeImmuneTo("fire")),
+  // ^  string.Format("{0,-6}:{1}", "aether", FoeImmuneTo("aether"))
+  // ^]
+  // >`0,12,#yellow,@string.Join("\n", immunities)@
 
+  // >`0,10,#yellow,@foe.buffs.string@
 
-  // :?ShouldUseElement("fire", "aether")
-  //   equipR aether sword
-  //   ?strats.UseWandAbility("calamity", "L")
-  //     return true
-  //   equipL aether wand
-  //   return true
-  // :?ShouldUseElement("ice", "fire")
-  //   equipR fire sword
-  //   ?strats.UseWandAbility("explosion", "L")
-  //     return true
-  //   equipL fire wand
-  //   return true
-  // :?ShouldUseElement("poison", "ice")
-  //   equipR ice sword
-  //   ?strats.UseWandAbility("frost", "L")
-  //     return true
-  //   equipL ice hammer
-  //   return true
-  // :?ShouldUseElement("vigor", "poison")
-  //   equipR poison sword dP
-  //   ?strats.UseWandAbility("plague", "L")
-  //     return true
-  //   equipL poison wand
-  //   return true
+  // ?debuffs.string = "chill"
 
   ?foe.armor > 0
     equip heavy hammer +11
     strats.UseWeaponIfReady("heavy_hammer", 12)
     return
-  // :
-  //   equipL vigor sword dL
-  //   equipR poison sword dP
+
+  ?item.GetCooldown("blade") <= 0 & item.CanActivate()
+    equip blade
+    activate R
+    return
+
+  ?foe = phase3
+    activate potion
+    equipR fire sword
+    equipL fire hammer
+    return
+
+  // ?!FoeImmuneTo("vigor",0) & !FoeImmuneTo("buff_protection",1) & !r_equipped
+  ?foe = aether & !r_equipped & !FoeImmuneTo("vigor",0) & !FoeImmuneTo("buff_protection",1) & foe.buffs.string ! "protection"
+    equipR vigor sword dL
+    equipL big vigor sword
+    return
+  ?foe = vigor & !FoeImmuneTo("poison",2)
+    ?strats.UseWandAbility("plague", "L")
+      return true
+    equipR fire sword
+    equipL poison sword dP
+    return
+  ?foe = poison & !FoeImmuneTo("ice",3)
+    ?strats.UseWandAbility("frost", "L")
+      return true
+    equipR ice sword +10 *9
+    equipL ice hammer
+    return
+  ?foe = ice & !FoeImmuneTo("fire",4)
+    ?strats.UseWandAbility("explosion", "L")
+      return true
+    equipL fire sword
+    equipR fire hammer
+    return
+  ?foe = fire & !FoeImmuneTo("aether",5)
+    ?strats.UseWandAbility("calamity", "L")
+      return true
+    equipR aether hammer
+    equipL big aether sword
+    return
+
+  equipR vigor sword dL
+  equipL poison sword dP
 
 ?loc = rocky
   Rocky()

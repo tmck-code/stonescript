@@ -108,7 +108,7 @@ func UseWandAbility(ability, hand)
 // Use the "right" key to trigger the blade of the fallen god
 func _ListenForBladeTrigger(keybind)
   ?key = keybind
-    >0,10,Triggered Blade!
+    >`0,10,Triggered Blade!
     equip blade
     activate R
     return true
@@ -116,6 +116,18 @@ func _ListenForBladeTrigger(keybind)
 
 func ListenForBladeTrigger()
   _ListenForBladeTrigger(rightBegin)
+
+func _ListenForSightStoneTrigger(keybind)
+  ?key = keybind
+    >`0,@screen.h-2@,#green,SightStone!
+    equipL sight stone
+    activate L
+    return true
+  return false
+
+func SightStone()
+  return _SightStone(ability2)
+
 
 // equip & activate a two-handed weapon, if the ability is ready
 // and the foe is within the specified distance

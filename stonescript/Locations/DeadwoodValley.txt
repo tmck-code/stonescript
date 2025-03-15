@@ -7,9 +7,14 @@ func Override()
   ?harvest = "Deadwood Tree"
     equip hatchet
     return true
-  equipR stone wand
-  equipL stone sword +11
-  return true
+  return false
+  // return false
+  ?strats.Speedy()
+    return
+  // return true
+  // equipR stone wand
+  // equipL stone sword +11
+  return false
 
 func DeadWoodValley()
   log.LogStrat(1, "DeadWoodValley", "#green")
@@ -49,6 +54,10 @@ func DeadWoodValley()
     ?foe.distance > 5
       ?strats.Speedy()
         return
+      ?strats.UseWandAbility("explosive", "L")
+        return
+    ?strats.MaskOfTheLost()
+      return
     :
       equipL poison hammer dP +11
       equipR vigor sword

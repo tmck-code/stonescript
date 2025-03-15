@@ -1,33 +1,66 @@
 var log = import SS/Log
 var strats = import SS/Strats
 
-// func Override()
-//   equipL poison wand +11
-//   equipR poison wand +10
-//   return false
+func Override()
+  equipL poison wand +11
+  equipR poison wand +10
+  return false
 
 func FungusForest()
-  log.LogStrat(4, "FungusForest", "#green")
+  log.LogStrat(1, "FungusForest", "#green")
 
   ?strats.canUseBladeDS(3)
     strats.useBladeDS()
 
   ?foe = boss
-    ?foe = phase2
-      ?strats.UseWandAbility("plague", "L")
+    ?foe = epic_snail
+      ?strats.Speedy()
+        return
+      equip poison crossbow
+      return
+
+    ?foe = phase1
+      ?strats.UseWandAbility("explosive", "L")
         return true
-    equip poison crossbow
-    return
+      ?foe.distance > 12
+        equipR tri
+        return
+
+    ?foe.armor > 0
+      equipR poison sword +11
+      equipL poison hammer +11 dP
+      return
+
+    ?foe = phase2
+      ?foe.count > 1
+        ?strats.UseWandAbility("plague", "L")
+          return true
+        equip poison crossbow
+          return
+
+      ?strats.MaskOfTheLost()
+        return
+      ?strats.UseWandAbility("explosive", "L")
+        return true
+      ?foe.armor > 0
+        equipR poison sword +11
+        equipL poison hammer +11 dP
+        return
+
 
   ?strats.Speedy()
     return
+
+  ?foe.count >= 2 & armor > 14
+    ?strats.UseWandAbility("calamity", "L")
+      return
   
   ?foe.count > 13
     ?strats.UseWandAbility("plague", "L")
       return
 
   ?foe.distance > 12
-    equip poison crossbow
+    equip repeating crossbow
     return
 
   ?strats.Dash()

@@ -1,5 +1,34 @@
-// import shared strategies & utils --------------
+// import shared strategies & utils -------------
 var gameEngine = import SS/GameEngine
+
+var log = import SS/Log
+var strats = import SS/Strats
+var Components = import SS/UI/Components
+var Buffs = import SS/Checks/Buffs
+
+// var OkaUtils = new UI/OkamiroyUtils
+// OkaUtils.ShowTimer(1, 15)
+// OkaUtils.ShowTimeStats(8, 15)
+// OkaUtils.ShowFoesBar(19, 1, 40, true)
+// OkaUtils.ShowPlayersBar(0, 4, 5)
+
+Buffs._UpdateBuffs()
+Components.render()
+
+// keybinds -------------------------------------
+// strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
+log._ShowWeapons(ability1)                    // show weapons by holding "shift"
+// gameEngine.AACToggle(downBegin)               // toggle AAC by pressing "down"
+gameEngine.AACFastToggle(rightBegin)          // toggle fast AAC by pressing "right"
+gameEngine.RemoteCacheToggle(upBegin)         // toggle remote caching of scripts by pressing "up"
+gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pressing "left"
+
+// AAC (Attack Animation Cancel) ----------------
+// enable faster attack speed
+// gameEngine.AAC()
+gameEngine.AACFast()
+// log.LogAAC(gameEngine.AACEnabled())
+log.LogAAC(gameEngine.AACFastEnabled())
 
 ?gameEngine.CustomStonescriptEnabled() = false
   >`0,0,#red,Custom Stonescripts disabled
@@ -7,29 +36,9 @@ var gameEngine = import SS/GameEngine
 // :
 //   >`0,0,#green,Custom Stonescripts enabled
 
-var log = import SS/Log
-var strats = import SS/Strats
-var Components = import SS/UI/Components
-var Buffs = import SS/Checks/Buffs
-
-Buffs._UpdateBuffs()
-Components.render()
-
-// enable AAC (Attack Animation Cancel) ---------
-// enable faster attack speed
-gameEngine.AAC()
-log.LogAAC(gameEngine.AACEnabled())
-
-// auto-actions -----------------------------------
+// auto-actions ---------------------------------
 strats._AutoPotion(45)                        // enable auto-heal (via potions)
 strats._LootStar(30)                          // enable bonus loot with star stone
-
-// keybinds ---------------------------------------
-strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
-log._ShowWeapons(ability1)                    // show weapons by holding "shift"
-gameEngine.AACToggle(downBegin)
-gameEngine.RemoteCacheToggle(upBegin)         // toggle remote caching of scripts by pressing "up"
-gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pressing "left"
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau
@@ -41,5 +50,5 @@ import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
 
-
 log.WriteLogs()
+strats._ListenForSightStoneTrigger(ability2)  // trigger sight stone by holding "control"

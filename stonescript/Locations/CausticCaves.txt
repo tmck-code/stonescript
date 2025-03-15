@@ -3,76 +3,8 @@ var strats = import SS/Strats
 var canUse = import SS/Checks/CanUse
 
 var buffs = import SS/Checks/Buffs
-
-
-var BUTTON_MORE_MAX_DISTANCE = 0
-var BUTTON_LESS_MAX_DISTANCE = 0
-var BUTTON_MORE_MIN_DISTANCE = 0
-var BUTTON_LESS_MIN_DISTANCE = 0
 var MAX_DISTANCE = 10
 var MIN_DISTANCE = 3
-
-func DecreaseMaxDistance()
-  MAX_DISTANCE = MAX_DISTANCE - 1
-  BUTTON_LESS_MAX_DISTANCE.text = string.Format("<{0}", MAX_DISTANCE)
-  BUTTON_MORE_MAX_DISTANCE.text = string.Format("{0}>", MAX_DISTANCE)
-
-func IncreaseMaxDistance()
-  MAX_DISTANCE = MAX_DISTANCE + 1
-  BUTTON_MORE_MAX_DISTANCE.text = string.Format("{0}>", MAX_DISTANCE)
-  BUTTON_LESS_MAX_DISTANCE.text = string.Format("<{0}", MAX_DISTANCE)
-
-func DecreaseMinDistance()
-  MIN_DISTANCE = MIN_DISTANCE - 1
-  BUTTON_LESS_MIN_DISTANCE.text = string.Format("<{0}", MIN_DISTANCE)
-  BUTTON_MORE_MIN_DISTANCE.text = string.Format("{0}>", MIN_DISTANCE)
-
-func IncreaseMinDistance()
-  MIN_DISTANCE = MIN_DISTANCE + 1
-  BUTTON_MORE_MIN_DISTANCE.text = string.Format("{0}>", MIN_DISTANCE)
-  BUTTON_LESS_MIN_DISTANCE.text = string.Format("<{0}", MIN_DISTANCE)
-
-?loc.begin | loc.loop
-  BUTTON_LESS_MAX_DISTANCE = ui.AddButton()
-  BUTTON_MORE_MAX_DISTANCE = ui.AddButton()
-  BUTTON_LESS_MIN_DISTANCE = ui.AddButton()
-  BUTTON_MORE_MIN_DISTANCE = ui.AddButton()
-  BUTTON_LESS_MIN_DISTANCE.anchor = bottom_left
-  BUTTON_LESS_MIN_DISTANCE.dock = bottom_left
-  BUTTON_LESS_MIN_DISTANCE.y = BUTTON_LESS_MIN_DISTANCE.y - 2
-  BUTTON_LESS_MIN_DISTANCE.x = BUTTON_LESS_MIN_DISTANCE.x + 6
-  BUTTON_LESS_MIN_DISTANCE.text = string.Format("<{0}", MIN_DISTANCE)
-  BUTTON_LESS_MIN_DISTANCE.h = 3
-  BUTTON_LESS_MIN_DISTANCE.w = 6
-  BUTTON_LESS_MIN_DISTANCE.SetPressed(DecreaseMinDistance)
-  
-  BUTTON_MORE_MIN_DISTANCE.anchor = bottom_left
-  BUTTON_MORE_MIN_DISTANCE.dock = bottom_left
-  BUTTON_MORE_MIN_DISTANCE.y = BUTTON_MORE_MIN_DISTANCE.y - 2
-  BUTTON_MORE_MIN_DISTANCE.x = BUTTON_LESS_MIN_DISTANCE.x + 6
-  BUTTON_MORE_MIN_DISTANCE.text = string.Format("{0}>", MIN_DISTANCE)
-  BUTTON_MORE_MIN_DISTANCE.h = 3
-  BUTTON_MORE_MIN_DISTANCE.w = 6
-  BUTTON_MORE_MIN_DISTANCE.SetPressed(IncreaseMinDistance)
-
-
-  BUTTON_LESS_MAX_DISTANCE.anchor = bottom_left
-  BUTTON_LESS_MAX_DISTANCE.dock = bottom_left
-  BUTTON_LESS_MAX_DISTANCE.y = BUTTON_LESS_MAX_DISTANCE.y - 2
-  BUTTON_LESS_MAX_DISTANCE.x = BUTTON_MORE_MIN_DISTANCE.x + 6
-  BUTTON_LESS_MAX_DISTANCE.text = string.Format("<{0}", MAX_DISTANCE)
-  BUTTON_LESS_MAX_DISTANCE.h = 3
-  BUTTON_LESS_MAX_DISTANCE.w = 6
-  BUTTON_LESS_MAX_DISTANCE.SetPressed(DecreaseMaxDistance)
-
-  BUTTON_MORE_MAX_DISTANCE.anchor = bottom_left
-  BUTTON_MORE_MAX_DISTANCE.dock = bottom_left
-  BUTTON_MORE_MAX_DISTANCE.y = BUTTON_MORE_MAX_DISTANCE.y - 2
-  BUTTON_MORE_MAX_DISTANCE.x = BUTTON_LESS_MAX_DISTANCE.x + 6
-  BUTTON_MORE_MAX_DISTANCE.text = string.Format("{0}>", MAX_DISTANCE)
-  BUTTON_MORE_MAX_DISTANCE.h = 3
-  BUTTON_MORE_MAX_DISTANCE.w = 6
-  BUTTON_MORE_MAX_DISTANCE.SetPressed(IncreaseMaxDistance)
 
 var IS_FINAL_BOSS_STAGE = false
 var BOSS_TIME = 0
@@ -106,6 +38,10 @@ func Caves()
       // ?buffs.GetFoeBuffLevel("damage") >= 2
       //   ?strats.UseWandAbility("reset", "R")
       //     return
+
+    equipL ice sword
+    equipR ice hammer
+    return
     equip ice crossbow
     return
     ?buffs.GetFoeDebuffLevel("chill") >= 2

@@ -12,7 +12,7 @@ func RemoteCacheToggle(keybind)
 
 // Attack Animation Cancel ------------------------
 
-var AAC_ENABLED = true
+var AAC_ENABLED = false
 
 func AAC()
   ?AAC_ENABLED = false
@@ -34,6 +34,32 @@ func _AACToggle()
 func AACToggle(keybind)
   ?key = keybind
     _AACToggle()
+
+var AAC_FAST_ENABLED = true
+
+func AACFast()
+  ?AAC_FAST_ENABLED = false
+    return
+  ?item.right.state = 3
+    ?totaltime % 2 = 0
+      equipR trisk
+    :
+      equipR dash
+    equip @item.right@
+  ?item.left.state = 3
+    equipL trisk
+    equipL @item.left@
+
+func AACFastEnabled()
+  return AAC_FAST_ENABLED
+
+func _AACFastToggle()
+  AAC_FAST_ENABLED = !AAC_FAST_ENABLED
+  >0,10,AAC_FAST_ENABLED: @AAC_FAST_ENABLED@
+
+func AACFastToggle(keybind)
+  ?key = keybind
+    _AACFastToggle()
 
 // Loading Custom Stonescript ---------------------
 

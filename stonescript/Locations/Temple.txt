@@ -9,6 +9,13 @@ func Temple()
     strats.useBladeDS()
 
   ?foe = boss
+    ?foe = acronian_cultist
+      ?strats.Speedy()
+        return
+      :
+        equipL ice sword
+        equipR ice hammer
+        return
     activate potion
     equip ice crossbow
     return

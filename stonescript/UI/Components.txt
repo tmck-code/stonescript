@@ -1,6 +1,8 @@
 var gameEngine = import SS/GameEngine
 
 var BUTTON_AAC = 0
+var BUTTON_AAC_FAST = 0
+var BUTTON_LOC_STRATS = 0
 var BUTTON_LOAD_CUSTOM_STONESCRIPT = 0
 
 func ButtonAAC()
@@ -8,16 +10,34 @@ func ButtonAAC()
     BUTTON_AAC = ui.AddButton()
     BUTTON_AAC.anchor = bottom_left
     BUTTON_AAC.dock = bottom_left
-    BUTTON_AAC.y = BUTTON_AAC.y - 2
+    BUTTON_AAC.y = BUTTON_AAC.y - 1
     BUTTON_AAC.text = AAC
     BUTTON_AAC.h = 3
-    BUTTON_AAC.w = 5
+    BUTTON_AAC.w = 4
     BUTTON_AAC.SetPressed(gameEngine._AACToggle)
-  
+
   ?gameEngine.AACEnabled()
      BUTTON_AAC.bcolor = #green
   :
     BUTTON_AAC.bcolor = #red
+
+func ButtonAACFast()
+  ?loc.begin | loc.loop
+    BUTTON_AAC_FAST = ui.AddButton()
+    BUTTON_AAC_FAST.anchor = bottom_left
+    BUTTON_AAC_FAST.dock = bottom_left
+    BUTTON_AAC_FAST.y = BUTTON_AAC_FAST.y - 1
+    BUTTON_AAC_FAST.x = BUTTON_AAC_FAST.x + 5
+
+    BUTTON_AAC_FAST.text = "AAC☆"
+    BUTTON_AAC_FAST.h = 3
+    BUTTON_AAC_FAST.w = 5
+    BUTTON_AAC_FAST.SetPressed(gameEngine._AACFastToggle)
+  
+  ?gameEngine.AACFastEnabled()
+     BUTTON_AAC_FAST.bcolor = #green
+  :
+    BUTTON_AAC_FAST.bcolor = #red
 
 func CustomStonescriptToggle(btn)
   ?gameEngine.CustomStonescriptEnabled()
@@ -31,7 +51,8 @@ func ButtonLoadCustomStonescript()
     BUTTON_LOAD_CUSTOM_STONESCRIPT = ui.AddButton()
     BUTTON_LOAD_CUSTOM_STONESCRIPT.anchor = bottom_left
     BUTTON_LOAD_CUSTOM_STONESCRIPT.dock = bottom_left
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.y = BUTTON_LOAD_CUSTOM_STONESCRIPT.y -5
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.y = BUTTON_LOAD_CUSTOM_STONESCRIPT.y -1
+    BUTTON_LOAD_CUSTOM_STONESCRIPT.x = BUTTON_AAC_FAST.x + 6
 
     BUTTON_LOAD_CUSTOM_STONESCRIPT.text = "Custom"
     BUTTON_LOAD_CUSTOM_STONESCRIPT.h = 3
@@ -42,6 +63,25 @@ func ButtonLoadCustomStonescript()
     :
       BUTTON_LOAD_CUSTOM_STONESCRIPT.bcolor = #red
 
+// func ButtonLocStrat()
+//   ?loc.begin | loc.loop
+//     BUTTON_AAC_FAST = ui.AddButton()
+//     BUTTON_AAC_FAST.anchor = bottom_left
+//     BUTTON_AAC_FAST.dock = bottom_left
+//     BUTTON_AAC_FAST.y = BUTTON_AAC_FAST.y - 2
+//     BUTTON_AAC_FAST.x = BUTTON_AAC_FAST.x + 6
+
+//     BUTTON_AAC_FAST.text = "AAC☆"
+//     BUTTON_AAC_FAST.h = 3
+//     BUTTON_AAC_FAST.w = 6
+//     BUTTON_AAC_FAST.SetPressed(gameEngine._AACFastToggle)
+  
+//   ?gameEngine.AACFastEnabled()
+//      BUTTON_AAC_FAST.bcolor = #green
+//   :
+//     BUTTON_AAC_FAST.bcolor = #red
+
 func render()
   ButtonAAC()
+  ButtonAACFast()
   ButtonLoadCustomStonescript()

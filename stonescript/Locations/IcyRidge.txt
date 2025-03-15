@@ -39,53 +39,80 @@ func IcyRidge()
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
     IS_FINAL_BOSS_STAGE = true
 
+  ?foe = giant_ice_elemental
+    ?foe.debuffs.string ! damage
+      equipR poison wand
+      equipL fire wand +13
+      return
+    equipR fire wand +13
+    return
+
   ?IS_FINAL_BOSS_STAGE
     BOSS_TIME = BOSS_TIME + 1
-    ?strats.Speedy() = true
-      return
 
     activate potion
 
-    ?foe = ice_pillar
+    ?foe = ice_wall
       equip fire crossbow
+      return
+
+    ?strats.Speedy()
       return
 
     ?BOSS_TIME > 400
       ?foe = yeti
-        ?strats.MaskOfTheLost() = true
+        ?strats.MaskOfTheLost()
           return
-      ?armor < 60
+      
+      ?foe.hp > 3000 & foe.hp < 3200
+        ?strats.UseWandAbility("frost", "L")
+          return
+
+      ?foe.hp < 3000
         ?strats.UseWandAbility("explosive", "L")
           return
         ?strats.UseWandAbility("plague", "R")
           return
 
-    ?buffs.GetFoeDebuffLevel("dot") < 1
-      equipR fire wand
-      equipL fire wand +11 df
-      return
-    :
-      equip fire crossbow
+    ?strats.Dash()
       return
 
-  ?strats._Speedy(19) = true
+    ?buffs.GetFoeDebuffLevel("dot") < 1
+      equipR poison wand
+      equipL fire wand +13
+      return
+    :
+      equipR fire sword
+      equipL fire hammer
+      return
+
+  ?strats.Speedy()
     return
 
   // ?foe.count > 8
   //   equipR fire talisman
   //   equipL fire wand +13
-
-  ?foe = ice_pillar & foe.count < 4
-    equipR fire wand
-    equipL fire wand +11 df
+  ?foe = ice_elemental
+    equipL fire talisman
+    activate L
+    equip fire crossbow
     return
-
-  ?foe = ice_elemental | foe.distance > 15
+  
+  ?foe.distance > 15
     equip fire crossbow
     return
 
-  ?foe.distance > 3
-    equipR fire wand +11 df
+  ?strats.Dash()
+    return
+
+  ?foe = ice_pillar & foe.count < 4
+    equipR poison wand
+    equipL fire wand +13
+    return
+
+
+  ?foe.distance > 12
+    equipR poison wand
     equipL fire wand +13
     return
 

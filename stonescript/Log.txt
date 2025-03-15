@@ -29,9 +29,9 @@ func LogAbovePlayer(l, x_offset, y_offset, increment, alignment)
     var msg = l[i][1]
     var y = (i*increment)+y_offset
     ?alignment = "right"
-      >o@x_offset-string.Size(msg)@,@y@,@colour@,@msg@
+      >h@x_offset-string.Size(msg)@,@y@,@colour@,@msg@
     :?alignment = "left"
-      >o@x_offset@,@y@,@colour@,@msg@
+      >h@x_offset@,@y@,@colour@,@msg@
 
 func LogTopLeft(y_offset, l)
   ?l.Count() = 0
@@ -172,7 +172,29 @@ func FmtCooldownLogs(weapon_ids)
       logs.Add(formatted[0])
   return logs
 
-// weapon formatting --------
+// location / time / info formatting ------------
+
+var FRAMES_PER_SECOND = 30
+
+func FmtFrames()
+  var seconds = totaltime / FRAMES_PER_SECOND
+  var framesWithinSecond = totaltime % FRAMES_PER_SECOND
+  // add a padding 0 e.g. "09"
+  ?framesWithinSecond < 9
+    var framesWithinSecondFmt = string.Format("0{0}", framesWithinSecond)
+  :
+    var framesWithinSecondFmt = string.Format("{0}", framesWithinSecond)
+  // only render the minutes if needed, e.g. "1921/1:01.01"
+  ?totaltime > 60 * FRAMES_PER_SECOND
+    return string.Format("{0,4}/{1,2}:{2,2}.{3}", totaltime, seconds / 60, seconds % 60, framesWithinSecondFmt)
+  // the most common case, e.g. "637/21.07"
+  :?totaltime > 0
+    return string.Format("{0,4}/{1,2}.{2}",       totaltime, seconds, framesWithinSecondFmt)
+  // the total time is 0, e.g. "0/0:00.00"
+  :
+    return string.Format("{0,4}/{1,2}:{2,2}.{3}", 0, 0, 0, framesWithinSecondFmt)
+
+// weapon formatting ----------------------------
 
 // hold shift to show weapons
 
@@ -185,7 +207,7 @@ func _ShowWeapons(keybind)
   var matches = strings.FindAllIndexes(item.left.id, "_")
   ?key = keybind
     >`0,4,#yellow,l:(@Fmt(matches)@)\n  @FmtItemIDBasic(item.left.id)@\n\nr:@FmtItemIDBasic(item.right.id)@
-    >`0,14,#white,f:@string.Join("\n", string.Break(foe, 20))@
+    >`0,14,#white,f:@string.Join("\n", string.Break(string.Join("\n", [foe, foe.buffs.string]), 20))@
 
 func ShowWeapons()
   _ShowWeapons(ability1)
@@ -282,63 +304,80 @@ func FmtFoeName(foe_name)
 // --------------------------------------------------
 // State Formatting
 
-func FmtItemState(item_state, item_hand)
+func FmtItemState(item_state)
   ?item_state = 1
-    return "idle"
+    // return "idle"
+    return "▄"
   :?item_state = 2
-    return "cast"
+    // return "cast"
+    return "▒"
   :?item_state = 3
-    return "perf"
+    // return "perf"
+    return "█"
   :?item_state = 4
-    return "cool"
+    // return "cool"
+    return "▓"
   :
     return string.Format("?? {0}", item_state)
 
 func FmtFoeState(foe_state)
   ?foe_state = 32
-    return "prep (32)"
+    return "prep (32) "
   :?foe_state = 33
-    return "attack (33)"
+    return "attack (33) "
   :?foe_state = 34
-    return "complete (34)"
+    return "complete (34) "
   :?foe_state = 2
-    return "wait (2)"
+    return "wait (2) "
   :
-    return foe_state  
+    return string.Format("{0} ", foe_state)  
 
-var seenItemStatesLeft = []
-var itemStateTimesLeft = []
-var seenItemStatesRight = []
-var itemStateTimesRight = []
+var itemStatesFmt = [FmtItemState(1), FmtItemState(2), FmtItemState(3), FmtItemState(4)]
+
+var seenItemStatesLeft = itemStatesFmt
+var itemStateTimesLeft = [0, 0, 0, 0]
+var seenItemStatesRight = itemStatesFmt
+var itemStateTimesRight = [0, 0, 0, 0]
 
 var seenFoeStates = []
 var foeStateTimes = []
 
 ?loc.loop
-  seenItemStatesLeft.Clear()
-  itemStateTimesLeft.Clear()
-  seenItemStatesRight.Clear()
-  itemStateTimesRight.Clear()
+  seenItemStatesLeft = itemStatesFmt
+  itemStateTimesLeft = [0, 0, 0, 0]
+  seenItemStatesRight = itemStatesFmt
+  itemStateTimesRight = [0, 0, 0, 0]
   seenFoeStates.Clear()
   foeStateTimes.Clear()
 
-func CollectStates(state_name, foe_state, foe_time, seen_states, state_times)
-  var state_value = FmtFoeState(foe_state)
+// var c1 = "#ff4400"
+var c1 = "#ffffff"
+var c2 = "#8888ff"
+var c
+var n
+// n = math.Lerp(n, 1, 0.02)
+// c = color.Lerp(c1, c2, n)
 
-  var t = foe_time
+func getColor()
+  ?time % 2 = 0
+    n = math.sin(time*0.05) / 2 + 0.5
+    c = color.Lerp(c1, c2, n)
+  return c
+
+func CollectStates(state_name, state_value, state_time, seen_states, state_times)
   var idx = seen_states.IndexOf(state_value)
   ?idx = -1
     seen_states.Add(state_value)
-    state_times.Add(t)
+    state_times.Add(state_time)
   :?time % 2 = 0
-    state_times.Emplace(idx, t)
+    state_times.Emplace(idx, state_time)
 
   var lines = []
   for i = 0 .. seen_states.Count()-1
     ?i = idx
-      lines.Add(["#green", string.Format("{0} {1}", seen_states[i], state_times[i])])
+      lines.Add(["#white", string.Format("{0}{1,3}", seen_states[i], state_times[i])])
     :
-      lines.Add(["#white", string.Format("{0} {1}", seen_states[i], state_times[i])])
+      lines.Add([getColor(), string.Format("{0}{1,3}", seen_states[i], state_times[i])])
   return lines
 
 var lastLeftItem = ""
@@ -353,26 +392,26 @@ func LogItemStates()
   //              > 4 (5)        4 (5)
 
   ?lastLeftItem ! item.left.id | string.Size(item.left.id) = 0
-    seenItemStatesLeft.Clear()
-    itemStateTimesLeft.Clear()
+    seenItemStatesLeft = itemStatesFmt
+    itemStateTimesLeft = [0, 0, 0, 0]
     lastLeftItem = item.left.id
   :
-    var leftItemLines = CollectStates(item, item.left.state, item.left.time, seenItemStatesLeft, itemStateTimesLeft)
+    var leftItemLines = CollectStates(item, FmtItemState(item.left.state), item.left.time, seenItemStatesLeft, itemStateTimesLeft)
     ?leftItemLines.Count() > 0
-      >`0,5,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+      >`0,6,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
       for i = 0 .. leftItemLines.Count()-1
-        >`0,@i+6@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
+        >`0,@i+7@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
 
   ?lastRightItem ! item.right.id | string.Size(item.right.id) = 0
-    seenItemStatesRight.Clear()
-    itemStateTimesRight.Clear()
+    seenItemStatesRight = itemStatesFmt
+    itemStateTimesRight = [0, 0, 0, 0]
     lastRightItem = item.right.id
   :
-    var rightItemLines = CollectStates(item, item.right.state, item.right.time, seenItemStatesRight, itemStateTimesRight)
+    var rightItemLines = CollectStates(item, FmtItemState(item.right.state), item.right.time, seenItemStatesRight, itemStateTimesRight)
     ?rightItemLines.Count() > 0
-      >`6,5,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+      >`6,6,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
       for i = 0 .. rightItemLines.Count()-1
-        >`6,@i+6@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
+        >`6,@i+7@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
 
 func LogFoeStates(x_offset)
   ?lastFoe ! foe.id | string.Size(foe.id) = 0
@@ -380,7 +419,7 @@ func LogFoeStates(x_offset)
     foeStateTimes.Clear()
     lastFoe = foe.id
   :
-    var foeLines = CollectStates(foe, foe.state, foe.time, seenFoeStates, foeStateTimes)
+    var foeLines = CollectStates(foe, FmtFoeState(foe.state), foe.time, seenFoeStates, foeStateTimes)
     LogTopRight(x_offset, foeLines)
 
 func cleanBuffString(b, buff_type)
@@ -505,12 +544,12 @@ func LogFoeDistance()
 func LogPickupDistance()
   ?pickup.distance = 9999
     return
-  LogAbovePlayer([["#yellow", string.Format("{0}:{1}", pickup, pickup.distance)]], 0, -1, -1, "left")
+  LogAbovePlayer([["#yellow", string.Format("{0}:{1,3}", pickup, pickup.distance)]], 0, -1, -1, "left")
 
 func LogHarvestDistance()
   ?harvest.distance = 9999
     return
-  LogAbovePlayer([["#yellow", string.Format("{0}:{1}", harvest, harvest.distance)]], 0, 0, -1, "left")
+  LogAbovePlayer([["#yellow", string.Format("{0}:{1,3}", harvest, harvest.distance)]], 0, 0, -1, "left")
 
 // --------------------------
 
@@ -561,8 +600,19 @@ func LogAAC(aac_enabled)
   AAC_ENABLED = aac_enabled
 
 func WriteLogs()
+  LogTopLeft(10, FmtCooldownLogs([
+  ^  "bardiche", "quarterstaff", "heavy_hammer",
+  ^  "bash", "dash",
+  ^  "mind", "hatchet",
+  ^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
+  ^  "skeleton_arm", "mask", "blade",
+  ^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
+  ^  "talisman_aether", "talisman_fire",
+  ^  "cinderwisp", "voidweaver"
+  ^]))
   LogTopLeft(1, [
-    ["#white",  string.Format("{0}: {1}", "t", Fmt([totaltime, time.FormatCasual(totaltime, true)]))],
+    ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames()]))],
+    ["#white",  string.Format("{0}: {1}", "p", Fmt([pos.x, screen.FromWorldX(pos.x), screen.FromWorldZ(pos.z - pos.y)]))],
     ["#blue",   string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))],
     ["#yellow", string.Format("{0}: {1}", "AAC", Fmt([AAC_ENABLED]))],
   ])
@@ -570,11 +620,8 @@ func WriteLogs()
   // LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])
 
   // log buffs and debuffs above the player
-  LogAllBuffsAndDebuffs()
   LogItemStates()
-  LogFoeDistance()
-  LogPickupDistance()
-  LogHarvestDistance()
+
   var FoeInfo = FmtFoeName(foe)
   var FoeInfoFmt = [
   ^  ["#green", string.Format("'{0}'", FoeInfo[0])],
@@ -589,16 +636,11 @@ func WriteLogs()
   ^ ["#yellow", string.Format("{0}/{1}", item.GetTreasureCount(), item.GetTreasureLimit())], 
   ^])
 
-  LogTopLeft(10, FmtCooldownLogs([
-  ^  "bardiche", "quarterstaff", "heavy_hammer",
-  ^  "bash", "dash",
-  ^  "mind", "hatchet",
-  ^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
-  ^  "skeleton_arm", "mask", "blade",
-  ^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
-  ^  "talisman_aether", "talisman_fire",
-  ^  "cinderwisp", "voidweaver"
-  ^]))
+  LogAllBuffsAndDebuffs()
+  LogFoeDistance()
+  LogPickupDistance()
+  LogHarvestDistance()
+
   // LogStatesBeforeDamage()
 
   // FmtWeaponID(item.left.id)
