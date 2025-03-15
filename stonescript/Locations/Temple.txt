@@ -23,19 +23,18 @@ func Temple()
   ?strats.Speedy()
     return
 
-  ?foe.distance < 22 & foe.distance > 8
+  ?foe.distance > 15
     equip ice crossbow
     return
-
-  // ?strats.Dash()
-  //   return
-
-  ?foe.distance > 2
+  ?foe.distance > 8
     equipL vigor wand
     equipR ice wand
-  :
-    equipL ice sword
-    equipR ice wand
+    return
+
+  ?strats.Dash()
+    return
+  equipL ice sword
+  equipR ice hammer
 
 ?loc = temple
   Temple()

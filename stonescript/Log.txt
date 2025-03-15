@@ -350,8 +350,7 @@ var foeStateTimes = []
   seenFoeStates.Clear()
   foeStateTimes.Clear()
 
-// var c1 = "#ff4400"
-var c1 = "#ffffff"
+var c1 = "#ff4400"
 var c2 = "#8888ff"
 var c
 var n
@@ -360,7 +359,7 @@ var n
 
 func getColor()
   ?time % 2 = 0
-    n = math.sin(time*0.05) / 2 + 0.5
+    n = math.sin(time*0.2) / 2 + 0.5
     c = color.Lerp(c1, c2, n)
   return c
 
