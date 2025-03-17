@@ -9,25 +9,43 @@ func BoilingMine()
     strats.useBladeDS()
 
   ?foe = boss & foe = bomb_cart
-    equip repeating crossbow
+    ?strats.Speedy()
+      return
+    equip aether crossbow
     return
 
   ?foe = boss
-    ?foe.armor <= 0
+    ?foe.state = 32
+      ?foe.distance > 10
+        equipL tri
+        return
+    ?foe.state = 33
+      ?foe.distance > 10
+        equipL tri
+        return
+      ?strats.UseWeaponIfReady("bardiche", 10)
+        return
+      ?strats.UseWeaponIfReady("heavy_hammer", 10)
+        activate R
+        return
+      equip heavy hammer
+      // equipL aether sword
+      // equipR stone sword
+      return
+
+    ?foe.armor <= 500
+      ?strats.MaskOfTheLost()
+        return
       ?strats.UseWandAbility("plague", "R")
         return
       ?strats.UseWandAbility("explosive", "L")
         return
       equip repeating crossbow
       return
-    ?strats.MaskOfTheLost()
-      return
-    // ?strats.UseWandAbility("plague", "R")
-    //   return
     equip aether crossbow
     return
 
-  ?strats.Speedy()
+  ?strats._Speedy(22, true)
     return
 
   ?(foe = slave_master | foe = elemental) | foe.distance > 12
