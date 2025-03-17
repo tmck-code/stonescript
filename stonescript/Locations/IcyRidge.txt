@@ -33,7 +33,7 @@ func QuickShield()
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
 
-  ?strats.canUseBladeDS(3)
+  ?strats.canUseBladeDS(1)
     strats.useBladeDS()
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
@@ -44,10 +44,6 @@ func IcyRidge()
       return
     ?strats.UseWeaponIfReady("blade", 20)
       return
-    // ?summon.GetId() ! "cinderwisp" & item.CanActivate()
-    //   equipL fire talisman
-    //   activate L
-    //   return
     ?foe.debuffs.string ! dot & foe.debuffs.string ! ignition
       equipR fire wand dF
       equipL fire wand +13
@@ -55,11 +51,18 @@ func IcyRidge()
     ?foe.count > 1
       equip fire crossbow
       return
-    equip repeating crossbow
-    // equip fire crossbow
+    // equip repeating crossbow
+    equip fire crossbow
     return
 
   ?IS_FINAL_BOSS_STAGE
+    ?foe.armor > 0
+      ?
+
+      equipL ice hammer
+      equipR fire hammer
+      return
+
     BOSS_TIME = BOSS_TIME + 1
     ?foe = ice_wall
       equip fire crossbow
@@ -73,10 +76,18 @@ func IcyRidge()
           return
         ?strats.UseWandAbility("plague", "R")
           return
+    
+    ?foe.distance < 10
+      equipL ice sword
+      equipR ice hammer
+      return
+
+    ?foe.count > 5 & armor > 14
+      ?strats.UseWandAbility("calamity", "L")
+        return
 
     equip fire crossbow
-    // equip fire staff
-    return
+      return
 
     // ?strats.Dash()
     //   return
