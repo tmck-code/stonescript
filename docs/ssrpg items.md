@@ -141,6 +141,14 @@
 | ❄   | ice     | `frost`     | #IcyRidge              |         |                |              |
 | 🞈  | stone   | `gravity`   | #DeadwoodCanyon        |         |                |              |
 
+| staff						 | ability armor cost |
+| ---------------- | ------------------ |
+| Acrobatic Staff  | 3                  |
+| Berserker Staff  | 7                  |
+| Prevention Staff | 4                  |
+| Grasping Staff   | 2                  |
+| Infernal Staff   | 6                  |
+| Eternity Staff   | 1                  |
  
 ## Items
 
