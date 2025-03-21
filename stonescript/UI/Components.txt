@@ -4,6 +4,7 @@ var BUTTON_AAC = 0
 var BUTTON_AAC_FAST = 0
 var BUTTON_LOC_STRATS = 0
 var BUTTON_LOAD_CUSTOM_STONESCRIPT = 0
+var BUTTON_ACTIVATE_MINDSTONE = 0
 
 func ButtonAAC()
   ?loc.begin | loc.loop
@@ -63,25 +64,28 @@ func ButtonLoadCustomStonescript()
     :
       BUTTON_LOAD_CUSTOM_STONESCRIPT.bcolor = #red
 
-// func ButtonLocStrat()
-//   ?loc.begin | loc.loop
-//     BUTTON_AAC_FAST = ui.AddButton()
-//     BUTTON_AAC_FAST.anchor = bottom_left
-//     BUTTON_AAC_FAST.dock = bottom_left
-//     BUTTON_AAC_FAST.y = BUTTON_AAC_FAST.y - 2
-//     BUTTON_AAC_FAST.x = BUTTON_AAC_FAST.x + 6
+func MindStoneActivate(btn)
+  btn.bcolor = #red
+  ?item.GetCooldown("mind") && item.CanActivate()
+    equipR mind
+    activate R
+  btn.bcolor = #green
 
-//     BUTTON_AAC_FAST.text = "AAC☆"
-//     BUTTON_AAC_FAST.h = 3
-//     BUTTON_AAC_FAST.w = 6
-//     BUTTON_AAC_FAST.SetPressed(gameEngine._AACFastToggle)
-  
-//   ?gameEngine.AACFastEnabled()
-//      BUTTON_AAC_FAST.bcolor = #green
-//   :
-//     BUTTON_AAC_FAST.bcolor = #red
+func ButtonActivateMindStone()
+  ?loc.begin | loc.loop
+    BUTTON_ACTIVATE_MINDSTONE = ui.AddButton()
+    BUTTON_ACTIVATE_MINDSTONE.anchor = bottom_left
+    BUTTON_ACTIVATE_MINDSTONE.dock = bottom_left
+    BUTTON_ACTIVATE_MINDSTONE.y = BUTTON_ACTIVATE_MINDSTONE.y -1
+    BUTTON_ACTIVATE_MINDSTONE.x = BUTTON_LOAD_CUSTOM_STONESCRIPT.x + 7
+
+    BUTTON_ACTIVATE_MINDSTONE.text = "mind"
+    BUTTON_ACTIVATE_MINDSTONE.h = 3
+    BUTTON_ACTIVATE_MINDSTONE.w = 6
+    BUTTON_ACTIVATE_MINDSTONE.SetPressed(MindStoneActivate)
 
 func render()
   ButtonAAC()
   ButtonAACFast()
   ButtonLoadCustomStonescript()
+  ButtonActivateMindStone()

@@ -34,7 +34,6 @@ func Caves()
         return
       ?strats.UseWandAbility("plague", "R")
         return
-      ?foe.buffs.string = damage
       ?buffs.GetFoeBuffLevel("damage") >= 2
         ?strats.UseWandAbility("reset", "R")
           return
@@ -68,7 +67,7 @@ func Caves()
     return
 
   equipL ice hammer
-  equipR vigor swordzz
+  equipR vigor sword
 
 ?loc = caves
   Caves()

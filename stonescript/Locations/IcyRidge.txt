@@ -30,11 +30,39 @@ func QuickShield()
     needShield = false
     return false
 
+func Override()
+  return false
+
+  ?foe.distance < 30 & armor = 0
+    activate potion
+    return true
+
+  ?foe.distance < 30 & armor > 0
+    >`0,15,#white,armor @armor@, @item.GetCooldown("staff_fire")@, @item.CanActivate()@
+    ?item.GetCooldown("staff_fire") = 0 & item.CanActivate()
+      >`0,16,#green,armor @armor@, @item.GetCooldown("staff_fire")@, @item.CanActivate()@
+      equip fire staff
+      activate R
+      return true
+  ?foe.distance > 12
+    equip fire staff
+    activate potion
+    ?item.GetCooldown("staff_fire") < 1 & item.CanActivate()
+      activate R
+      return true
+    :
+      equip fire crossbow
+      return true
+  return false
+
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
 
-  ?strats.canUseBladeDS(1)
+  ?strats.canUseBladeDS(2)
     strats.useBladeDS()
+
+  ?Override()
+    return
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
     IS_FINAL_BOSS_STAGE = true
@@ -57,7 +85,6 @@ func IcyRidge()
 
   ?IS_FINAL_BOSS_STAGE
     ?foe.armor > 0
-      ?
 
       equipL ice hammer
       equipR fire hammer
@@ -69,6 +96,11 @@ func IcyRidge()
       return
 
     ?BOSS_TIME > 400 & foe = yeti
+      activate potion
+      ?item.GetCooldown("staff_fire") < 1 & item.CanActivate()
+        equip fire staff
+        activate R
+        return
       ?strats.MaskOfTheLost()
         return
       ?armor > 30
@@ -112,8 +144,8 @@ func IcyRidge()
     equip fire crossbow
     return
 
-  equipR fire wand dF
-  equipL fire wand
+  // equipR fire wand dF
+  // equipL fire wand
 
   ?foe.distance > 12
     equipR fire wand dF

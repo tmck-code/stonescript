@@ -22,12 +22,14 @@ func FungusForest()
     ?foe = phase1
       ?strats.UseWandAbility("explosive", "L")
         return true
+      ?strats.UseWandAbility("frost", "L")
+        return true
       ?foe.distance > 12
         equipR tri
         return
 
     ?foe.armor > 0
-      equipR poison sword +11
+      equipR ice hammer
       equipL poison hammer +11 dP
       return
 
@@ -47,20 +49,15 @@ func FungusForest()
         equipL poison hammer +11 dP
         return
 
-
-  ?strats.Speedy()
+  ?strats._Speedy(22, true)
     return
 
   ?foe.count >= 2 & armor > 14
     ?strats.UseWandAbility("calamity", "L")
       return
-  
-  ?foe.count > 13
-    ?strats.UseWandAbility("plague", "L")
-      return
 
-  ?foe.distance > 12
-    equip repeating crossbow
+  ?foe.distance > 15
+    equip poison crossbow
     return
 
   ?strats.Dash()
