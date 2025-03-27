@@ -16,8 +16,18 @@ var BOSS_TIME = 0
 
 var foeState = 0
 
+func Override()
+  equip ice staff
+  ?hp < 20 & canUse.AbilityOfStaff("eternity")
+    activate R
+    return true
+  return true
+
 func Caves()
   log.LogStrat(4, "Caves "+loc.stars+"☆", "#green")
+
+  ?Override()
+    return
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()

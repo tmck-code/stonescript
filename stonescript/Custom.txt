@@ -6,12 +6,6 @@ var strats = import SS/Strats
 var Components = import SS/UI/Components
 var Buffs = import SS/Checks/Buffs
 
-// var OkaUtils = new UI/OkamiroyUtils
-// OkaUtils.ShowTimer(1, 15)
-// OkaUtils.ShowTimeStats(8, 15)
-// OkaUtils.ShowFoesBar(19, 1, 40, true)
-// OkaUtils.ShowPlayersBar(0, 4, 5)
-
 Buffs._UpdateBuffs()
 Components.render()
 
@@ -26,8 +20,8 @@ gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pr
 // AAC (Attack Animation Cancel) ----------------
 // enable faster attack speed
 // gameEngine.AAC()
-gameEngine.AACFast()
-// log.LogAAC(gameEngine.AACEnabled())
+// gameEngine.AACFast()
+log.LogAAC(gameEngine.AACEnabled())
 log.LogAAC(gameEngine.AACFastEnabled())
 
 ?gameEngine.CustomStonescriptEnabled() = false
@@ -38,7 +32,7 @@ log.LogAAC(gameEngine.AACFastEnabled())
 
 // auto-actions ---------------------------------
 strats._AutoPotion(45)                        // enable auto-heal (via potions)
-strats._LootStar(30)                          // enable bonus loot with star stone
+// strats._LootStar(30)                          // enable bonus loot with star stone
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau

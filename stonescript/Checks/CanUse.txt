@@ -12,23 +12,50 @@ var _WAND_ABILITIES_MAP = [
   ["gravity",   "stone"],
 ]
 
-var _WAND_ABILITIES = structs.DictKeys(_WAND_ABILITIES_MAP)
-var _WANDS          = structs.DictValues(_WAND_ABILITIES_MAP)
+// ability, element, armor cost
+var _STAFF_ABILITIES_MAP = [
+  ["berserker",  ["poison", 7]],
+  ["infernal",   ["fire",   6]],
+  ["eternity",   ["ice",    1]],
+  ["grasping",   ["aether", 2]],
+  ["acrobatic",  ["stone",  3]],
+  ["prevention", ["vigor",  4]],
+]
 
+var _WAND_ABILITIES  = structs.DictKeys(_WAND_ABILITIES_MAP)
+var _WANDS           = structs.DictValues(_WAND_ABILITIES_MAP)
+var _STAFF_ABILITIES = structs.DictKeys(_STAFF_ABILITIES_MAP)
+var _STAFFS          = structs.DictValues(_STAFF_ABILITIES_MAP)
+
+// returns -> element: str
 func _matchWand(ability, default)
   var i = _WAND_ABILITIES.IndexOf(ability)
   ?i ! -1
     return _WANDS[i]
   return default
 
+// returns -> [element: str, armorCost: int]
+func _matchStaff(ability, default)
+  var i = _STAFF_ABILITIES.IndexOf(ability)
+  ?i ! -1
+    return _STAFFS[i]
+  return default
+
 // public functions -----------------------------
 
-func AnyWandAbility()
-  return item.CanActivate() & armor >= 14
-
 func WandAbility(wand_element)
-  return item.GetCooldown("wand_" + wand_element) = 0
+  return armor >= 14 
+    ^ & item.GetCooldown("wand_" + wand_element) = 0
     ^ & item.CanActivate()
 
 func AbilityOfWand(ability)
   return WandAbility(_matchWand(ability, "??"))
+
+func StaffAbility(staffElement, armorCost)
+  return item.GetCooldown("staff_" + staffElement) = 0
+    ^ & item.CanActivate()
+    ^ & armor > armorCost
+
+func AbilityOfStaff(ability)
+  var staff = _matchStaff(ability, ["??", 0])
+  return StaffAbility(staff[0], staff[1])

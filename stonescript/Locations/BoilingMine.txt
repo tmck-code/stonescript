@@ -1,9 +1,19 @@
 var log = import SS/Log
 var strats = import SS/Strats
-import SS/Checks/CanUse
+var CanUse = import SS/Checks/CanUse
+
+func Override()
+  equip aether staff
+  ?CanUse.AbilityOfStaff("grasping")
+    activate R
+    return true
+  return true
 
 func BoilingMine()
   log.LogStrat(1, "BoilingMine", "#green")
+
+  ?Override()
+    return
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()

@@ -13,7 +13,6 @@ var BOSS_TIME = 0
 
 // >`0,10,#white,BOSS_TIME @IS_FINAL_BOSS_STAGE@ @BOSS_TIME@
 
-
 func QuickShield()
   // about to be hit! equip the shield
   ?foe.state = 33 & foe.time > 10
@@ -32,37 +31,29 @@ func QuickShield()
 
 func Override()
   return false
+  equip fire staff
 
-  ?foe.distance < 30 & armor = 0
+  ?foe = boss
     activate potion
-    return true
 
-  ?foe.distance < 30 & armor > 0
+  ?armor > 14
     >`0,15,#white,armor @armor@, @item.GetCooldown("staff_fire")@, @item.CanActivate()@
+
     ?item.GetCooldown("staff_fire") = 0 & item.CanActivate()
       >`0,16,#green,armor @armor@, @item.GetCooldown("staff_fire")@, @item.CanActivate()@
-      equip fire staff
       activate R
       return true
-  ?foe.distance > 12
-    equip fire staff
-    activate potion
-    ?item.GetCooldown("staff_fire") < 1 & item.CanActivate()
-      activate R
-      return true
-    :
-      equip fire crossbow
-      return true
-  return false
+
+  return true
 
 func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
 
-  ?strats.canUseBladeDS(2)
-    strats.useBladeDS()
-
   ?Override()
     return
+
+  ?strats.canUseBladeDS(2)
+    strats.useBladeDS()
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
     IS_FINAL_BOSS_STAGE = true

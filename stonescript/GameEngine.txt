@@ -12,7 +12,7 @@ func RemoteCacheToggle(keybind)
 
 // Attack Animation Cancel ------------------------
 
-var AAC_ENABLED = true
+var AAC_ENABLED = false
 
 func AAC()
   ?AAC_ENABLED = false

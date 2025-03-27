@@ -1,16 +1,20 @@
 var log = import SS/Log
 var strats = import SS/Strats
+var CanUse = import SS/Checks/CanUse
+
 
 func Override()
-  equipL poison wand +11
-  equipR poison wand +10
+  equip poison staff
+  ?CanUse.AbilityOfStaff("beserker")
+    activate R
+    return true
   return false
 
 func FungusForest()
   log.LogStrat(1, "FungusForest", "#green")
 
-  ?strats.canUseBladeDS(3)
-    strats.useBladeDS()
+  // ?strats.canUseBladeDS(3)
+  //   strats.useBladeDS()
 
   ?foe = boss
     ?foe = epic_snail
@@ -49,14 +53,14 @@ func FungusForest()
         equipL poison hammer +11 dP
         return
 
-  ?strats._Speedy(22, true)
+  ?strats._Speedy(25, true)
     return
 
   ?foe.count >= 2 & armor > 14
     ?strats.UseWandAbility("calamity", "L")
       return
 
-  ?foe.distance > 15
+  ?foe.distance > 12
     equip poison crossbow
     return
 
