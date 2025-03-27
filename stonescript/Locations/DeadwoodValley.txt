@@ -43,6 +43,8 @@ func DeadWoodValley()
       equip repeating crossbow
       return
 
+    ?strats.Speedy()
+      return
     equip repeating crossbow
     return
 

@@ -5,13 +5,16 @@ var CanUse = import SS/Checks/CanUse
 
 func Override()
   equip poison staff
-  ?CanUse.AbilityOfStaff("beserker")
+  ?CanUse.AbilityOfStaff("berserker")
     activate R
     return true
-  return false
+  return true
 
 func FungusForest()
   log.LogStrat(1, "FungusForest", "#green")
+
+  ?Override()
+    return
 
   // ?strats.canUseBladeDS(3)
   //   strats.useBladeDS()
