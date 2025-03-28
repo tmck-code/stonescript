@@ -19,7 +19,7 @@ gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pr
 
 // AAC (Attack Animation Cancel) ----------------
 // enable faster attack speed
-gameEngine.AAC()
+// gameEngine.AAC()
 // gameEngine.AACFast()
 log.LogAAC(gameEngine.AACEnabled())
 log.LogAAC(gameEngine.AACFastEnabled())
@@ -32,7 +32,7 @@ log.LogAAC(gameEngine.AACFastEnabled())
 
 // auto-actions ---------------------------------
 strats._AutoPotion(45)                        // enable auto-heal (via potions)
-strats._LootStar(30)                          // enable bonus loot with star stone
+// strats._LootStar(30)                          // enable bonus loot with star stone
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau

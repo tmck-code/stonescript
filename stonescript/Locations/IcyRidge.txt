@@ -1,6 +1,7 @@
 var log    = import SS/Log
 var strats = import SS/Strats
 var buffs = import SS/Checks/Buffs
+var CanUse = import SS/Checks/CanUse
 
 buffs._UpdateBuffs()
 
@@ -30,20 +31,11 @@ func QuickShield()
     return false
 
 func Override()
-  return false
+  // activate potion
   equip fire staff
-
-  ?foe = boss
-    activate potion
-
-  ?armor > 14
-    >`0,15,#white,armor @armor@, @item.GetCooldown("staff_fire")@, @item.CanActivate()@
-
-    ?item.GetCooldown("staff_fire") = 0 & item.CanActivate()
-      >`0,16,#green,armor @armor@, @item.GetCooldown("staff_fire")@, @item.CanActivate()@
-      activate R
-      return true
-
+  ?CanUse.AbilityOfStaff("infernal")
+    activate R
+    return true
   return true
 
 func IcyRidge()
