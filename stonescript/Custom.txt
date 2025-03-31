@@ -6,10 +6,20 @@ var strats = import SS/Strats
 var Components = import SS/UI/Components
 var Buffs = import SS/Checks/Buffs
 
+// set global variables -------------------------
+?loc.begin
+  gameEngine.SetOverrideEnabled(false)          // enable behaviour override
+  gameEngine.SetAACEnabled(true)               // enable AAC
+  gameEngine.SetAACFastEnabled(false)          // enable fast AAC
+  gameEngine.SetCustomStonescriptEnabled(true) // enable custom stonescript
+
+// update UI ------------------------------------
+
 Buffs._UpdateBuffs()
 Components.render()
 
 // keybinds -------------------------------------
+
 strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
 log._ShowWeapons(ability1)                    // show weapons by holding "shift"
 // gameEngine.AACToggle(downBegin)               // toggle AAC by pressing "down"
@@ -17,22 +27,21 @@ log._ShowWeapons(ability1)                    // show weapons by holding "shift"
 gameEngine.RemoteCacheToggle(upBegin)         // toggle remote caching of scripts by pressing "up"
 gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pressing "left"
 
-// AAC (Attack Animation Cancel) ----------------
-// enable faster attack speed
-gameEngine.AAC()
-// gameEngine.AACFast()
-log.LogAAC(gameEngine.AACEnabled())
-log.LogAAC(gameEngine.AACFastEnabled())
+// auto-actions ---------------------------------
 
+// AAC (Attack Animation Cancel) - enable faster attack speed
+gameEngine.AAC()
+gameEngine.AACFast()
+// log.LogAAC(gameEngine.AACEnabled())
+// log.LogAAC(gameEngine.AACFastEnabled())
+
+// return now if custom stonescripts are disabled
 ?gameEngine.CustomStonescriptEnabled() = false
   >`0,0,#red,Custom Stonescripts disabled
   return
-// :
-//   >`0,0,#green,Custom Stonescripts enabled
 
-// auto-actions ---------------------------------
-strats._AutoPotion(45)                        // enable auto-heal (via potions)
-strats._LootStar(30)                          // enable bonus loot with star stone
+strats._AutoPotion(45) // enable auto-heal (via potions)
+strats._LootStar(30)   // enable bonus loot with star stone
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau
@@ -43,6 +52,8 @@ import SS/Locations/HauntedHalls
 import SS/Locations/BoilingMine
 import SS/Locations/IcyRidge
 import SS/Locations/Temple
+
+// logs/post-location overrides -----------------
 
 log.WriteLogs()
 strats._ListenForSightStoneTrigger(ability2)  // trigger sight stone by holding "control"

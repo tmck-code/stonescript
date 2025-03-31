@@ -1,0 +1,15 @@
+var element = ""
+var ability = ""
+var armorCost = 0
+var fullName = ""
+
+func _(_ability, _element, _armorCost)
+  element   = _element
+  ability   = _ability
+  armorCost = _armorCost
+  fullName  = "staff_" + _element
+
+func CanActivate()
+  return item.GetCooldown(fullName) = 0
+    ^ & item.CanActivate()
+    ^ & armor > armorCost

@@ -50,6 +50,8 @@ func DeadWoodValley()
 
   :?foe = boss & foe = xyloalgia
     ?foe.distance > 5
+      ?strats.Speedy()
+        return
       ?strats.Dash()
         return
     ?strats.MaskOfTheLost()
@@ -70,7 +72,7 @@ func DeadWoodValley()
     // equip fire crossbow
     return
 
-  ?strats._Speedy(22, true)
+  ?strats._Speedy(25, true)
     return
 
   ?foe ! scarab & foe.distance > 8
@@ -81,8 +83,8 @@ func DeadWoodValley()
     equipR tri
     return
 
-  // ?strats.Dash()
-  //   return
+  ?strats.Dash()
+    return
 
   // equipL poison sword dP
   equipL ice hammer

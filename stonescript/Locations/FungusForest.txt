@@ -1,6 +1,7 @@
 var log = import SS/Log
 var strats = import SS/Strats
 var CanUse = import SS/Checks/CanUse
+var gameEngine = import SS/GameEngine
 
 
 func Override()
@@ -82,4 +83,6 @@ func FungusForest()
   equipR poison hammer
 
 ?loc = fungus_forest
+  ?gameEngine.OverrideEnabled() & Override()
+    return
   FungusForest()

@@ -1,91 +1,60 @@
 var gameEngine = import SS/GameEngine
 
-var BUTTON_AAC = 0
-var BUTTON_AAC_FAST = 0
-var BUTTON_LOC_STRATS = 0
-var BUTTON_LOAD_CUSTOM_STONESCRIPT = 0
-var BUTTON_ACTIVATE_MINDSTONE = 0
+var PANEL = 0
+var BUTTONS = []
 
-func ButtonAAC()
-  ?loc.begin | loc.loop
-    BUTTON_AAC = ui.AddButton()
-    BUTTON_AAC.anchor = bottom_left
-    BUTTON_AAC.dock = bottom_left
-    BUTTON_AAC.y = BUTTON_AAC.y - 1
-    BUTTON_AAC.text = AAC
-    BUTTON_AAC.h = 3
-    BUTTON_AAC.w = 4
-    BUTTON_AAC.SetPressed(gameEngine._AACToggle)
+var STYLE_LINED_BOX = ui.AddStyle(＂┌─┐│ │└─┘＂)
 
-  ?gameEngine.AACEnabled()
-     BUTTON_AAC.bcolor = #green
-  :
-    BUTTON_AAC.bcolor = #red
+func AddActionButton(panel, text, action)
+  var button = ui.AddButton()
+  button.anchor = bottom_left
+  button.dock = bottom_left
+  button.y = button.y - 1
+  button.x = button.x + 2
 
-func ButtonAACFast()
-  ?loc.begin | loc.loop
-    BUTTON_AAC_FAST = ui.AddButton()
-    BUTTON_AAC_FAST.anchor = bottom_left
-    BUTTON_AAC_FAST.dock = bottom_left
-    BUTTON_AAC_FAST.y = BUTTON_AAC_FAST.y - 1
-    BUTTON_AAC_FAST.x = BUTTON_AAC_FAST.x + 5
+  button.text = text
+  button.h = 3
+  button.w = string.Size(text)+2
+  button.SetPressed(action)
 
-    BUTTON_AAC_FAST.text = "AAC☆"
-    BUTTON_AAC_FAST.h = 3
-    BUTTON_AAC_FAST.w = 5
-    BUTTON_AAC_FAST.SetPressed(gameEngine._AACFastToggle)
-  
-  ?gameEngine.AACFastEnabled()
-     BUTTON_AAC_FAST.bcolor = #green
-  :
-    BUTTON_AAC_FAST.bcolor = #red
+  return button
 
-func CustomStonescriptToggle(btn)
-  ?gameEngine.CustomStonescriptEnabled()
-    btn.bcolor = #red
-  :
-    btn.bcolor = #green
-  gameEngine._CustomStonescriptToggle()
+var BUTTON_ACTIONS = [
+^  [0, ["††",  gameEngine.AACEnabled,               gameEngine._AACToggle]],
+^  [0, ["††☆", gameEngine.AACFastEnabled,           gameEngine._AACFastToggle]],
+^  [0, ["☺",   gameEngine.CustomStonescriptEnabled, gameEngine._CustomStonescriptToggle]],
+^]
 
-func ButtonLoadCustomStonescript()
-  ?loc.begin | loc.loop
-    BUTTON_LOAD_CUSTOM_STONESCRIPT = ui.AddButton()
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.anchor = bottom_left
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.dock = bottom_left
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.y = BUTTON_LOAD_CUSTOM_STONESCRIPT.y -1
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.x = BUTTON_AAC_FAST.x + 6
+func init()
+  PANEL = ui.AddPanel()
+  PANEL.style = STYLE_LINED_BOX
+  PANEL.anchor = bottom_left
+  PANEL.dock = bottom_left
+  PANEL.h = 3
+  PANEL.y = PANEL.y - 1
+  PANEL.x = PANEL.x + 1
 
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.text = "Custom"
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.h = 3
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.w = 7
-    BUTTON_LOAD_CUSTOM_STONESCRIPT.SetPressed(CustomStonescriptToggle)
-    ?gameEngine.CustomStonescriptEnabled()
-      BUTTON_LOAD_CUSTOM_STONESCRIPT.bcolor = #green
-    :
-      BUTTON_LOAD_CUSTOM_STONESCRIPT.bcolor = #red
+  // create & add all buttons with their actions
+  for action : BUTTON_ACTIONS
+    var button = AddActionButton(PANEL, action[1][0], action[1][2])
+    BUTTONS.Add(button)
+  // space out the buttons evenly
+  for i = 1 .. BUTTONS.Count() - 1
+    BUTTONS[i].x = BUTTONS[i - 1].x + BUTTONS[i - 1].w
 
-func MindStoneActivate(btn)
-  btn.bcolor = #red
-  ?item.GetCooldown("mind") & item.CanActivate()
-    equipR mind
-    activate R
-  btn.bcolor = #green
+  var totalWidth = BUTTONS[BUTTONS.Count() - 1].x + BUTTONS[BUTTONS.Count() - 1].w
 
-func ButtonActivateMindStone()
-  ?loc.begin | loc.loop
-    BUTTON_ACTIVATE_MINDSTONE = ui.AddButton()
-    BUTTON_ACTIVATE_MINDSTONE.anchor = bottom_left
-    BUTTON_ACTIVATE_MINDSTONE.dock = bottom_left
-    BUTTON_ACTIVATE_MINDSTONE.y = BUTTON_ACTIVATE_MINDSTONE.y -1
-    BUTTON_ACTIVATE_MINDSTONE.x = BUTTON_LOAD_CUSTOM_STONESCRIPT.x + 7
-
-    BUTTON_ACTIVATE_MINDSTONE.text = "mind"
-    BUTTON_ACTIVATE_MINDSTONE.h = 3
-    BUTTON_ACTIVATE_MINDSTONE.w = 6
-    BUTTON_ACTIVATE_MINDSTONE.SetPressed(MindStoneActivate)
+  PANEL.w = totalWidth
 
 func render()
-  ButtonAAC()
-  ButtonAACFast()
-  ButtonLoadCustomStonescript()
-  ButtonActivateMindStone()
+  // only create the buttons once
+  ?loc.begin
+    init()
+    return
+
+  // update all button states each frame
+  for i = 0 .. BUTTONS.Count() - 1
+    ?BUTTON_ACTIONS[i][1][1]()
+      BUTTONS[i].bcolor = #green
+    :
+      BUTTONS[i].bcolor = #red

@@ -1,6 +1,7 @@
 var log    = import SS/Log
 var strats = import SS/Strats
 var buffs = import SS/Checks/Buffs
+var gameEngine = import SS/GameEngine
 
 buffs._UpdateBuffs()
 
@@ -30,7 +31,6 @@ func QuickShield()
     return false
 
 func Override()
-  return false
   equip fire staff
 
   ?foe = boss
@@ -46,11 +46,8 @@ func Override()
 
   return true
 
-func IcyRidge()
+func IcyRidge(should_override)
   log.LogStrat(4, "IcyRidge", "#green")
-
-  ?Override()
-    return
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()
@@ -151,4 +148,6 @@ func IcyRidge()
   return
 
 ?loc = icy_ridge
-  IcyRidge()
+  ?gameEngine.OverrideEnabled() & Override()
+    return
+  IcyRidge(should_override)

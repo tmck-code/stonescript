@@ -3,11 +3,13 @@ var strats = import SS/Strats
 var buffs = import SS/Checks/Buffs
 
 func FoeImmuneTo(element, index)
-  // >`0,@13+index@,#yellow,@element@: @string.IndexOf(foe.buffs.string, element)@ @foe.buffs.string = element@
   ?string.IndexOf(foe.buffs.string, string.Format("adaptive_defense_{0}", element)) ! -1
+    >`0,@13+index@,#yellow,immune @element@: true
     return true
   ?string.IndexOf(foe.buffs.string, element) ! -1
+    >`0,@13+index@,#yellow,immune @element@: true
     return true
+  >`0,@13+index@,#yellow,immune @element@: false
   return false
 
 func ShouldUseElement(element, element_weapon_choice)
@@ -60,44 +62,54 @@ func Rocky()
     activate R
     return
 
-  ?foe = phase3
-    activate potion
-    equipR fire sword
-    equipL fire hammer
-    return
+  // ?foe = phase3
+  //   activate potion
+  //   equipR fire sword
+  //   equipL fire hammer
+  //   return
+
+  ?strats.UseWandAbility("plague", "L")
+    return true
+  ?strats.UseWandAbility("frost", "L")
+    return true
+  ?strats.UseWandAbility("explosion", "L")
+    return true
+  ?strats.UseWandAbility("calamity", "L")
+    return true
 
   // ?!FoeImmuneTo("vigor",0) & !FoeImmuneTo("buff_protection",1) & !r_equipped
-  ?foe = aether & !r_equipped & !FoeImmuneTo("vigor",0) & !FoeImmuneTo("buff_protection",1) & foe.buffs.string ! "protection"
-    equipR vigor sword dL
+  // ?!r_equipped & !FoeImmuneTo("vigor",0) & !FoeImmuneTo("buff_protection",1) & foe.buffs.string ! "protection"
+  ?!(FoeImmuneTo("vigor",2) | FoeImmuneTo("protection",3))
+    equipR vigor sword
     equipL big vigor sword
     return
-  ?foe = vigor & !FoeImmuneTo("poison",2)
+  ?!FoeImmuneTo("poison",4)
     ?strats.UseWandAbility("plague", "L")
       return true
     equipR fire sword
-    equipL poison sword dP
+    equipL big poison sword
     return
-  ?foe = poison & !FoeImmuneTo("ice",3)
+  ?!FoeImmuneTo("ice",5)
     ?strats.UseWandAbility("frost", "L")
       return true
     equipR ice sword +10 *9
     equipL ice hammer
     return
-  ?foe = ice & !FoeImmuneTo("fire",4)
+  ?!FoeImmuneTo("fire",6)
     ?strats.UseWandAbility("explosion", "L")
       return true
     equipL fire sword
     equipR fire hammer
     return
-  ?foe = fire & !FoeImmuneTo("aether",5)
+  ?!FoeImmuneTo("aether",7)
     ?strats.UseWandAbility("calamity", "L")
       return true
     equipR aether hammer
     equipL big aether sword
     return
 
-  equipR vigor sword dL
-  equipL poison sword dP
+  equipR big vigor sword
+  equipL big poison sword
 
 ?loc = rocky
   Rocky()

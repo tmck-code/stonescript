@@ -3,16 +3,21 @@
 // - _<FeatureName>Toggle() -> void       > toggles the feature
 // - <FeatureName>Toggle(keybind) -> void  > toggles the feature when the keybind is pressed
 
-// remote caching --------------------------------
+// global variables -----------------------------
+
+var AAC_ENABLED                = false
+var AAC_FAST_ENABLED           = false
+var CUSTOM_STONESCRIPT_ENABLED = true
+var OVERRIDE_ENABLED           = false
+
+// remote caching ------------------------------
 
 func RemoteCacheToggle(keybind)
   ?key = keybind
     sys.cacheRemoteFiles = !sys.cacheRemoteFiles
     >0,10,Remote caching @sys.cacheRemoteFiles@
 
-// Attack Animation Cancel ------------------------
-
-var AAC_ENABLED = false
+// Attack Animation Cancel ----------------------
 
 func AAC()
   ?AAC_ENABLED = false
@@ -27,6 +32,9 @@ func AAC()
 func AACEnabled()
   return AAC_ENABLED
 
+func SetAACEnabled(enabled)
+  AAC_ENABLED = enabled
+
 func _AACToggle()
   AAC_ENABLED = !AAC_ENABLED
   >0,10,AAC_ENABLED: @AAC_ENABLED@
@@ -35,7 +43,8 @@ func AACToggle(keybind)
   ?key = keybind
     _AACToggle()
 
-var AAC_FAST_ENABLED = false
+// Attack Animation Cancel (Fast) ---------------
+// (a version that uses the triskellion)
 
 func AACFast()
   ?AAC_FAST_ENABLED = false
@@ -53,6 +62,9 @@ func AACFast()
 func AACFastEnabled()
   return AAC_FAST_ENABLED
 
+func SetAACFastEnabled(enabled)
+  AAC_FAST_ENABLED = enabled
+
 func _AACFastToggle()
   AAC_FAST_ENABLED = !AAC_FAST_ENABLED
   >0,10,AAC_FAST_ENABLED: @AAC_FAST_ENABLED@
@@ -61,12 +73,13 @@ func AACFastToggle(keybind)
   ?key = keybind
     _AACFastToggle()
 
-// Loading Custom Stonescript ---------------------
-
-var CUSTOM_STONESCRIPT_ENABLED = true
+// Loading Custom Stonescript -------------------
 
 func CustomStonescriptEnabled()
   return CUSTOM_STONESCRIPT_ENABLED
+
+func SetCustomStonescriptEnabled(enabled)
+  CUSTOM_STONESCRIPT_ENABLED = enabled
 
 func _CustomStonescriptToggle()
   CUSTOM_STONESCRIPT_ENABLED = !CUSTOM_STONESCRIPT_ENABLED
@@ -75,3 +88,20 @@ func _CustomStonescriptToggle()
 func CustomStonescriptToggle(keybind)
   ?key = keybind
     _CustomStonescriptToggle()
+
+// Run Override ---------------------------------
+// (custom hehaviour, usually for special event challenges)
+
+func OverrideEnabled()
+  return OVERRIDE_ENABLED
+
+func SetOverrideEnabled(enabled)
+  OVERRIDE_ENABLED = enabled
+
+func _OverrideToggle()
+  OVERRIDE_ENABLED = !OVERRIDE_ENABLED
+  >0,10,OVERRIDE_ENABLED: @OVERRIDE_ENABLED@
+
+func OverrideToggle(keybind)
+  ?key = keybind
+    _OverrideToggle()
