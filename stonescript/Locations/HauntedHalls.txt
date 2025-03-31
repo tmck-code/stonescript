@@ -2,6 +2,7 @@ var log = import SS/Log
 // var info = import Data/Info
 var strats = import SS/Strats
 var CanUse = import SS/Checks/CanUse
+var gameEngine = import SS/GameEngine
 
 var BOSS = false
 var MINIBOSS = false
@@ -29,9 +30,6 @@ func Override()
 
 func HauntedHalls()
   log.LogStrat(1, "HauntedHalls", "#green")
-
-  ?Override()
-    return
 
   ?loc.loop
     BOSS = false
@@ -152,4 +150,7 @@ func HauntedHalls()
   equipR reset wand +10
 
 ?loc = halls
+  ?gameEngine.OverrideEnabled()
+    ?Override()
+      return
   HauntedHalls()

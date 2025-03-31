@@ -39,7 +39,7 @@ func Override()
     return true
   return true
 
-func IcyRidge(should_override)
+func IcyRidge()
   log.LogStrat(4, "IcyRidge", "#green")
 
   ?strats.canUseBladeDS(2)
@@ -143,4 +143,4 @@ func IcyRidge(should_override)
 ?loc = icy_ridge
   ?gameEngine.OverrideEnabled() & Override()
     return
-  IcyRidge(should_override)
+  IcyRidge()
