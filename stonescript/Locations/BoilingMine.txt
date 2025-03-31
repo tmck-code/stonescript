@@ -13,7 +13,7 @@ func Override()
 func BoilingMine()
   log.LogStrat(1, "BoilingMine", "#green")
 
-  ?strats.canUseBladeDS(4)
+  ?strats.canUseBladeDS(3)
     strats.useBladeDS()
 
   ?foe = boss & foe = bomb_cart
@@ -23,6 +23,7 @@ func BoilingMine()
     return
 
   ?foe = boss
+    activate potion
     ?foe.state = 32
       ?foe.distance > 10
         equipL tri
@@ -37,8 +38,8 @@ func BoilingMine()
       //   activate R
       //   return
       // equip heavy hammer
-      equipL aether sword +8
-      equipR aether hammer +8
+      equipL big aether sword
+      equipR aether hammer
       return
 
     ?foe.armor <= 500
@@ -46,24 +47,40 @@ func BoilingMine()
       //   return
       // ?strats.UseWandAbility("plague", "R")
       //   return
-      // ?strats.UseWandAbility("explosive", "L")
+      // ?strats.UseWandAbility("e\xplosive", "L")
       //   return
       equip aether crossbow
       return
     equip aether crossbow
     return
 
-  ?strats._Speedy(22, false)
+  ?strats._Speedy(25, false)
     return
 
-  ?foe.count <= 4
-    ?strats._Dash(11, 20)
-      return
-
-  ?(foe = slave_master | foe = elemental) | foe.count > 8
+  ?foe.distance > 15 & foe.count > 6 // | (foe = slave_master | foe = elemental)
     equip aether crossbow
     return
 
+  ?foe.count <= 8 & !((foe = mine_walker | foe = big_slave_master) & foe.hp > 30)
+    ?strats._Dash(11, 18)
+      return
+
+  ?foe.count < 4
+    ?strats._Dash(11, 18)
+      return
+
+  ?foe.distance > 15 & foe.count > 6 // | (foe = slave_master | foe = elemental)
+    equip aether crossbow
+    return
+  
+  ?foe ! mine_walker & foe ! big_slave_master
+    ?strats._Dash(11, 18)
+      return
+
+  ?foe.distance > 15 & foe.count > 10
+    equip aether crossbow
+    return
+  
   ?strats.Dash()
     return
 
@@ -80,9 +97,8 @@ func BoilingMine()
   //   equipR vigor wand
   //   return
 
-
-  equipL aether sword +8
-  equipR aether hammer +8
+  equipL big aether sword
+  equipR aether hammer
 
 ?loc = mine
   ?gameEngine.OverrideEnabled() & Override()

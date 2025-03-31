@@ -24,8 +24,19 @@ func _LootStar(pickup_dist)
 func LootStar()
   return _LootStar(30)
 
-// close distance to the foe
 func _Dash(min_dist, max_dist)
+  ?foe.distance >= min_dist & foe.distance <= max_dist
+    >o0,4,#yellow,→
+    // dash cooldown can be -1 for some reason
+    ?item.GetCooldown("dash") <= 0
+      >o0,4,#green,→
+      equipR dash
+      activate R
+      return true
+  >o0,4,#red,→
+  return false
+
+func _Bash(min_dist, max_dist)
   ?foe.distance >= min_dist & foe.distance <= max_dist
     >o0,4,#yellow,→
     ?item.GetCooldown("bash") = 0
@@ -33,16 +44,16 @@ func _Dash(min_dist, max_dist)
       equipR bash
       activate R
       return true
-    // dash cooldown can be -1 for some reason
-    ?item.GetCooldown("dash") <= 0
-      >o0,4,#green,→
-      equipR dash
-      activate R
-      return true
-    return false
-  :
-    >o0,4,#red,→
-    return false
+  >o0,4,#red,→
+  return false
+
+// close distance to the foe
+func _DashBash(min_dist, max_dist)
+  ?_Bash(min_dist, max_dist)
+    return true
+  ?_Dash(min_dist, max_dist)
+    return true
+  return false
 
 func Dash()
   return _Dash(11, 16)
