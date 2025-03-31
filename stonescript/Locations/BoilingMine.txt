@@ -1,6 +1,7 @@
 var log = import SS/Log
 var strats = import SS/Strats
 var CanUse = import SS/Checks/CanUse
+var gameEngine = import SS/GameEngine
 
 func Override()
   equip aether staff
@@ -12,10 +13,7 @@ func Override()
 func BoilingMine()
   log.LogStrat(1, "BoilingMine", "#green")
 
-  ?Override()
-    return
-
-  ?strats.canUseBladeDS(2)
+  ?strats.canUseBladeDS(4)
     strats.useBladeDS()
 
   ?foe = boss & foe = bomb_cart
@@ -33,53 +31,60 @@ func BoilingMine()
       ?foe.distance > 10
         equipL tri
         return
-      ?strats.UseWeaponIfReady("bardiche", 10)
-        return
-      ?strats.UseWeaponIfReady("heavy_hammer", 10)
-        activate R
-        return
-      equip heavy hammer
-      // equipL aether sword
-      // equipR stone sword
+      // ?strats.UseWeaponIfReady("bardiche", 10)
+      //   return
+      // ?strats.UseWeaponIfReady("heavy_hammer", 10)
+      //   activate R
+      //   return
+      // equip heavy hammer
+      equipL aether sword +8
+      equipR aether hammer +8
       return
 
     ?foe.armor <= 500
-      ?strats.MaskOfTheLost()
-        return
-      ?strats.UseWandAbility("plague", "R")
-        return
-      ?strats.UseWandAbility("explosive", "L")
-        return
-      equip repeating crossbow
+      // ?strats.MaskOfTheLost()
+      //   return
+      // ?strats.UseWandAbility("plague", "R")
+      //   return
+      // ?strats.UseWandAbility("explosive", "L")
+      //   return
+      equip aether crossbow
       return
     equip aether crossbow
     return
 
-  ?strats._Speedy(22, true)
+  ?strats._Speedy(22, false)
     return
 
-  ?(foe = slave_master | foe = elemental) | foe.distance > 12
-    equip aether crossbow
-    return
-
-  ?foe.count > 12
-    ?armor > 14
-      strats.UseWandAbility("calamity", "L")
+  ?foe.count <= 4
+    ?strats._Dash(11, 20)
       return
-    equipL aether wand
-    equipR vigor wand
-    return
 
-  ?foe.distance > 12
-    equipL aether wand
-    equipR vigor wand
+  ?(foe = slave_master | foe = elemental) | foe.count > 8
+    equip aether crossbow
     return
 
   ?strats.Dash()
     return
 
+  // ?foe.count > 12
+  //   ?armor > 14
+  //     strats.UseWandAbility("calamity", "L")
+  //     return
+  //   equipL aether wand
+  //   equipR vigor wand
+  //   return
+
+  // ?foe.distance > 18
+  //   equipL aether wand
+  //   equipR vigor wand
+  //   return
+
+
   equipL aether sword +8
   equipR aether hammer +8
 
 ?loc = mine
+  ?gameEngine.OverrideEnabled() & Override()
+    return
   BoilingMine()
