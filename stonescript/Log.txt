@@ -110,6 +110,8 @@ func _Fmt(value, arr_sep)
 func FmtValue(value)
   return _Fmt(value, ",")
 
+// FmtSafeJoin provides a "safe" way to join an array
+// of any type. It avoids the error:
 func FmtSafeJoin(sep, data)
   var msg = []
   ?Type(data) ! array
@@ -126,14 +128,12 @@ func FmtSafeJoin(sep, data)
       msg.Add(string.Format("{0}", data[i]))
   return string.Join(sep, msg)
 
-// FmtSafeJoin provides a "safe" way to join an array
-// of any type. It avoids the error:
-// func FmtSafeJoin(sep, data)
-//   ?Type(data) ! array
-//     >`0,@screen.h-3@,#red,⚠ FmtSafeJoin(sep='@sep@' data='@data@')
-//     >`0,@screen.h-2@,#red,- data type '@Type(data)@' != 'array'
-//     return ""
-//   return _Fmt(data, sep)
+func FmtBigInt(number)
+  ?number > 1000
+    return string.Format("{0,3:F1}K", math.BigNumber(number).ToFloat()/1000)
+  ?number > 1000000
+    return string.Format("{0,3:F1}M", math.BigNumber(number).ToFloat()/1000000)
+  return string.Format("{0,4:D}", number)
 
 func Fmt(data)
   return FmtSafeJoin(" ", data)
@@ -335,18 +335,18 @@ func FmtFoeState(foe_state)
 var itemStatesFmt = [FmtItemState(1), FmtItemState(2), FmtItemState(3), FmtItemState(4)]
 
 var seenItemStatesLeft = itemStatesFmt
-var itemStateTimesLeft = [0, 0, 0, 0]
+var itemStateTimesLeft = []
 var seenItemStatesRight = itemStatesFmt
-var itemStateTimesRight = [0, 0, 0, 0]
+var itemStateTimesRight = []
 
 var seenFoeStates = []
 var foeStateTimes = []
 
 ?loc.loop
   seenItemStatesLeft = itemStatesFmt
-  itemStateTimesLeft = [0, 0, 0, 0]
+  itemStateTimesLeft = [FmtBigInt(0), FmtBigInt(0), FmtBigInt(0), FmtBigInt(0)]
   seenItemStatesRight = itemStatesFmt
-  itemStateTimesRight = [0, 0, 0, 0]
+  itemStateTimesRight = [FmtBigInt(0), FmtBigInt(0), FmtBigInt(0), FmtBigInt(0)]
   seenFoeStates.Clear()
   foeStateTimes.Clear()
 
@@ -373,9 +373,9 @@ func CollectStates(state_name, state_value, state_time, seen_states, state_times
   var lines = []
   for i = 0 .. seen_states.Count()-1
     ?i = idx
-      lines.Add(["#white", string.Format("{0,3}{1}", state_times[i], seen_states[i])])
+      lines.Add(["#white", string.Format("{0,3}{1}", FmtBigInt(state_times[i]), seen_states[i])])
     :
-      lines.Add([getColor(), string.Format("{0,3}{1}", state_times[i], seen_states[i])])
+      lines.Add([getColor(), string.Format("{0,3}{1}", FmtBigInt(state_times[i]), seen_states[i])])
   return lines
 
 var lastLeftItem = ""
