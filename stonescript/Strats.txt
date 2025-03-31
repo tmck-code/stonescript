@@ -33,7 +33,8 @@ func _Dash(min_dist, max_dist)
       equipR bash
       activate R
       return true
-    ?item.GetCooldown("dash") = 0
+    // dash cooldown can be -1 for some reason
+    ?item.GetCooldown("dash") <= 0
       >o0,4,#green,→
       equipR dash
       activate R
