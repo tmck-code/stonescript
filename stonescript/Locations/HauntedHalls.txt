@@ -1,6 +1,7 @@
 var log = import SS/Log
 // var info = import Data/Info
 var strats = import SS/Strats
+var CanUse = import SS/Checks/CanUse
 
 var BOSS = false
 var MINIBOSS = false
@@ -19,14 +20,24 @@ func FoeImmuneTo(element)
     return true
   return false
 
+func Override()
+  equip vigor staff
+  ?CanUse.AbilityOfStaff("prevention")
+    activate R
+    return true
+  return true
+
 func HauntedHalls()
-  ?loc.loop
-    BOSS = false
   log.LogStrat(1, "HauntedHalls", "#green")
 
-  >`0,13,#green,BOSS:@BOSS@
-  >`0,14,#green,MINIBOSS:@MINIBOSS@
-  >`0,15,#green,weaponCycles:@weaponCycles@ (@equippedWeapon@)
+  ?Override()
+    return
+
+  ?loc.loop
+    BOSS = false
+  // >`0,13,#green,BOSS:@BOSS@
+  // >`0,14,#green,MINIBOSS:@MINIBOSS@
+  // >`0,15,#green,weaponCycles:@weaponCycles@ (@equippedWeapon@)
 
   ?strats.canUseBladeDS(1)
     strats.useBladeDS()
@@ -51,7 +62,7 @@ func HauntedHalls()
   ?MINIBOSS
     ?strats.Speedy()
       return
-    ?item.right.state = 2
+    ?item.right.state = 2 & (item.right = crossbow | item.right = poison wand)
       weaponCycles = weaponCycles + 1
       return
     ?weaponCycles > 2
@@ -65,6 +76,8 @@ func HauntedHalls()
         equip vigor crossbow
         equippedWeapon = "crossbow"
         return
+    equipL vigor wand
+    equipR poison wand
     return
 
   ?foe = skeleton_boss & BOSS = true & foe.hp = 0
@@ -76,6 +89,8 @@ func HauntedHalls()
     return
 
   ?BOSS
+    equipL big vigor sword
+    equipR vigor sword
     ?foe.armor > 0
       equip heavy crossbow
       return
@@ -95,6 +110,8 @@ func HauntedHalls()
       return
 
     ?boss = phase2
+      equipL big vigor sword
+      equipR vigor sword
       activate potion
       ?strats.UseWandAbility("plague", "R")
         return
@@ -102,7 +119,9 @@ func HauntedHalls()
         return
 
     // equip vigor crossbow
-    equip repeating crossbow
+    // equip repeating crossbow
+    equipL big vigor sword
+    equipR vigor sword
     return
 
   ?strats._Speedy(22, false)

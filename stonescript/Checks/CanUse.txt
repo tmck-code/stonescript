@@ -54,7 +54,7 @@ func AbilityOfWand(ability)
 func StaffAbility(staffElement, armorCost)
   return item.GetCooldown("staff_" + staffElement) = 0
     ^ & item.CanActivate()
-    ^ & armor > armorCost
+    ^ & armor >= armorCost
 
 func AbilityOfStaff(ability)
   var staff = _matchStaff(ability, ["??", 0])

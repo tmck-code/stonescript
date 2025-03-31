@@ -17,6 +17,7 @@ var BOSS_TIME = 0
 var foeState = 0
 
 func Override()
+  return false
   equip ice staff
   ?hp < 20 & canUse.AbilityOfStaff("eternity")
     activate R

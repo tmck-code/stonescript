@@ -3,7 +3,6 @@ var strats = import SS/Strats
 var CanUse = import SS/Checks/CanUse
 var gameEngine = import SS/GameEngine
 
-
 func Override()
   equip poison staff
   ?CanUse.AbilityOfStaff("berserker")
