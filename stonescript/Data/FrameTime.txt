@@ -1,0 +1,2 @@
+var frame_n
+var x_pos

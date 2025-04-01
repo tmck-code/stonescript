@@ -60,6 +60,9 @@ func IcyRidge()
     ?foe.count > 1
       equip fire crossbow
       return
+    ?foe.hp < 100
+      ?strats.Dash()
+        return
     // equip repeating crossbow
     equip fire crossbow
     return
@@ -78,10 +81,6 @@ func IcyRidge()
 
     ?BOSS_TIME > 400 & foe = yeti
       activate potion
-      ?item.GetCooldown("staff_fire") < 1 & item.CanActivate()
-        equip fire staff
-        activate R
-        return
       ?strats.MaskOfTheLost()
         return
       ?armor > 30
@@ -95,15 +94,8 @@ func IcyRidge()
       equipR ice hammer
       return
 
-    ?foe.count > 5 & armor > 14
-      ?strats.UseWandAbility("calamity", "L")
-        return
-
     equip fire crossbow
       return
-
-    // ?strats.Dash()
-    //   return
 
     ?buffs.GetFoeDebuffLevel("dot") < 1
       equipR fire wand dF
@@ -113,31 +105,28 @@ func IcyRidge()
       equip fire crossbow
       return
 
-  ?strats._Speedy(22, true)
+  ?strats._Speedy(22, false)
     return
+
+  ?foe.count <= 4 & foe.hp < 100 & foe ! ice_pillarand foe ! ice_wall
+    ?strats._Dash(11, 20)
+      return
 
   ?foe = ice_pillar & foe.count < 4
     equipR fire wand dF
     equipL fire wand +13
     return
 
-  ?foe.distance > 12
+  ?foe.count <= 4 & foe.hp < 100 & foe ! ice_pillarand foe ! ice_wall
+    ?strats._Dash(11, 20)
+      return
+
+  ?foe.distance > 15
     equip fire crossbow
     return
 
-  // equipR fire wand dF
-  // equipL fire wand
-
-  ?foe.distance > 12
-    equipR fire wand dF
-    equipL fire wand +13
-    return
-
-  // ?strats.Dash()
-  //   return
-
   equipL fire sword
-  equipR compound shield
+  equipR fire hammer
   return
 
 ?loc = icy_ridge

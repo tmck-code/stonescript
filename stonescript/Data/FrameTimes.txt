@@ -1,0 +1,55 @@
+// this is a struct that stores the time taken to complete each level,
+// storing the time every 1 second (30 frames)
+//
+// it has helper funtions to serialise and deserialise the data to storage
+// so that previous times can be compared
+
+var FRAMES_PER_SECOND = 30
+
+var frameNArray = []
+var xPosArray = []
+
+var totalX = 0
+var totalFrames = 0
+var avgX = 0
+var avgFrames = 0
+
+// this is the main public function that can be called to update the time
+// every second, stores a tuple of:
+// (time taken, x position of the player)
+func Update()
+  >`0,17,#yellow,x:@pos.x@ f:@totaltime@
+  ?totaltime % FRAMES_PER_SECOND = 0
+    frameNArray.Add(totaltime)
+    xPosArray.Add(pos.x)
+
+  ?totalX ! 0
+    >`0,18,#green,@string.Format("{0,8}:{1}", "frames", totalFrames)@W
+    >`0,19,#green,@string.Format("{0,8}:{1}", "totalX", totalX)@
+    >`0,20,#yellow,@string.Format("{0,8}:{1}", "avgX", avgX)@
+    >`0,21,#yellow,@string.Format("{0,8}:{1}", "avgF", avgFrames)@
+
+
+  // if we have just looped around (started at 0 again), then
+  // store the current struct and print a summary
+  ?!loc.loop
+    return
+  totalFrames = 0
+  totalX = 0
+  avgX = 0
+  avgFrames = 0
+
+  // check if the arrays are empty
+  ?frameNArray.Count() = 0 & xPosArray.Count() = 0
+    return
+
+  for frameN : frameNArray
+    totalFrames += frameN
+    totalX += xPosArray[frameN]
+  // calculate the average
+  avgX = totalX / frameNArray.Count()
+  avgFrames = totalFrames / frameNArray.Count()
+
+  // finally, empty the arrays
+  frameNArray.Clear()
+  xPosArray.Clear()

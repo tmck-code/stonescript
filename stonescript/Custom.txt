@@ -6,14 +6,24 @@ var strats = import SS/Strats
 var Components = import SS/UI/Components
 var Buffs = import SS/Checks/Buffs
 
+var FrameTimer = new SS/Data/FrameTimes
+
+FrameTimer.Update()
+
 // set global variables -------------------------
 ?loc.begin
-  gameEngine.SetOverrideEnabled(false)          // enable behaviour override
+  gameEngine.SetOverrideEnabled(false)         // enable behaviour override
   gameEngine.SetAACEnabled(true)               // enable AAC
   gameEngine.SetAACFastEnabled(false)          // enable fast AAC
   gameEngine.SetCustomStonescriptEnabled(true) // enable custom stonescript
 
 // update UI ------------------------------------
+
+// ?loc.begin | loc.loop
+//   ?hp < 80
+//     brew stone + tar
+//   :
+//     brew bronze + stone
 
 Buffs._UpdateBuffs()
 Components.render()
@@ -56,4 +66,4 @@ import SS/Locations/Temple
 // logs/post-location overrides -----------------
 
 log.WriteLogs()
-strats._ListenForSightStoneTrigger(ability2)  // trigger sight stone by holding "control"
+strats._ListenForSightStoneTrigger(ability2) // trigger sight stone by holding "control"

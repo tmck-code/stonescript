@@ -5,63 +5,74 @@ var strats = import SS/Strats
 func Temple()
   log.LogStrat(1, "Temple", "#green")
 
-  ?strats.canUseBladeDS(5)
+  ?strats.canUseBladeDS(13)
     strats.useBladeDS()
 
   ?foe = boss & foe = acronian_cultist
-    ?strats.Speedy()
+    ?strats._Speedy(16, false)
       return
     ?strats.Dash()
       return
-    equipL ice sword
-    equipR ice hammer
+    activate potion
+    equipL ice hammer
+    equipR ice sword
     return
 
   ?foe = boss & foe = nagaraja
-    ?!(foe.debuffs.string = dot | foe.debuffs.string = ignition)
-      equip fire crossbow
+    // ?!(foe.debuffs.string = dot | foe.debuffs.string = ignition)
+    //   equip fire crossbow
       // equipR fire wand dF
       // equipL fire wand +13
-      return
-    activate potion
-    ?strats.UseWandAbility("explosive", "L")
-      return
-    ?strats.UseWandAbility("frost", "L")
-      return
+    //   return
+    // ?strats.UseWandAbility("explosive", "L")
+    //   return
+    // ?strats.UseWandAbility("frost", "L")
+    //   return
+    equipR ice sword
     ?hp < 10
       equip vigor crossbow
       return
-    equip ice crossbow
-    return
-
-  ?strats._Speedy(22, false)
-    return
-
-  ?foe.count > 4 & armor > 15
-    ?strats.UseWandAbility("calamity", "L")
+    ?strats._Speedy(16, false)
       return
+    // ?strats.useBladeDS()
+    //   return
+    activate potion
+    equipL ice hammer
+    return
 
-  ?foe = heavy_hitter | foe = worm_rider
+  ?strats._Speedy(24, false)
+    return
+  
+  ?foe.count > 8
     equip ice crossbow
     return
 
-  ?foe.count <= 8 | foe = cult_marksman
+  ?(foe.distance < 18 & foe.count <= 8) | foe = cult_marksman | foe.count <= 3
     ?strats.Dash()
       return
 
-  ?foe.distance > 12 & foe ! cult_marksman
+  ?(foe = heavy_hitter | foe = worm_rider) & foe.distance > 16
     equip ice crossbow
     return
 
-  ?foe.distance > 8
-    equipL vigor wand
-    equipR ice wand
+  ?(foe.distance < 18 & foe.count <= 8) | foe = cult_marksman | foe.count <= 3
+    ?strats._Dash(12, 18)
+      return
+
+
+  ?foe.distance > 15 & foe ! cult_marksman
+    equip ice crossbow
     return
 
-  // ?strats.Dash()
+  // ?foe.distance > 8
+  //   equipL vigor wand
+  //   equipR ice wand
   //   return
-  equipL ice sword
-  equipR vigor sword
+
+  ?strats.Dash()
+    return
+  equipL ice hammer
+  equipR ice sword
 
 ?loc = temple
   Temple()
