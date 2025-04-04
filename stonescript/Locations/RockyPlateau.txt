@@ -1,6 +1,7 @@
 var log = import SS/Log
 var strats = import SS/Strats
 var buffs = import SS/Checks/Buffs
+var CanUse = import SS/Checks/CanUse
 
 func FoeImmuneTo(element, index)
   ?string.IndexOf(foe.buffs.string, string.Format("adaptive_defense_{0}", element)) ! -1
@@ -50,7 +51,9 @@ func Rocky()
 
   // >`0,10,#yellow,@foe.buffs.string@
 
-  // ?debuffs.string = "chill"
+  ?debuffs.string = "chill"
+    ?CanUse.AbilityOfWand("reset")
+      return
 
   ?foe.armor > 0
     equip heavy hammer +11
@@ -62,50 +65,56 @@ func Rocky()
     activate R
     return
 
-  // ?foe = phase3
-  //   activate potion
-  //   equipR fire sword
-  //   equipL fire hammer
-  //   return
+  ?foe.distance > 6
+    ?strats._Speedy(10, true)
+      return
 
   ?strats.UseWandAbility("plague", "L")
     return true
-  ?strats.UseWandAbility("frost", "L")
-    return true
+  // ?strats.UseWandAbility("frost", "L")
+  //   return true
   ?strats.UseWandAbility("explosion", "L")
     return true
-  ?strats.UseWandAbility("calamity", "L")
+  equip fire staff
+  ?CanUse.AbilityOfStaff("infernal")
+    activate R
     return true
 
-  // ?!FoeImmuneTo("vigor",0) & !FoeImmuneTo("buff_protection",1) & !r_equipped
-  // ?!r_equipped & !FoeImmuneTo("vigor",0) & !FoeImmuneTo("buff_protection",1) & foe.buffs.string ! "protection"
+
   ?!(FoeImmuneTo("vigor",2) | FoeImmuneTo("protection",3))
-    equipR vigor sword
+    equipR socketed_sword vigor
     equipL big vigor sword
+    return
+  ?!FoeImmuneTo("aether",7)
+    // ?strats.UseWandAbility("calamity", "L")
+    //   return true
+    equipR aether hammer
+    equipL big aether sword
     return
   ?!FoeImmuneTo("poison",4)
     ?strats.UseWandAbility("plague", "L")
       return true
-    equipR fire sword
-    equipL big poison sword
-    return
-  ?!FoeImmuneTo("ice",5)
-    ?strats.UseWandAbility("frost", "L")
+    equip poison staff
+    ?CanUse.AbilityOfStaff("berserker")
+      activate R
       return true
-    equipR ice sword +10 *9
-    equipL ice hammer
+    equipR poison hammer
+    equipL poison sword
     return
+
+
+  // ?!FoeImmuneTo("ice",5)
+  //   ?strats.UseWandAbility("frost", "L")
+  //     return true
+  //   equipR ice sword +10 *9
+  //   equipL ice hammer
+  //   return
+
   ?!FoeImmuneTo("fire",6)
     ?strats.UseWandAbility("explosion", "L")
       return true
     equipL fire sword
     equipR fire hammer
-    return
-  ?!FoeImmuneTo("aether",7)
-    ?strats.UseWandAbility("calamity", "L")
-      return true
-    equipR aether hammer
-    equipL big aether sword
     return
 
   equipR big vigor sword
