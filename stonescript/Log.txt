@@ -373,9 +373,9 @@ func CollectStates(state_name, state_value, state_time, seen_states, state_times
   var lines = []
   for i = 0 .. seen_states.Count()-1
     ?i = idx
-      lines.Add(["#white", string.Format("{0,3}{1}", FmtBigInt(state_times[i]), seen_states[i])])
+      lines.Add(["#white", string.Format("{0,3} {1}", FmtBigInt(state_times[i]), seen_states[i])])
     :
-      lines.Add([getColor(), string.Format("{0,3}{1}", FmtBigInt(state_times[i]), seen_states[i])])
+      lines.Add([getColor(), string.Format("{0,3} {1}", FmtBigInt(state_times[i]), seen_states[i])])
   return lines
 
 var lastLeftItem = ""

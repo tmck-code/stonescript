@@ -38,7 +38,8 @@ func BoilingMine()
       //   activate R
       //   return
       // equip heavy hammer
-      equipL big aether sword
+      // equipL big aether sword
+      equipL poison hammer
       equipR aether hammer
       return
 
@@ -57,32 +58,33 @@ func BoilingMine()
   ?strats._Speedy(25, false)
     return
 
-  ?foe.distance > 15 & foe.count > 6 // | (foe = slave_master | foe = elemental)
+  ?foe.distance > 12 // & foe.count > 6 // | (foe = slave_master | foe = elemental)
     equip aether crossbow
     return
 
-  ?foe.count <= 8 & !((foe = mine_walker | foe = big_slave_master) & foe.hp > 30)
-    ?strats._Dash(11, 18)
-      return
+  // ?foe.count <= 4 & !((foe = mine_walker | foe = big_slave_master) & foe.hp > 30)
+  //   ?strats._Dash(11, 18)
+  //     return
 
-  ?foe.count < 4
-    ?strats._Dash(11, 18)
-      return
+  // ?foe.count < 4
+  //   ?strats._Dash(11, 18)
+  //     return
 
-  ?foe.distance > 15 & foe.count > 6 // | (foe = slave_master | foe = elemental)
-    equip aether crossbow
-    return
-  
-  ?foe ! mine_walker & foe ! big_slave_master
-    ?strats._Dash(11, 18)
-      return
-
-  ?foe.distance > 15 & foe.count > 10
-    equip aether crossbow
-    return
-  
-  // ?strats.Dash()
+  // ?foe.distance > 15 & foe.count > 6 // | (foe = slave_master | foe = elemental)
+  //   equip aether crossbow
   //   return
+  
+  // ?foe ! mine_walker & foe ! big_slave_master
+  //   ?strats._Dash(11, 18)
+  //     return
+
+  // ?foe.distance > 15 & foe.count > 10
+  //   equip aether crossbow
+  //   return
+
+  ?foe.distance < 7  
+    ?strats.Dash()
+      return
 
   // ?foe.count > 12
   //   ?armor > 14

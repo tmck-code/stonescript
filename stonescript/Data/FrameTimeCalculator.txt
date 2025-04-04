@@ -35,30 +35,30 @@ func Init()
   totalX = 0
   totalFrames = 0
 
-  // load the previous times from storage
-  ?storage.Keys().Contains(string.Format("{0}_{1}", loc.id, "frames"))
-    var prevFrameNArrayStrs = string.Split(storage.Get(string.Format("{0}_{1}", loc.id, "frames")), ",")
-    for frameN : prevFrameNArrayStrs
-      prevFrameNArray.Add(math.BigNumber(frameN).ToFloat())
-        totalFrames = prevFrameNArray[prevFrameNArray.Count()-1]
+  // // load the previous times from storage
+  // ?storage.Keys().Contains(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "frames"))
+  //   var prevFrameNArrayStrs = string.Split(",", storage.Get(string.Format("{0}_{1}", loc.id, "frames")), ",")
+  //   for frameN : prevFrameNArrayStrs
+  //     prevFrameNArray.Add(math.BigNumber(frameN).ToFloat())
+  //       totalFrames = prevFrameNArray[prevFrameNArray.Count()-1]
   
-  ?storage.Keys().Contains(string.Format("{0}_{1}", loc.id, "xpos"))
-    var prevXPosArrayStrs = string.Split(storage.Get(string.Format("{0}_{1}", loc.id, "xpos")), ",")
-    for xPos : prevXPosArrayStrs
-      prevXPosArray.Add(math.BigNumber(xPos).ToFloat())
-      totalX = prevXPosArray[prevXPosArray.Count()-1]
+  // ?storage.Keys().Contains(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "xpos"))
+  //   var prevXPosArrayStrs = string.Split(",", storage.Get(string.Format("{0}_{1}", loc.id, "xpos")), ",")
+  //   for xPos : prevXPosArrayStrs
+  //     prevXPosArray.Add(math.BigNumber(xPos).ToFloat())
+  //     totalX = prevXPosArray[prevXPosArray.Count()-1]
 
 
 func Log(_posX, _totalX, _frameN, _totalFrames, _diffX)
   // print basic info if no previous times
   ?_totalX = 0
-    >`0,16,#yellow,x:@string.Format("{0,5:N0}", _posX)@
-    >`0,17,#yellow,f:@string.Format("{0,5:N0}", _frameN)@
+    >`0,15,#yellow,x:@string.Format("{0,5:N0}", _posX)@
+    >`0,16,#yellow,f:@string.Format("{0,5:N0}", _frameN)@
   :
     // print the time taken and the x position, and how far we are to the total
     var msg = string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _posX, _totalX, (100*_posX)/_totalX)
-    >`0,16,#yellow,x:@msg@
-    >`0,17,#yellow,f:@string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _frameN, _totalFrames, (100*_frameN)/_totalFrames)@
+    >`0,15,#yellow,x:@msg@
+    >`0,16,#yellow,f:@string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _frameN, _totalFrames, (100*_frameN)/_totalFrames)@
 
     // if we should be updating (as per total frame N / time)
     ?(_frameN % FRAMES_PER_SECOND) % 2 = 0
@@ -75,7 +75,7 @@ func Log(_posX, _totalX, _frameN, _totalFrames, _diffX)
         :
           colour = #red
     // print the difference in x position
-    >`@string.Size(msg)+3@,16,@colour@,@string.Format("▲{0:N0}", _diffX)@
+    >`@string.Size(msg)+3@,15,@colour@,@string.Format("▲{0:N0}", _diffX)@
   
   return _diffX  
 
@@ -121,9 +121,10 @@ func Update()
   for xPos : xPosArray
     xPosArrayStrs.Add(math.BigNumber(xPos).ToString())
 
-  ?totalFrames <= prevFrameNArray[prevFrameNArray.Count()-1]
-    storage.Set(string.Format("{0}_{1}", loc.id, "frames"), string.Join(",", frameNArrayStrs))
-    storage.Set(string.Format("{0}_{1}", loc.id, "xpos"),   string.Join(",", xPosArrayStrs))
+  // ?totalFrames <= prevFrameNArray[prevFrameNArray.Count()-1]
+    
+  storage.Set(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "frames"), string.Join(",", frameNArrayStrs))
+  storage.Set(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "xpos"),   string.Join(",", xPosArrayStrs))
 
   // clear & initialise the arrays
   prevFrameNArray.Clear()

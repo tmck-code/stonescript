@@ -33,7 +33,7 @@ func HauntedHalls()
 
   ?loc.loop
     BOSS = false
-  // >`0,13,#green,BOSS:@BOSS@
+  >`0,13,#green,BOSS:@BOSS@
   // >`0,14,#green,MINIBOSS:@MINIBOSS@
   // >`0,15,#green,weaponCycles:@weaponCycles@ (@equippedWeapon@)
 

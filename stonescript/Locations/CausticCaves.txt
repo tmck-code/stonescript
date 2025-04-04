@@ -4,7 +4,7 @@ var canUse = import SS/Checks/CanUse
 
 var buffs = import SS/Checks/Buffs
 var MAX_DISTANCE = 10
-var MIN_DISTANCE = 3
+var MIN_DISTANCE = 5
 
 var IS_FINAL_BOSS_STAGE = false
 var BOSS_TIME = 0
@@ -39,6 +39,10 @@ func Caves()
   ?IS_FINAL_BOSS_STAGE
     BOSS_TIME = BOSS_TIME + 1
     ?BOSS_TIME > 400 & foe.hp > 0
+      equip fire staff
+      ?canUse.AbilityOfStaff("infernal")
+        activate R
+        return true
       ?strats.MaskOfTheLost()
         return
       ?strats.UseWandAbility("explosive", "L")
@@ -49,8 +53,10 @@ func Caves()
         ?strats.UseWandAbility("reset", "R")
           return
 
-    equip ice crossbow
-    return
+    equip bardiche
+    ?foe.distance <= 10
+      activate R
+
     ?buffs.GetFoeDebuffLevel("chill") >= 2
       equip ice crossbow
       return
@@ -66,6 +72,9 @@ func Caves()
     ?armor > 14
       ?strats.UseWandAbility("calamity", "L")
         return
+  ?foe.count < 4
+    ?strats.Dash()
+      return
 
   // ?foe.distance >= MAX_DISTANCE | foe.hp > 80 | foe = tiny_spider
   ?foe.distance > 12 | foe.hp > 80

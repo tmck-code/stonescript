@@ -29,6 +29,7 @@ FrameTimer.Update()
 
 Buffs._UpdateBuffs()
 Components.render()
+log.WriteLogs()
 
 // keybinds -------------------------------------
 
@@ -67,5 +68,4 @@ import SS/Locations/Temple
 
 // logs/post-location overrides -----------------
 
-log.WriteLogs()
 strats._ListenForSightStoneTrigger(ability2) // trigger sight stone by holding "control"
