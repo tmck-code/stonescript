@@ -180,7 +180,7 @@ func FmtFrames()
   var seconds = totaltime / FRAMES_PER_SECOND
   var framesWithinSecond = totaltime % FRAMES_PER_SECOND
   // add a padding 0 e.g. "09"
-  ?framesWithinSecond < 9
+  ?framesWithinSecond <= 9
     var framesWithinSecondFmt = string.Format("0{0}", framesWithinSecond)
   :
     var framesWithinSecondFmt = string.Format("{0}", framesWithinSecond)
