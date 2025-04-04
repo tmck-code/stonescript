@@ -125,7 +125,7 @@ func HauntedHalls()
   ?strats._Speedy(22, false)
     return
 
-  ?foe.distance > 18
+  ?foe.distance > 15
     ?foe = ghost
       equipL vigor wand
       equipR reset wand +10
@@ -150,7 +150,6 @@ func HauntedHalls()
   equipR reset wand +10
 
 ?loc = halls
-  ?gameEngine.OverrideEnabled()
-    ?Override()
-      return
+  ?gameEngine.OverrideEnabled() & Override()
+    return
   HauntedHalls()

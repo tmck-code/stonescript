@@ -6,8 +6,10 @@ var strats = import SS/Strats
 var Components = import SS/UI/Components
 var Buffs = import SS/Checks/Buffs
 
-var FrameTimer = new SS/Data/FrameTimes
+var FrameTimer = new SS/Data/FrameTimeCalculator
 
+?loc.begin
+  FrameTimer.Init()
 FrameTimer.Update()
 
 // set global variables -------------------------

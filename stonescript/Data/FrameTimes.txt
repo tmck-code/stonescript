@@ -4,48 +4,60 @@
 // it has helper funtions to serialise and deserialise the data to storage
 // so that previous times can be compared
 
-var FRAMES_PER_SECOND = 30
+// stores each N frames, and the x position of the player
+var positionsByFrame = []
+// stores each x position of the player, and the N frames taken to reach that position
+var framesByPosition = []
 
-var frameNArray = []
-var xPosArray = []
+var currX = 0
+var currFrame = 0
 
-var totalX = 0
-var totalFrames = 0
-var avgX = 0
-var avgFrames = 0
+
+func Init()
+  // this is the main function that is called when the script is loaded
+  // it sets up the arrays and the storage for the time taken
+  framesByPosition.Clear()
+  positionsByFrame.Clear()
+  currX = 0
+  currFrame = 0
 
 // this is the main public function that can be called to update the time
-// every second, stores a tuple of:
-// (time taken, x position of the player)
+// stores:
+// every n frames: (frames taken , x position of the player), and
+// every 1 xPos:   (x position of the player, time taken)
 func Update()
-  var posX = string.Format("{0,3:N}", pos.x)
-  var frameN = string.Format("{0,3:N}", totaltime)
-  >`0,16,#yellow,x: @posX@
-  >`0,17,#yellow,f: @frameN@
+  // if we should be updating (as per total frame N / time)
+  ?(totaltime % FRAMES_PER_SECOND) % 2 = 0
+    positionsByFrame.Add([math.BigNumber(totaltime).ToFloat(), math.BigNumber(pos.x).ToFloat()])
 
-  ?totaltime % FRAMES_PER_SECOND = 0
-    frameNArray.Add(totaltime)
-    xPosArray.Add(pos.x)
+  ?pos.x > currX
+    currX = math.BigNumber(pos.x).ToFloat()
+    framesByPosition.Add([currX, math.BigNumber(totaltime).ToFloat()])
 
-  ?totalX ! 0
-    >`0,18,#green,@string.Format("{0,6}:{1:N}", "frames", totalFrames)@W
-    >`0,19,#green,@string.Format("{0,6}:{1:N}", "totalX", totalX)@
+  // // if we have just looped around (started at 0 again), then
+  // // store the current struct and print a summary
+  // ?!(loc.loop)
+  //   return
 
-  // if we have just looped around (started at 0 again), then
-  // store the current struct and print a summary
-  ?!(loc.begin | loc.loop)
-    return
-  totalFrames = 0
-  totalX = 0
+  // // check if the arrays are empty
+  // ?frameNArray.Count() = 0 & xPosArray.Count() = 0
+  //   return
+  
+  // totalFrames = frameNArray[frameNArray.Count()-1]
+  // totalX = xPosArray[xPosArray.Count()-1]
 
-  // check if the arrays are empty
-  ?frameNArray.Count() = 0 & xPosArray.Count() = 0
-    return
+  // // storage.Set(string.Format("{0}_{1}", loc.id, "frames"), string.Join(",", frameNArray))
+  // // storage.Set(string.Format("{0}_{1}", loc.id, "xpos"),   string.Join(",", xPosArray))
 
-  for i = 0 .. frameNArray.Count()-1
-    totalFrames += frameNArray[i]
-    totalX += xPosArray[i]
+  // // clear & initialise the arrays
+  // prevFrameNArray.Clear()
+  // for frameN : frameNArray
+  //   prevFrameNArray.Add(frameN)
 
-  // finally, empty the arrays
-  frameNArray.Clear()
-  xPosArray.Clear()
+  // prevXPosArray.Clear()
+  // for xPos : xPosArray
+  //   prevXPosArray.Add(xPos)
+
+  // // finally, empty the arrays
+  // frameNArray.Clear()
+  // xPosArray.Clear()

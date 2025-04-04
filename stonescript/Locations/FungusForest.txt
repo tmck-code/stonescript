@@ -13,11 +13,8 @@ func Override()
 func FungusForest()
   log.LogStrat(1, "FungusForest", "#green")
 
-  ?Override()
-    return
-
-  // ?strats.canUseBladeDS(3)
-  //   strats.useBladeDS()
+  ?strats.canUseBladeDS(3)
+    strats.useBladeDS()
 
   ?foe = boss
     ?foe = epic_snail
@@ -58,6 +55,10 @@ func FungusForest()
 
   ?strats._Speedy(25, true)
     return
+
+  ?foe.count <= 4
+    ?strats.Dash()
+      return
 
   ?foe.count >= 2 & armor > 14
     ?strats.UseWandAbility("calamity", "L")
