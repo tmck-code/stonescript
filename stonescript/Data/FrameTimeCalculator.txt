@@ -40,11 +40,14 @@ func Init()
     var prevFrameNArrayStrs = string.Split(storage.Get(string.Format("{0}_{1}", loc.id, "frames")), ",")
     for frameN : prevFrameNArrayStrs
       prevFrameNArray.Add(math.BigNumber(frameN).ToFloat())
+        totalFrames = prevFrameNArray[prevFrameNArray.Count()-1]
   
   ?storage.Keys().Contains(string.Format("{0}_{1}", loc.id, "xpos"))
     var prevXPosArrayStrs = string.Split(storage.Get(string.Format("{0}_{1}", loc.id, "xpos")), ",")
     for xPos : prevXPosArrayStrs
       prevXPosArray.Add(math.BigNumber(xPos).ToFloat())
+      totalX = prevXPosArray[prevXPosArray.Count()-1]
+
 
 func Log(_posX, _totalX, _frameN, _totalFrames, _diffX)
   // print basic info if no previous times
@@ -118,8 +121,9 @@ func Update()
   for xPos : xPosArray
     xPosArrayStrs.Add(math.BigNumber(xPos).ToString())
 
-  storage.Set(string.Format("{0}_{1}", loc.id, "frames"), string.Join(",", frameNArrayStrs))
-  storage.Set(string.Format("{0}_{1}", loc.id, "xpos"),   string.Join(",", xPosArrayStrs))
+  ?totalFrames <= prevFrameNArray[prevFrameNArray.Count()-1]
+    storage.Set(string.Format("{0}_{1}", loc.id, "frames"), string.Join(",", frameNArrayStrs))
+    storage.Set(string.Format("{0}_{1}", loc.id, "xpos"),   string.Join(",", xPosArrayStrs))
 
   // clear & initialise the arrays
   prevFrameNArray.Clear()
