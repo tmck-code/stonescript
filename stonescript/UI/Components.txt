@@ -48,7 +48,7 @@ func init()
 
 func render()
   // only create the buttons once
-  ?loc.begin
+  ?loc.begin | loc.loop
     init()
     return
 

@@ -81,8 +81,8 @@ func BoilingMine()
     equip aether crossbow
     return
   
-  ?strats.Dash()
-    return
+  // ?strats.Dash()
+  //   return
 
   // ?foe.count > 12
   //   ?armor > 14
