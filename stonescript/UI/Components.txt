@@ -2,6 +2,11 @@ var gameEngine = import SS/GameEngine
 
 var PANEL = 0
 var BUTTONS = []
+var BUTTON_ACTIONS = [
+^  [0, ["††",  gameEngine.AACEnabled,               gameEngine._AACToggle]],
+^  [0, ["††☆", gameEngine.AACFastEnabled,           gameEngine._AACFastToggle]],
+^  [0, ["☺",   gameEngine.CustomStonescriptEnabled, gameEngine._CustomStonescriptToggle]],
+^]
 
 var STYLE_LINED_BOX = ui.AddStyle(＂┌─┐│ │└─┘＂)
 
@@ -19,12 +24,6 @@ func AddActionButton(panel, text, action)
 
   return button
 
-var BUTTON_ACTIONS = [
-^  [0, ["††",  gameEngine.AACEnabled,               gameEngine._AACToggle]],
-^  [0, ["††☆", gameEngine.AACFastEnabled,           gameEngine._AACFastToggle]],
-^  [0, ["☺",   gameEngine.CustomStonescriptEnabled, gameEngine._CustomStonescriptToggle]],
-^]
-
 func init()
   PANEL = ui.AddPanel()
   PANEL.style = STYLE_LINED_BOX
@@ -35,6 +34,7 @@ func init()
   PANEL.x = PANEL.x + 1
 
   // create & add all buttons with their actions
+  BUTTONS.Clear()
   for action : BUTTON_ACTIONS
     var button = AddActionButton(PANEL, action[1][0], action[1][2])
     BUTTONS.Add(button)
@@ -46,8 +46,9 @@ func init()
 
   PANEL.w = totalWidth
 
+
 func render()
-  // only create the buttons once
+  // create/recreate the buttons at the first frame of the level
   ?loc.begin | loc.loop
     init()
     return

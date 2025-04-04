@@ -18,37 +18,33 @@ var avgFrames = 0
 // every second, stores a tuple of:
 // (time taken, x position of the player)
 func Update()
-  >`0,17,#yellow,x:@pos.x@ f:@totaltime@
+  var posX = string.Format("{0,3:N}", pos.x)
+  var frameN = string.Format("{0,3:N}", totaltime)
+  >`0,16,#yellow,x: @posX@
+  >`0,17,#yellow,f: @frameN@
+
   ?totaltime % FRAMES_PER_SECOND = 0
     frameNArray.Add(totaltime)
     xPosArray.Add(pos.x)
 
   ?totalX ! 0
-    >`0,18,#green,@string.Format("{0,8}:{1}", "frames", totalFrames)@W
-    >`0,19,#green,@string.Format("{0,8}:{1}", "totalX", totalX)@
-    >`0,20,#yellow,@string.Format("{0,8}:{1}", "avgX", avgX)@
-    >`0,21,#yellow,@string.Format("{0,8}:{1}", "avgF", avgFrames)@
-
+    >`0,18,#green,@string.Format("{0,6}:{1:N}", "frames", totalFrames)@W
+    >`0,19,#green,@string.Format("{0,6}:{1:N}", "totalX", totalX)@
 
   // if we have just looped around (started at 0 again), then
   // store the current struct and print a summary
-  ?!loc.loop
+  ?!(loc.begin | loc.loop)
     return
   totalFrames = 0
   totalX = 0
-  avgX = 0
-  avgFrames = 0
 
   // check if the arrays are empty
   ?frameNArray.Count() = 0 & xPosArray.Count() = 0
     return
 
-  for frameN : frameNArray
-    totalFrames += frameN
-    totalX += xPosArray[frameN]
-  // calculate the average
-  avgX = totalX / frameNArray.Count()
-  avgFrames = totalFrames / frameNArray.Count()
+  for i = 0 .. frameNArray.Count()-1
+    totalFrames += frameNArray[i]
+    totalX += xPosArray[i]
 
   // finally, empty the arrays
   frameNArray.Clear()
