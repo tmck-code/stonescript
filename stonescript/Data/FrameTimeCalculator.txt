@@ -1,0 +1,139 @@
+// this is a struct that stores the time taken to complete each level,
+// storing the time every 1 second (30 frames)
+//
+// it has helper funtions to serialise and deserialise the data to storage
+// so that previous times can be compared
+
+var FRAMES_PER_SECOND = 30
+
+var frameNArray = []
+var prevFrameNArray = []
+var xPosArray = []
+var prevXPosArray = []
+
+var totalX = 0
+var totalFrames = 0
+var posX = 0
+
+var offsetX = 0
+
+var diffFrames = 0
+var diffX = 0
+
+var currX = 0
+
+var colour = #red
+
+func Init()
+  // this is the main function that is called when the script is loaded
+  // it sets up the arrays and the storage for the time taken
+  frameNArray.Clear()
+  prevFrameNArray.Clear()
+  xPosArray.Clear()
+  prevXPosArray.Clear()
+
+  totalX = 0
+  totalFrames = 0
+
+  // load the previous times from storage
+  ?storage.Keys().Contains(string.Format("{0}_{1}", loc.id, "frames"))
+    var prevFrameNArrayStrs = string.Split(storage.Get(string.Format("{0}_{1}", loc.id, "frames")), ",")
+    for frameN : prevFrameNArrayStrs
+      prevFrameNArray.Add(math.BigNumber(frameN).ToFloat())
+  
+  ?storage.Keys().Contains(string.Format("{0}_{1}", loc.id, "xpos"))
+    var prevXPosArrayStrs = string.Split(storage.Get(string.Format("{0}_{1}", loc.id, "xpos")), ",")
+    for xPos : prevXPosArrayStrs
+      prevXPosArray.Add(math.BigNumber(xPos).ToFloat())
+
+func Log(_posX, _totalX, _frameN, _totalFrames, _diffX)
+  // print basic info if no previous times
+  ?_totalX = 0
+    >`0,16,#yellow,x:@string.Format("{0,5:N0}", _posX)@
+    >`0,17,#yellow,f:@string.Format("{0,5:N0}", _frameN)@
+  :
+    // print the time taken and the x position, and how far we are to the total
+    var msg = string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _posX, _totalX, (100*_posX)/_totalX)
+    >`0,16,#yellow,x:@msg@
+    >`0,17,#yellow,f:@string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _frameN, _totalFrames, (100*_frameN)/_totalFrames)@
+
+    // if we should be updating (as per total frame N / time)
+    ?(_frameN % FRAMES_PER_SECOND) % 2 = 0
+      ?xPosArray.Count() > 0 & prevXPosArray.Count() > 0
+        // compare the current x position to the previous x position
+        ?prevXPosArray.Count() >= xPosArray.Count()
+          _diffX = _posX - prevXPosArray[xPosArray.Count()-1]
+        :
+          // or compare the current x position to the last-most previous x position
+          _diffX = _posX - prevXPosArray[prevXPosArray.Count()-1]
+        // check if our x position is better or worse than the previous
+        ?_diffX >= 0
+          colour = #green
+        :
+          colour = #red
+    // print the difference in x position
+    >`@string.Size(msg)+3@,16,@colour@,@string.Format("▲{0:N0}", _diffX)@
+  
+  return _diffX  
+
+// this is the main public function that can be called to update the time
+// every second, stores a tuple of:
+// (time taken, x position of the player)
+func Update()
+  // if we should be updating (as per total frame N / time)
+  ?(totaltime % FRAMES_PER_SECOND) % 2 = 0
+    frameNArray.Add(math.BigNumber(totaltime).ToFloat())
+
+    // sometimes, the pos.x can reset to 0 mid-level -_-
+    // first, check if the x position is <= 0, and not at the beginning of the level
+    ?pos.x <= 0 & !loc.loop & !loc.begin
+      // now, check if the x position is less than the previous x position, but also handle negative x positions
+      // e.g. starting again at -20, then going to -19 will NOT reset the "offsetX"
+      ?pos.x < currX
+        // if we really have a reset x position, then set the offsetX to the previous x position
+        // e.g. pos.x 100 > 101 > -20 will set the offsetX to 101
+        offsetX = posX
+    currX = math.BigNumber(pos.x).ToFloat()
+    posX = offsetX + currX
+    xPosArray.Add(posX)
+
+  // log the current stats
+  diffX = Log(posX, totalX, totaltime, totalFrames, diffX)
+
+  // if we have just looped around (started at 0 again), then store struct and reset vars
+  ?!(loc.loop)
+    return
+
+  // check if the arrays are empty
+  ?frameNArray.Count() = 0 & xPosArray.Count() = 0
+    return
+  
+  totalFrames = frameNArray[frameNArray.Count()-1]
+  totalX = xPosArray[xPosArray.Count()-1]
+
+  var frameNArrayStrs = []
+  var xPosArrayStrs = []
+  for frameN : frameNArray
+    frameNArrayStrs.Add(math.BigNumber(frameN).ToString())
+  for xPos : xPosArray
+    xPosArrayStrs.Add(math.BigNumber(xPos).ToString())
+
+  storage.Set(string.Format("{0}_{1}", loc.id, "frames"), string.Join(",", frameNArrayStrs))
+  storage.Set(string.Format("{0}_{1}", loc.id, "xpos"),   string.Join(",", xPosArrayStrs))
+
+  // clear & initialise the arrays
+  prevFrameNArray.Clear()
+  for frameN : frameNArray
+    prevFrameNArray.Add(frameN)
+
+  prevXPosArray.Clear()
+  for xPos : xPosArray
+    prevXPosArray.Add(xPos)
+
+  // finally, empty the arrays
+  frameNArray.Clear()
+  xPosArray.Clear()
+
+  posX = 0
+  offsetX = 0
+  currX = 0
