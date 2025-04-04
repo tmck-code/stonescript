@@ -40,7 +40,7 @@ func Temple()
     equipL ice hammer
     return
 
-  ?strats._Speedy(24, false)
+  ?strats._Speedy(22, false)
     return
   
   ?foe.count > 8
@@ -55,10 +55,9 @@ func Temple()
     equip ice crossbow
     return
 
-  ?(foe.distance < 18 & foe.count <= 8) | foe = cult_marksman | foe.count <= 3
+  ?(foe.distance < 18 & foe.count <= 8) | foe = cult_marksman | foe = cult_sorcerer | foe.count <= 3
     ?strats._Dash(12, 18)
       return
-
 
   ?foe.distance > 15 & foe ! cult_marksman
     equip ice crossbow
