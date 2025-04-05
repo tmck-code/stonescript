@@ -604,7 +604,7 @@ func WriteLogs()
   ^  "mind", "hatchet",
   ^  "staff_aether", "staff_fire", "staff_ice", "staff_poison", "staff_stone", "staff_vigor",
   ^  "skeleton_arm", "mask", "blade",
-  ^  "wand_poison", "wand_ice", "wand_fire", "wand_aether", "wand_vigor",
+  ^  "wand_aether", "wand_fire", "wand_ice", "wand_poison", "wand_vigor",
   ^  "talisman_aether", "talisman_fire",
   ^  "cinderwisp", "voidweaver"
   ^]))
@@ -612,10 +612,9 @@ func WriteLogs()
     ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
     ["#white",  string.Format("{0}: {1}", "p", Fmt([pos.x, screen.FromWorldX(pos.x), screen.FromWorldZ(pos.z - pos.y)]))],
     ["#blue",   string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))],
-    // ["#yellow", string.Format("{0}: {1}", "AAC", Fmt([AAC_ENABLED]))],
   ])
 
-  // LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])
+  LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])
 
   // log buffs and debuffs above the player
   LogItemStates()
@@ -640,10 +639,3 @@ func WriteLogs()
   LogHarvestDistance()
 
   // LogStatesBeforeDamage()
-
-  // FmtWeaponID(item.left.id)
-  // >`0,13,#white,id: @FoeInfo[0]@
-  // >`0,14,#white,name: @FoeInfo[1]@
-  // >`0,15,#white,element: @FoeInfo[2]@
-  // >`0,16,#white,tag: @FoeInfo[3]@
-  // >`0,17,#white,immunities: @FoeInfo[4]@
