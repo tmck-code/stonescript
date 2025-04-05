@@ -32,36 +32,48 @@ var deltaLogColour = #red
 
 var PANEL = 0
 var STYLE_LINED_BOX = ui.AddStyle(＂┌─┐│ │└─┘＂)
+
 var XPOS_TEXT = ""
 var FRAMES_TEXT = ""
 
-func InitUI()
-  // PANEL = ui.AddPanel()
-  // PANEL.style = STYLE_LINED_BOX
-  // PANEL.anchor = bottom_left
-  // PANEL.dock = bottom_left
-  // PANEL.h = 4
-  // PANEL.w = 50
-  // PANEL.y = PANEL.y - 4
-  // PANEL.x = PANEL.x + 1
-  XPOS_TEXT = ui.AddText()
-  XPOS_TEXT.anchor = bottom_left
-  FRAMES_TEXT = ui.AddText()
-  FRAMES_TEXT.anchor = bottom_left
-  XPOS_TEXT.dock = bottom_left
-  FRAMES_TEXT.dock = bottom_left
-  XPOS_TEXT.y = XPOS_TEXT.y - 1
-  XPOS_TEXT.w = 50
-  FRAMES_TEXT.w = 50
+var XPOS_PCT_TEXT = ""
+var FRAMES_PCT_TEXT = ""
 
-  // PANEL.Add(XPOS_TEXT, 0)
-  // XPOS_TEXT.x = PANEL.x - 24
-  // XPOS_TEXT.y = PANEL.y + 3
-  // PANEL.Add(FRAMES_TEXT, 1)
-  // FRAMES_TEXT.y = XPOS_TEXT.y + 1
-  // FRAMES_TEXT.x = XPOS_TEXT.x
-  // XPOS_TEXT.text = ""
-  // FRAMES_TEXT.text = ""
+var XPOS_TOTAL_TEXT = ""
+var FRAMES_TOTAL_TEXT = ""
+
+func MakeTextPanel(_x, _y, _w, _h)
+  var panel = ui.AddPanel()
+  panel.anchor = bottom_left
+  panel.dock = bottom_left
+  panel.style = STYLE_LINED_BOX
+  panel.w = _w
+  panel.h = _h
+  panel.x = panel.x + _x
+  panel.y = panel.y + _y
+
+  var text = ui.AddText()
+  text.anchor = bottom_left
+  text.dock = bottom_left
+  text.w = _w
+  text.y = text.y + panel.h
+  text.x = panel.x - _x
+  text.text = "XXXXXXXXXX"
+
+  panel.Add(text)
+
+  return text
+
+func InitUI()
+  XPOS_TEXT = MakeTextPanel(0, -8, 10, 3)
+  FRAMES_TEXT = MakeTextPanel(0, -5, 10, 3)
+
+  XPOS_TOTAL_TEXT = MakeTextPanel(11, -8, 10, 3)
+  FRAMES_TOTAL_TEXT = MakeTextPanel(11, -5, 10, 3)
+  FRAMES_TOTAL_TEXT.text = ":D:D:D"
+
+  XPOS_PCT_TEXT = MakeTextPanel(22, -8, 10, 3)
+  FRAMES_PCT_TEXT = MakeTextPanel(22, -5, 10, 3)
 
 func Init()
   // this is the main function that is called when the script is loaded
@@ -112,9 +124,7 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
   // print basic info if no previous times
   ?_totalX = 0
     XPOS_TEXT.text = string.Format("X: {0,5:N0}", _posX)
-    // >`0,15,#yellow,x:@string.Format("{0,5:N0}", _posX)@
     FRAMES_TEXT.text = string.Format("F: {0,5:N0}", _frameN)
-    // >`0,16,#yellow,f:@string.Format("{0,5:N0}", _frameN)@
   :
     ?_totalFrames = loc.bestTime
       // if we have a best time, then set the colour to green
@@ -122,9 +132,13 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
     :
       logColour = #yellow
     // print the time taken and the x position, and how far we are to the total
-    var msg = string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _posX, _totalX, (100*_posX)/_totalX)
-    XPOS_TEXT.text = msg
-    FRAMES_TEXT.text = string.Format("F: {0,5:N0}/{1,5:N0} {2:N1}%", _frameN, _totalFrames, (100*_frameN)/_totalFrames)
+    XPOS_TEXT.text = string.Format("x: {0,5:N0}", _posX)
+    XPOS_TOTAL_TEXT.text = string.Format("x: {0,5:N0}", _totalX)
+    XPOS_PCT_TEXT.text = string.Format("{0:N1}%", (100*_posX)/_totalX)
+ 
+    FRAMES_TEXT.text = string.Format("f: {0,5:N0}", _frameN)
+    FRAMES_TOTAL_TEXT.text = string.Format("f: {0,5:N0}", _totalFrames)
+    FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
 
     // if we should be updating (as per total frame N / time)
     LogXPosDiff(_posX, _totalX, string.Size(msg))
