@@ -22,7 +22,46 @@ var diffX = 0
 
 var currX = 0
 
-var colour = #red
+var xPosStorageKey = string.Format("{0}_{1}_{2}", loc.id, loc.stars, "xpos")
+var frameNStorageKey = string.Format("{0}_{1}_{2}", loc.id, loc.stars, "frames")
+
+var prevXPosArrayStrs = []
+
+var logColour = #yellow
+var deltaLogColour = #red
+
+var PANEL = 0
+var STYLE_LINED_BOX = ui.AddStyle(＂┌─┐│ │└─┘＂)
+var XPOS_TEXT = ""
+var FRAMES_TEXT = ""
+
+func InitUI()
+  // PANEL = ui.AddPanel()
+  // PANEL.style = STYLE_LINED_BOX
+  // PANEL.anchor = bottom_left
+  // PANEL.dock = bottom_left
+  // PANEL.h = 4
+  // PANEL.w = 50
+  // PANEL.y = PANEL.y - 4
+  // PANEL.x = PANEL.x + 1
+  XPOS_TEXT = ui.AddText()
+  XPOS_TEXT.anchor = bottom_left
+  FRAMES_TEXT = ui.AddText()
+  FRAMES_TEXT.anchor = bottom_left
+  XPOS_TEXT.dock = bottom_left
+  FRAMES_TEXT.dock = bottom_left
+  XPOS_TEXT.y = XPOS_TEXT.y - 1
+  XPOS_TEXT.w = 50
+  FRAMES_TEXT.w = 50
+
+  // PANEL.Add(XPOS_TEXT, 0)
+  // XPOS_TEXT.x = PANEL.x - 24
+  // XPOS_TEXT.y = PANEL.y + 3
+  // PANEL.Add(FRAMES_TEXT, 1)
+  // FRAMES_TEXT.y = XPOS_TEXT.y + 1
+  // FRAMES_TEXT.x = XPOS_TEXT.x
+  // XPOS_TEXT.text = ""
+  // FRAMES_TEXT.text = ""
 
 func Init()
   // this is the main function that is called when the script is loaded
@@ -35,53 +74,62 @@ func Init()
   totalX = 0
   totalFrames = 0
 
-  // // load the previous times from storage
-  // ?storage.Keys().Contains(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "frames"))
-  //   var prevFrameNArrayStrs = string.Split(",", storage.Get(string.Format("{0}_{1}", loc.id, "frames")), ",")
-  //   for frameN : prevFrameNArrayStrs
-  //     prevFrameNArray.Add(math.BigNumber(frameN).ToFloat())
-  //       totalFrames = prevFrameNArray[prevFrameNArray.Count()-1]
-  
-  // ?storage.Keys().Contains(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "xpos"))
-  //   var prevXPosArrayStrs = string.Split(",", storage.Get(string.Format("{0}_{1}", loc.id, "xpos")), ",")
-  //   for xPos : prevXPosArrayStrs
-  //     prevXPosArray.Add(math.BigNumber(xPos).ToFloat())
-  //     totalX = prevXPosArray[prevXPosArray.Count()-1]
+  // load the previous times from storage. once a key has been stored a single time,
+  // even if it's "Deleted", it will always be present, so we need to use Get with a default value
+  ?storage.Get(frameNStorageKey, -1) ! -1
+    var prevFrameNArrayStrs = string.Split(storage.Get(frameNStorageKey), ",")
+    for i = 0 .. prevFrameNArrayStrs.Count()-1
+      var n = math.BigNumber(prevFrameNArrayStrs[i]).ToFloat()
+      prevFrameNArray.Add(n)
+      totalFrames = n
 
+  ?storage.Get(xPosStorageKey, -1) ! -1 
+    prevXPosArrayStrs = string.Split(storage.Get(xPosStorageKey), ",")
+    for i = 0 .. prevXPosArrayStrs.Count()-1
+      var n = math.BigNumber(prevXPosArrayStrs[i]).ToFloat()
+      prevXPosArray.Add(n)
+      totalX = n
 
-func Log(_posX, _totalX, _frameN, _totalFrames, _diffX)
+func LogXPosDiff(_posX, _totalX, _msgOffset)
+  ?xPosArray.Count() = 0 | prevXPosArray.Count() = 0
+    return
+  var diffX = 0
+  // compare the current x position to the previous x position
+  ?prevXPosArray.Count() >= xPosArray.Count()
+    diffX = _posX - prevXPosArray[xPosArray.Count()-1]
+  :
+    // or compare the current x position to the last-most previous x position
+    diffX = _posX - prevXPosArray[prevXPosArray.Count()-1]
+  // check if our x position is better or worse than the previous
+  ?diffX >= 0
+    deltaLogColour = #green
+  :
+    deltaLogColour = #red
+  // print the difference in x position
+  >`@_msgOffset+3@,15,@deltaLogColour@,@string.Format("▲{0:N0}", diffX)@
+
+func Log(_posX, _totalX, _frameN, _totalFrames)
   // print basic info if no previous times
   ?_totalX = 0
-    >`0,15,#yellow,x:@string.Format("{0,5:N0}", _posX)@
-    >`0,16,#yellow,f:@string.Format("{0,5:N0}", _frameN)@
+    XPOS_TEXT.text = string.Format("X: {0,5:N0}", _posX)
+    // >`0,15,#yellow,x:@string.Format("{0,5:N0}", _posX)@
+    FRAMES_TEXT.text = string.Format("F: {0,5:N0}", _frameN)
+    // >`0,16,#yellow,f:@string.Format("{0,5:N0}", _frameN)@
   :
+    ?_totalFrames = loc.bestTime
+      // if we have a best time, then set the colour to green
+      logColour = #green
+    :
+      logColour = #yellow
     // print the time taken and the x position, and how far we are to the total
     var msg = string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _posX, _totalX, (100*_posX)/_totalX)
-    >`0,15,#yellow,x:@msg@
-    >`0,16,#yellow,f:@string.Format("{0,5:N0}/{1,5:N0} {2:N1}%", _frameN, _totalFrames, (100*_frameN)/_totalFrames)@
+    XPOS_TEXT.text = msg
+    FRAMES_TEXT.text = string.Format("F: {0,5:N0}/{1,5:N0} {2:N1}%", _frameN, _totalFrames, (100*_frameN)/_totalFrames)
 
     // if we should be updating (as per total frame N / time)
-    ?(_frameN % FRAMES_PER_SECOND) % 2 = 0
-      ?xPosArray.Count() > 0 & prevXPosArray.Count() > 0
-        // compare the current x position to the previous x position
-        ?prevXPosArray.Count() >= xPosArray.Count()
-          _diffX = _posX - prevXPosArray[xPosArray.Count()-1]
-        :
-          // or compare the current x position to the last-most previous x position
-          _diffX = _posX - prevXPosArray[prevXPosArray.Count()-1]
-        // check if our x position is better or worse than the previous
-        ?_diffX >= 0
-          colour = #green
-        :
-          colour = #red
-    // print the difference in x position
-    >`@string.Size(msg)+3@,15,@colour@,@string.Format("▲{0:N0}", _diffX)@
-  
-  return _diffX  
+    LogXPosDiff(_posX, _totalX, string.Size(msg))
 
 // this is the main public function that can be called to update the time
-// every second, stores a tuple of:
-// (time taken, x position of the player)
 func Update()
   // if we should be updating (as per total frame N / time)
   ?(totaltime % FRAMES_PER_SECOND) % 2 = 0
@@ -101,7 +149,7 @@ func Update()
     xPosArray.Add(posX)
 
   // log the current stats
-  diffX = Log(posX, totalX, totaltime, totalFrames, diffX)
+  Log(posX, totalX, totaltime, totalFrames)
 
   // if we have just looped around (started at 0 again), then store struct and reset vars
   ?!(loc.loop)
@@ -121,10 +169,8 @@ func Update()
   for xPos : xPosArray
     xPosArrayStrs.Add(math.BigNumber(xPos).ToString())
 
-  // ?totalFrames <= prevFrameNArray[prevFrameNArray.Count()-1]
-    
-  storage.Set(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "frames"), string.Join(",", frameNArrayStrs))
-  storage.Set(string.Format("{0}_{1}_{2}", loc.id, loc.stars, "xpos"),   string.Join(",", xPosArrayStrs))
+  storage.Set(frameNStorageKey, string.Join(",", frameNArrayStrs))
+  storage.Set(xPosStorageKey,   string.Join(",", xPosArrayStrs))
 
   // clear & initialise the arrays
   prevFrameNArray.Clear()
