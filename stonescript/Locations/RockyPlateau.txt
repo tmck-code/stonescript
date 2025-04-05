@@ -39,17 +39,8 @@ func Rocky()
     ?strats.UseWandAbility("explode", "L")
       return
 
-  // var immunities = [
-  // ^  string.Format("{0,-6}:{1}", "vigor", FoeImmuneTo("vigor")),
-  // ^  string.Format("{0,-6}:{1}", "❤", FoeImmuneTo("❤")),
-  // ^  string.Format("{0,-6}:{1}", "poison", FoeImmuneTo("poison")),
-  // ^  string.Format("{0,-6}:{1}", "ice", FoeImmuneTo("ice")),
-  // ^  string.Format("{0,-6}:{1}", "fire", FoeImmuneTo("fire")),
-  // ^  string.Format("{0,-6}:{1}", "aether", FoeImmuneTo("aether"))
-  // ^]
-  // >`0,12,#yellow,@string.Join("\n", immunities)@
-
-  // >`0,10,#yellow,@foe.buffs.string@
+  ?foe = phase3
+    activate potion
 
   ?debuffs.string = "chill"
     ?CanUse.AbilityOfWand("reset")
