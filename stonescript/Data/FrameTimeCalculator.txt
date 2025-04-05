@@ -58,7 +58,7 @@ func MakeTextPanel(_x, _y, _w, _h)
   text.w = _w
   text.y = text.y + panel.h
   text.x = panel.x - _x
-  text.text = "XXXXXXXXXX"
+  text.text = "XXXXXX"
 
   panel.Add(text)
 
@@ -68,12 +68,11 @@ func InitUI()
   XPOS_TEXT = MakeTextPanel(0, -8, 10, 3)
   FRAMES_TEXT = MakeTextPanel(0, -5, 10, 3)
 
-  XPOS_TOTAL_TEXT = MakeTextPanel(11, -8, 10, 3)
-  FRAMES_TOTAL_TEXT = MakeTextPanel(11, -5, 10, 3)
-  FRAMES_TOTAL_TEXT.text = ":D:D:D"
+  XPOS_TOTAL_TEXT = MakeTextPanel(11, -8, 6, 3)
+  FRAMES_TOTAL_TEXT = MakeTextPanel(11, -5, 6, 3)
 
-  XPOS_PCT_TEXT = MakeTextPanel(22, -8, 10, 3)
-  FRAMES_PCT_TEXT = MakeTextPanel(22, -5, 10, 3)
+  XPOS_PCT_TEXT = MakeTextPanel(17, -8, 6, 3)
+  FRAMES_PCT_TEXT = MakeTextPanel(17, -5, 6, 3)
 
 func Init()
   // this is the main function that is called when the script is loaded
@@ -133,11 +132,11 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
       logColour = #yellow
     // print the time taken and the x position, and how far we are to the total
     XPOS_TEXT.text = string.Format("x: {0,5:N0}", _posX)
-    XPOS_TOTAL_TEXT.text = string.Format("x: {0,5:N0}", _totalX)
+    XPOS_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalX)
     XPOS_PCT_TEXT.text = string.Format("{0:N1}%", (100*_posX)/_totalX)
  
     FRAMES_TEXT.text = string.Format("f: {0,5:N0}", _frameN)
-    FRAMES_TOTAL_TEXT.text = string.Format("f: {0,5:N0}", _totalFrames)
+    FRAMES_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalFrames)
     FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
 
     // if we should be updating (as per total frame N / time)
