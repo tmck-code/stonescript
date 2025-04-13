@@ -40,9 +40,9 @@ func Override()
   return true
 
 func IcyRidge()
-  log.LogStrat(4, "IcyRidge", "#green")
+  log.LogStrat(0, "IcyRidge", "#green")
 
-  ?strats.canUseBladeDS(2)
+  ?strats.canUseBladeDS(4)
     strats.useBladeDS()
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE

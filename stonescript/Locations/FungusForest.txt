@@ -13,7 +13,7 @@ func Override()
 func FungusForest()
   log.LogStrat(1, "FungusForest", "#green")
 
-  ?strats.canUseBladeDS(3)
+  ?strats.canUseBladeDS(2)
     strats.useBladeDS()
 
   ?foe = boss
@@ -28,16 +28,18 @@ func FungusForest()
         return true
       ?strats.UseWandAbility("frost", "L")
         return true
-      ?foe.distance > 12
-        equipR tri
-        return
-
+      ?foe.distance > 6
+        ?strats._Speedy(12, false)
+          return
     ?foe.armor > 0
-      equipR ice hammer
-      equipL poison hammer +11 dP
+      equip heavy hammer
+      // equipR ice hammer
+      // equipL poison hammer +11 dP
       return
 
     ?foe = phase2
+      activate potion
+
       ?foe.count > 1
         ?strats.UseWandAbility("plague", "L")
           return true
@@ -48,38 +50,40 @@ func FungusForest()
         return
       ?strats.UseWandAbility("explosive", "L")
         return true
-      ?foe.armor > 0
-        equipR poison sword +11
-        equipL poison hammer +11 dP
-        return
+      equipR poison sword +11
+      equipL poison hammer +11 dP
+      return
 
   ?strats._Speedy(25, true)
     return
-
-  ?foe.count <= 4
-    ?strats.Dash()
-      return
 
   ?foe.count >= 2 & armor > 14
     ?strats.UseWandAbility("calamity", "L")
       return
 
-  ?foe.distance > 12
+  // ?foe.count <= 2 & (foe.hp + foe.armor) < 100
+  //   ?strats._Dash(5,20)
+  //     return
+
+  ?foe.distance > 15
     equip poison crossbow
     return
 
-  ?strats.Dash()
+  // ?foe.count <= 2 & (foe.hp + foe.armor) < 100
+  //   ?strats._Dash(5,20)
+  //     return
+
+  ?foe.distance > 6
+    equipL poison wand
+    equipR vigor wand
+    ?strats.UseWandAbility("plague", "L")
+      return true
     return
 
-  ?foe.distance >= 5
-    equipR poison wand
-    ?item.GetCooldown("wand_poison") = 0 & item.CanActivate() & foe.count > 5
-      activate potion
-      activate R
-    equipL fire wand
-    return
-
-  equipL poison sword
+  ?hp < 60
+    equipL socketed_sword vigor
+  :
+    equipL poison sword
   equipR poison hammer
 
 ?loc = fungus_forest

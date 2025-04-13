@@ -4,6 +4,8 @@
 // it has helper funtions to serialise and deserialise the data to storage
 // so that previous times can be compared
 
+var log = import SS/Log
+
 var FRAMES_PER_SECOND = 30
 
 var frameNArray = []
@@ -16,10 +18,8 @@ var totalFrames = 0
 var posX = 0
 
 var offsetX = 0
-
 var diffFrames = 0
 var diffX = 0
-
 var currX = 0
 
 var xPosStorageKey = string.Format("{0}_{1}_{2}", loc.id, loc.stars, "xpos")
@@ -30,8 +30,14 @@ var prevXPosArrayStrs = []
 var logColour = #yellow
 var deltaLogColour = #red
 
-var PANEL = 0
-var STYLE_LINED_BOX = ui.AddStyle(＂┌─┐│ │└─┘＂)
+var REGULAR_STYLE_STR = ＂┌─┐│ │└─┘＂
+var REGULAR_STYLE = ui.AddStyle(REGULAR_STYLE_STR)
+
+var STYLE_LINED_BOX_NO_BOTTOM = ui.AddStyle(＂├─┤│ │   ＂)
+var STYLE_LINED_BOX_RHS = ui.AddStyle(＂┌─┐│     ＂)
+
+var X_POS_STYLE = ui.AddStyle(＂x─┐│ │└─┘＂)
+var F_POS_STYLE = ui.AddStyle(＂f─┐│ │└─┘＂)
 
 var XPOS_TEXT = ""
 var FRAMES_TEXT = ""
@@ -44,20 +50,20 @@ var FRAMES_TOTAL_TEXT = ""
 
 func MakeTextPanel(_x, _y, _w, _h)
   var panel = ui.AddPanel()
-  panel.anchor = bottom_left
-  panel.dock = bottom_left
-  panel.style = STYLE_LINED_BOX
+  panel.anchor = top_left
+  panel.dock = top_left
+  panel.style = STYLE_LINED_BOX_NO_BOTTOM
   panel.w = _w
   panel.h = _h
   panel.x = panel.x + _x
-  panel.y = panel.y + _y
+  panel.y = _y
 
   var text = ui.AddText()
   text.anchor = bottom_left
   text.dock = bottom_left
   text.w = _w
   text.y = text.y + panel.h
-  text.x = panel.x - _x
+  text.x = panel.x - _x + 1
   text.text = "??"
 
   panel.Add(text)
@@ -65,14 +71,15 @@ func MakeTextPanel(_x, _y, _w, _h)
   return text
 
 func InitUI()
-  XPOS_TEXT   = MakeTextPanel(0, -8, 6, 3)
-  FRAMES_TEXT = MakeTextPanel(0, -5, 6, 3)
+  FRAMES_TEXT         = MakeTextPanel(0, 6, 8, 3)
+  FRAMES_TEXT.parent.style   = F_POS_STYLE
+  FRAMES_TOTAL_TEXT   = MakeTextPanel(0, 8, 8, 3)
+  FRAMES_PCT_TEXT     = MakeTextPanel(0, 10, 8, 3)
 
-  XPOS_TOTAL_TEXT   = MakeTextPanel(6, -8, 6, 3)
-  FRAMES_TOTAL_TEXT = MakeTextPanel(6, -5, 6, 3)
-
-  XPOS_PCT_TEXT   = MakeTextPanel(12, -8, 6, 3)
-  FRAMES_PCT_TEXT = MakeTextPanel(12, -5, 6, 3)
+  XPOS_TEXT           = MakeTextPanel(7, 6, 8, 3)
+  XPOS_TEXT.parent.style     = X_POS_STYLE
+  XPOS_TOTAL_TEXT     = MakeTextPanel(7, 8, 8, 3)
+  XPOS_PCT_TEXT       = MakeTextPanel(7, 10, 8, 3)
 
 func Init()
   // this is the main function that is called when the script is loaded
@@ -103,6 +110,11 @@ func Init()
       prevXPosArray.Add(n)
       totalX = n
 
+// this function takes the current x position (at the current frame/time), and
+// compares it to the x position at the same frame/time in the previous run
+// - every array stored/used by this script has the same length
+// - so, just get the current array size
+// - and compare the current x position to the previous x position
 func LogXPosDiff(_posX, _totalX, _msgOffset)
   ?xPosArray.Count() = 0 | prevXPosArray.Count() = 0
     return
@@ -113,21 +125,52 @@ func LogXPosDiff(_posX, _totalX, _msgOffset)
   :
     // or compare the current x position to the last-most previous x position
     diffX = _posX - prevXPosArray[prevXPosArray.Count()-1]
-  // check if our x position is better or worse than the previous
-  ?diffX >= 0
-    deltaLogColour = #green
-  :
-    deltaLogColour = #red
   // print the difference in x position
-  >`@_msgOffset+2@,17,@deltaLogColour@,@string.Format("▲{0:N0}", diffX)@
+  ?diffX >= 0
+    >`9,12,#green,@string.Format("▲{0:N0}", diffX)@
+    XPOS_TEXT.color = #green
+    XPOS_TOTAL_TEXT.color = #green
+    XPOS_PCT_TEXT.color = #green
+  :
+    >`9,12,#red,@string.Format("▼{0:N0}", diffX)@
+    XPOS_TEXT.color = #red
+    XPOS_TOTAL_TEXT.color = #red
+    XPOS_PCT_TEXT.color = #red
+
+
+// this function takes the current frame/time (and x position), and
+// and looks up the previous run x positions to see what the frame/time was,
+// and diffs the twwo 
+func LogFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
+  ?frameNArray.Count() = 0 | prevFrameNArray.Count() = 0
+    return
+  // find the index of our current x pos in the previous run
+  var i = prevXPosArray.IndexOf(_posX)
+  // compare what time we were at when we last saw this x pos
+  ?i = -1 | i >= prevFrameNArray.Count()
+    >`0,18,#red,xpos not found:@_posX@
+    return
+  var diffFrameN = _frameN - prevFrameNArray[i]
+
+  ?diffFrameN >= 0
+    var log = import SS/Log
+    >`2,12,#green,@string.Format("▲{0:N0}", diffFrameN)@
+    FRAMES_TEXT.color = #green
+    FRAMES_TOTAL_TEXT.color = #green
+    FRAMES_PCT_TEXT.color = #green
+  :
+    >`2,12,#red,@string.Format("▼{0:N0}", diffFrameN)@
+    FRAMES_TEXT.color = #red
+    FRAMES_TOTAL_TEXT.color = #red
+    FRAMES_PCT_TEXT.color = #red
 
 func Log(_posX, _totalX, _frameN, _totalFrames)
   // print basic info if no previous times
   ?_totalX = 0
-    XPOS_TEXT.text = string.Format("x{0,4:N0}", _posX)
-    FRAMES_TEXT.text = string.Format("f{0,4:N0}", _frameN)
+    XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
+    FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     ?_totalFrames > 0
-      FRAMES_TOTAL_TEXT.text = string.Format("{0:N0}", _totalFrames)
+      FRAMES_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalFrames)
       FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
   :
     ?_totalFrames = loc.bestTime
@@ -136,16 +179,17 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
     :
       logColour = #yellow
     // print the time taken and the x position, and how far we are to the total
-    XPOS_TEXT.text = string.Format("x{0,4:N0}", _posX)
-    XPOS_TOTAL_TEXT.text = string.Format("{0:N0}", _totalX)
+    XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
+    XPOS_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalX)
     XPOS_PCT_TEXT.text = string.Format("{0:N1}%", (100*_posX)/_totalX)
  
-    FRAMES_TEXT.text = string.Format("f{0,4:N0}", _frameN)
+    FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     FRAMES_TOTAL_TEXT.text = string.Format("{0:N0}", _totalFrames)
     FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
 
     // if we should be updating (as per total frame N / time)
     LogXPosDiff(_posX, _totalX, 20)
+    LogFrameNDiff(_posX, _frameN, _totalFrames, 20)
 
 // this is the main public function that can be called to update the time
 func Update()
@@ -176,7 +220,7 @@ func Update()
   // check if the arrays are empty
   ?frameNArray.Count() = 0 & xPosArray.Count() = 0
     return
-  
+
   totalFrames = frameNArray[frameNArray.Count()-1]
   totalX = xPosArray[xPosArray.Count()-1]
 

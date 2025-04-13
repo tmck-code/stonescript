@@ -186,13 +186,13 @@ func FmtFramesAsTime(frame_n)
     var framesWithinSecondFmt = string.Format("{0}", framesWithinSecond)
   // only render the minutes if needed, e.g. "1921/1:01.01"
   ?frame_n > 60 * FRAMES_PER_SECOND
-    return string.Format("{0,2}:{1,2}.{2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
+    return string.Format("{0,2}:{1,2}.{2,2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
   // the most common case, e.g. "637/21.07"
   :?frame_n > 0
-    return string.Format("{0,2}.{1}",       seconds, framesWithinSecondFmt)
+    return string.Format("{0,2}.{1,2}",       seconds, framesWithinSecondFmt)
   // the total time is 0, e.g. "0/0:00.00"
   :
-    return string.Format("{0,2}:{1,2}.{2}", 0, 0, framesWithinSecondFmt)
+    return string.Format("{0,2}:{1,2}.{2,2}", 0, 0, framesWithinSecondFmt)
 
 func FmtFrames()
   return string.Format("{0,4}/{1}", totaltime, FmtFramesAsTime(totaltime))
@@ -206,14 +206,19 @@ func FmtItemIDBasic(item_id)
 
 var strings = import SS/Data/Strings
 
-func _ShowWeapons(keybind)
-  var matches = strings.FindAllIndexes(item.left.id, "_")
-  ?key = keybind
-    >`0,4,#yellow,l:(@Fmt(matches)@)\n  @FmtItemIDBasic(item.left.id)@\n\nr:@FmtItemIDBasic(item.right.id)@
-    >`0,14,#white,f:@string.Join("\n", string.Break(string.Join("\n", [foe, foe.buffs.string]), 20))@
-
 func ShowWeapons()
-  _ShowWeapons(ability1)
+  var matches = strings.FindAllIndexes(item.left.id, "_")
+  >`0,4,#yellow,l:(@Fmt(matches)@)\n  @FmtItemIDBasic(item.left.id)@\n\nr:@FmtItemIDBasic(item.right.id)@
+  >`0,14,#white,f:@string.Join("\n", string.Break(string.Join("\n", [foe, foe.buffs.string]), 20))@
+
+func ShowStorageKeys()
+  >`0,20,#red,@Fmt(["keys [", storage.Keys().Count(), "]", storage.Keys()])@
+
+func ShowInfo(functions, keybind)
+  ?key ! keybind | functions.Count() = 0
+    return
+  for i = 0 .. functions.Count()-1
+    functions[i]()
 
 func FmtWeaponID(weapon_id)
   // "Explosive Wand Fire wand wand_hidden_fire *10*max* +7/0 D
@@ -399,9 +404,9 @@ func LogItemStates()
   :
     var leftItemLines = CollectStates(item, FmtItemState(item.left.state), item.left.time, seenItemStatesLeft, itemStateTimesLeft)
     ?leftItemLines.Count() > 0
-      >`0,6,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+      >`20,0,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
       for i = 0 .. leftItemLines.Count()-1
-        >`0,@i+7@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
+        >`20,@0+1@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
 
   ?lastRightItem ! item.right.id | string.Size(item.right.id) = 0
     seenItemStatesRight = itemStatesFmt
@@ -410,9 +415,9 @@ func LogItemStates()
   :
     var rightItemLines = CollectStates(item, FmtItemState(item.right.state), item.right.time, seenItemStatesRight, itemStateTimesRight)
     ?rightItemLines.Count() > 0
-      >`6,6,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+      >`28,0,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
       for i = 0 .. rightItemLines.Count()-1
-        >`6,@i+7@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
+        >`28,@0+1@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
 
 func LogFoeStates(x_offset)
   ?lastFoe ! foe.id | string.Size(foe.id) = 0
@@ -601,7 +606,7 @@ func LogAAC(aac_enabled)
   AAC_ENABLED = aac_enabled
 
 func WriteLogs()
-  LogTopLeft(10, FmtCooldownLogs([
+  LogTopLeft(14, FmtCooldownLogs([
   ^  "bardiche", "quarterstaff", "heavy_hammer",
   ^  "bash", "dash",
   ^  "mind", "hatchet",
@@ -611,9 +616,9 @@ func WriteLogs()
   ^  "talisman_aether", "talisman_fire",
   ^  "cinderwisp", "voidweaver"
   ^]))
-  LogTopLeft(1, [
-    ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
-    ["#white",  string.Format("{0}: {1}", "p", Fmt([pos.x, screen.FromWorldX(pos.x), screen.FromWorldZ(pos.z - pos.y)]))],
+  LogTopLeft(0, [
+    // ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
+    // ["#white",  string.Format("{0}: {1}", "p", Fmt([pos.x, screen.FromWorldX(pos.x), screen.FromWorldZ(pos.z - pos.y)]))],
     ["#blue",   string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))],
   ])
 

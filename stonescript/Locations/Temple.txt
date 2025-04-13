@@ -19,23 +19,14 @@ func Temple()
     return
 
   ?foe = boss & foe = nagaraja
-    // ?!(foe.debuffs.string = dot | foe.debuffs.string = ignition)
-    //   equip fire crossbow
-      // equipR fire wand dF
-      // equipL fire wand +13
-    //   return
-    // ?strats.UseWandAbility("explosive", "L")
-    //   return
-    // ?strats.UseWandAbility("frost", "L")
-    //   return
+    ?foe.state = 112 & foe.time = 59
+      equipR mind
     equipR ice sword
     ?hp < 10
       equip vigor crossbow
       return
     ?strats._Speedy(16, false)
       return
-    // ?strats.useBladeDS()
-    //   return
     activate potion
     equipL ice hammer
     return
@@ -59,19 +50,15 @@ func Temple()
     ?strats._Dash(12, 18)
       return
 
-  ?foe.distance > 15 & foe ! cult_marksman
+  ?foe.distance > 8 & foe ! cult_marksman
     equip ice crossbow
     return
 
-  // ?foe.distance > 8
-  //   equipL vigor wand
-  //   equipR ice wand
-  //   return
-
   ?strats.Dash()
     return
+
   equipL ice hammer
-  equipR ice sword
+  equipR big ice sword
 
 ?loc = temple
   Temple()

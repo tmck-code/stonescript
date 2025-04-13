@@ -35,7 +35,8 @@ Components.render()
 // keybinds -------------------------------------
 
 strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
-log._ShowWeapons(ability1)                    // show weapons by holding "shift"
+log.ShowInfo([log.ShowWeapons, log.ShowStorageKeys], ability1)
+// log._ShowWeapons(ability1)                    // show weapons by holding "shift"
 // gameEngine.AACToggle(downBegin)               // toggle AAC by pressing "down"
 // gameEngine.AACFastToggle(rightBegin)          // toggle fast AAC by pressing "right"
 gameEngine.RemoteCacheToggle(upBegin)         // toggle remote caching of scripts by pressing "up"
@@ -55,7 +56,7 @@ gameEngine.AACFast()
   return
 
 strats._AutoPotion(45) // enable auto-heal (via potions)
-// strats._LootStar(30)   // enable bonus loot with star stone
+strats._LootStar(30)   // enable bonus loot with star stone
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau

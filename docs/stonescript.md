@@ -40,3 +40,13 @@ nopqrstuvwxyz
 └┴┘╚╩╝╘╧╛╙╨╜═ ─
 asciiend
 ```
+
+## Tips n Tricks
+
+```
+func a(x)
+  >`0,1,#yellow,YAYAY: @x@
+
+var b = a
+b(＂xD＂)
+```
