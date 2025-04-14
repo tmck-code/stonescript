@@ -3,18 +3,21 @@ var strats = import SS/Strats
 
 
 func Temple()
-  log.LogStrat(1, "Temple", "#green")
+  log.LogStrat(0, "Temple", "#green")
 
-  ?strats.canUseBladeDS(13)
-    strats.useBladeDS()
+  // ?strats.canUseBladeDS(13)
+  //   strats.useBladeDS()
 
   ?foe = boss & foe = acronian_cultist
     ?strats._Speedy(16, false)
       return
     ?strats.Dash()
       return
-    activate potion
-    equipL ice hammer
+    // activate potion
+    // ?foe.armor > 0
+    //   equip heavy hammer
+    //   return
+    equipL big ice sword
     equipR ice sword
     return
 
@@ -28,7 +31,7 @@ func Temple()
     ?strats._Speedy(16, false)
       return
     activate potion
-    equipL ice hammer
+    equipL big ice sword
     return
 
   ?strats._Speedy(22, false)
@@ -57,7 +60,7 @@ func Temple()
   ?strats.Dash()
     return
 
-  equipL ice hammer
+  equipL ice sword
   equipR big ice sword
 
 ?loc = temple

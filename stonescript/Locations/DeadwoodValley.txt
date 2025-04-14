@@ -17,7 +17,7 @@ func Override()
   return false
 
 func DeadWoodValley()
-  log.LogStrat(1, "DeadWoodValley", "#green")
+  log.LogStrat(0, "DeadWoodValley", "#green")
 
   ?Override()
     return

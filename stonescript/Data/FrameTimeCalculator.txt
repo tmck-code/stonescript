@@ -41,12 +41,14 @@ var F_POS_STYLE = ui.AddStyle(＂f─┐│ │└─┘＂)
 
 var XPOS_TEXT = ""
 var FRAMES_TEXT = ""
+var TIME_TEXT = ""
 
 var XPOS_PCT_TEXT = ""
 var FRAMES_PCT_TEXT = ""
 
 var XPOS_TOTAL_TEXT = ""
 var FRAMES_TOTAL_TEXT = ""
+var TIME_TOTAL_TEXT = ""
 
 func MakeTextPanel(_x, _y, _w, _h)
   var panel = ui.AddPanel()
@@ -76,10 +78,13 @@ func InitUI()
   FRAMES_TOTAL_TEXT   = MakeTextPanel(0, 8, 8, 3)
   FRAMES_PCT_TEXT     = MakeTextPanel(0, 10, 8, 3)
 
-  XPOS_TEXT           = MakeTextPanel(7, 6, 8, 3)
+  TIME_TEXT           = MakeTextPanel(7, 6, 10, 3)
+  TIME_TOTAL_TEXT     = MakeTextPanel(7, 8, 20, 3)
+
+  XPOS_TEXT           = MakeTextPanel(16, 6, 8, 3)
   XPOS_TEXT.parent.style     = X_POS_STYLE
-  XPOS_TOTAL_TEXT     = MakeTextPanel(7, 8, 8, 3)
-  XPOS_PCT_TEXT       = MakeTextPanel(7, 10, 8, 3)
+  XPOS_TOTAL_TEXT     = MakeTextPanel(16, 8, 8, 3)
+  XPOS_PCT_TEXT       = MakeTextPanel(16, 10, 8, 3)
 
 func Init()
   // this is the main function that is called when the script is loaded
@@ -150,16 +155,22 @@ func LogFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
   ?i = -1 | i >= prevFrameNArray.Count()
     >`0,18,#red,xpos not found:@_posX@
     return
-  var diffFrameN = _frameN - prevFrameNArray[i]
+  var diffFrameN = prevFrameNArray[i] - _frameN
+  var diffFrameNFmt = ""
+
+  ?diffFrameN < 0
+    diffFrameNFmt = "-" + log.FmtFramesAsTime(math.Abs(diffFrameN))
+  :
+    diffFrameNFmt = log.FmtFramesAsTime(diffFrameN)
 
   ?diffFrameN >= 0
     var log = import SS/Log
-    >`2,12,#green,@string.Format("▲{0:N0}", diffFrameN)@
+    >`2,13,#green,@string.Format("▲{0} - {1}-{2}", diffFrameNFmt, prevFrameNArray[i], _frameN)@
     FRAMES_TEXT.color = #green
     FRAMES_TOTAL_TEXT.color = #green
     FRAMES_PCT_TEXT.color = #green
   :
-    >`2,12,#red,@string.Format("▼{0:N0}", diffFrameN)@
+    >`2,13,#red,@string.Format("▼{0} - {1}-{2}", diffFrameNFmt, prevFrameNArray[i], _frameN)@
     FRAMES_TEXT.color = #red
     FRAMES_TOTAL_TEXT.color = #red
     FRAMES_PCT_TEXT.color = #red
@@ -169,8 +180,10 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
   ?_totalX = 0
     XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
     FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
+    TIME_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_frameN))
     ?_totalFrames > 0
       FRAMES_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalFrames)
+      TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
       FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
   :
     ?_totalFrames = loc.bestTime
@@ -186,6 +199,9 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
     FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     FRAMES_TOTAL_TEXT.text = string.Format("{0:N0}", _totalFrames)
     FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
+
+    TIME_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_frameN))
+    TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
 
     // if we should be updating (as per total frame N / time)
     LogXPosDiff(_posX, _totalX, 20)

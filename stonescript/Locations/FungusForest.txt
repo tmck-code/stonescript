@@ -11,7 +11,7 @@ func Override()
   return true
 
 func FungusForest()
-  log.LogStrat(1, "FungusForest", "#green")
+  log.LogStrat(0, "FungusForest", "#green")
 
   ?strats.canUseBladeDS(2)
     strats.useBladeDS()

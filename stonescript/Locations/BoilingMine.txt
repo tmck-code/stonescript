@@ -11,13 +11,14 @@ func Override()
   return true
 
 func BoilingMine()
-  log.LogStrat(1, "BoilingMine", "#green")
+  log.LogStrat(0, "BoilingMine", "#green")
 
   ?strats.canUseBladeDS(3)
     strats.useBladeDS()
 
   ?foe = boss & foe = bomb_cart
-    ?strats.Speedy()
+    equipR fire talisman
+    ?strats.Speedy(28, false)
       return
     equip aether crossbow
     return
@@ -55,6 +56,7 @@ func BoilingMine()
     equip aether crossbow
     return
 
+  equipR fire talisman
   ?strats._Speedy(25, false)
     return
 
@@ -99,8 +101,9 @@ func BoilingMine()
   //   equipR vigor wand
   //   return
 
+  equipR fire talisman
   equipL big aether sword
-  equipR aether hammer
+  // equipR aether hammer
 
 ?loc = mine
   ?gameEngine.OverrideEnabled() & Override()

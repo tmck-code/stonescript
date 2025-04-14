@@ -42,7 +42,7 @@ func Override()
 func IcyRidge()
   log.LogStrat(0, "IcyRidge", "#green")
 
-  ?strats.canUseBladeDS(4)
+  ?strats.canUseBladeDS(5)
     strats.useBladeDS()
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
@@ -108,6 +108,10 @@ func IcyRidge()
   ?strats._Speedy(22, false)
     return
 
+  ?foe.distance > 12
+    equip fire crossbow
+    return
+
   ?foe.count <= 4 & foe.hp < 100 & foe ! ice_pillarand foe ! ice_wall
     ?strats._Dash(11, 20)
       return
@@ -121,7 +125,7 @@ func IcyRidge()
     ?strats._Dash(11, 20)
       return
 
-  ?foe.distance > 15
+  ?foe.distance > 8
     equip fire crossbow
     return
 

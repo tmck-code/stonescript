@@ -25,12 +25,12 @@ func Override()
   return true
 
 func Caves()
-  log.LogStrat(4, "Caves "+loc.stars+"☆", "#green")
+  log.LogStrat(0, "Caves "+loc.stars+"☆", "#green")
 
   ?Override()
     return
 
-  ?strats.canUseBladeDS(2)
+  ?strats.canUseBladeDS(1)
     strats.useBladeDS()
 
   ?foe = spider_boss
@@ -38,59 +38,69 @@ func Caves()
 
   ?IS_FINAL_BOSS_STAGE
     BOSS_TIME = BOSS_TIME + 1
-    ?BOSS_TIME > 400 & foe.hp > 0
-      equip fire staff
-      ?canUse.AbilityOfStaff("infernal")
-        activate R
-        return true
-      ?strats.MaskOfTheLost()
-        return
-      ?strats.UseWandAbility("explosive", "L")
-        return
-      ?strats.UseWandAbility("plague", "R")
-        return
-      ?buffs.GetFoeBuffLevel("damage") >= 2
-        ?strats.UseWandAbility("reset", "R")
-          return
+    // ?BOSS_TIME > 400 & foe.hp > 0
+      // equip fire staff
+      // ?canUse.AbilityOfStaff("infernal")
+      //   activate R
+      //   return true
+      // ?strats.MaskOfTheLost()
+      //   return
+      // ?strats.UseWandAbility("explosive", "L")
+      //   return
+      // ?strats.UseWandAbility("plague", "R")
+      //   return
+      // ?buffs.GetFoeBuffLevel("damage") >= 2
+      //   ?strats.UseWandAbility("reset", "R")
+      //     return
 
-    equip bardiche
-    ?foe.distance <= 10
-      activate R
+    equip ice crossbow
+    // ?foe.distance <= 10
+    //   activate R
 
-    ?buffs.GetFoeDebuffLevel("chill") >= 2
-      equip ice crossbow
-      return
-    :
-      equipR ice wand
-      equipL fire wand +11 df
-      return
+    // ?buffs.GetFoeDebuffLevel("chill") >= 2
+    //   equip ice crossbow
+    //   return
+    // :
+    //   equipR ice wand
+    //   equipL fire wand +11 df
+    //   return
 
-  ?strats._Speedy(25, true)
+  ?strats._Speedy(22, true)
     return
 
-  ?foe.count > 8
-    ?armor > 14
-      ?strats.UseWandAbility("calamity", "L")
-        return
+  // ?foe.count > 8
+  //   ?armor > 14
+  //     ?strats.UseWandAbility("calamity", "L")
+  //       return
 
-  ?foe.count < 4
+  ?foe.count < 6
     ?strats.Dash()
+      return
+  :
+    activate potion
+
+  ?foe.count < 2
+    ?strats._Dash(20, 11)
       return
 
   // ?foe.distance >= MAX_DISTANCE | foe.hp > 80 | foe = tiny_spider
-  ?foe.distance > 12 | foe.hp > 80
+  ?foe.distance > 18 | foe.hp > 80
     equip ice crossbow
     return
 
-  ?foe.distance >= MIN_DISTANCE
-    ?strats.Dash()
-      return
-    equipL ice wand
-    equipR tri
+  ?strats.Dash()
     return
 
-  equipL ice hammer
-  equipR vigor sword
+  // ?foe.distance >= MIN_DISTANCE
+  //   ?strats.Dash()
+  //     return
+    // equipL ice wand
+    // equipR tri
+    // return
+
+  equipL stone sword
+  // equipR vigor sword
+  // equip bardiche
 
 ?loc = caves
   Caves()

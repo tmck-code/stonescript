@@ -129,6 +129,8 @@ func FmtSafeJoin(sep, data)
   return string.Join(sep, msg)
 
 func FmtBigInt(number)
+  ?Type(value) ! number
+    return string.Format("{0}", number)
   ?number > 1000
     return string.Format("{0,3:F1}K", math.BigNumber(number).ToFloat()/1000)
   ?number > 1000000
@@ -181,9 +183,9 @@ func FmtFramesAsTime(frame_n)
   var framesWithinSecond = frame_n % FRAMES_PER_SECOND
   // add a padding 0 e.g. "09"
   ?framesWithinSecond <= 9
-    var framesWithinSecondFmt = string.Format("0{0}", framesWithinSecond)
+    var framesWithinSecondFmt = string.Format("0{0,1:N2}", framesWithinSecond)
   :
-    var framesWithinSecondFmt = string.Format("{0}", framesWithinSecond)
+    var framesWithinSecondFmt = string.Format("{0,2:N2}", framesWithinSecond)
   // only render the minutes if needed, e.g. "1921/1:01.01"
   ?frame_n > 60 * FRAMES_PER_SECOND
     return string.Format("{0,2}:{1,2}.{2,2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
@@ -404,9 +406,9 @@ func LogItemStates()
   :
     var leftItemLines = CollectStates(item, FmtItemState(item.left.state), item.left.time, seenItemStatesLeft, itemStateTimesLeft)
     ?leftItemLines.Count() > 0
-      >`20,0,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+      >`21,0,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
       for i = 0 .. leftItemLines.Count()-1
-        >`20,@0+1@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
+        >`21,@0+1@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
 
   ?lastRightItem ! item.right.id | string.Size(item.right.id) = 0
     seenItemStatesRight = itemStatesFmt
@@ -415,9 +417,9 @@ func LogItemStates()
   :
     var rightItemLines = CollectStates(item, FmtItemState(item.right.state), item.right.time, seenItemStatesRight, itemStateTimesRight)
     ?rightItemLines.Count() > 0
-      >`28,0,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+      >`29,0,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
       for i = 0 .. rightItemLines.Count()-1
-        >`28,@0+1@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
+        >`29,@0+1@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
 
 func LogFoeStates(x_offset)
   ?lastFoe ! foe.id | string.Size(foe.id) = 0
@@ -617,7 +619,7 @@ func WriteLogs()
   ^  "cinderwisp", "voidweaver"
   ^]))
   LogTopLeft(0, [
-    // ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
+    ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
     // ["#white",  string.Format("{0}: {1}", "p", Fmt([pos.x, screen.FromWorldX(pos.x), screen.FromWorldZ(pos.z - pos.y)]))],
     ["#blue",   string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))],
   ])
