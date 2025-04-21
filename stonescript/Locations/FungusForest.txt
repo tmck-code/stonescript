@@ -61,17 +61,17 @@ func FungusForest()
     ?strats.UseWandAbility("calamity", "L")
       return
 
-  // ?foe.count <= 2 & (foe.hp + foe.armor) < 100
-  //   ?strats._Dash(5,20)
-  //     return
+  ?foe.count <= 2 & (foe.hp + foe.armor) < 100
+    ?strats._Dash(5,20)
+      return
 
   ?foe.distance > 15
     equip poison crossbow
     return
 
-  // ?foe.count <= 2 & (foe.hp + foe.armor) < 100
-  //   ?strats._Dash(5,20)
-  //     return
+  ?foe.count <= 2 & (foe.hp + foe.armor) < 100
+    ?strats._Dash(5,20)
+      return
 
   ?foe.distance > 6
     equipL poison wand

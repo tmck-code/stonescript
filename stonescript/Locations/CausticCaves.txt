@@ -88,7 +88,7 @@ func Caves()
     equip ice crossbow
     return
 
-  ?strats.Dash()
+  ?strats._Dash(20, 11)
     return
 
   ?foe.distance >= MIN_DISTANCE

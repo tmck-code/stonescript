@@ -52,6 +52,52 @@ var TIME_TOTAL_TEXT = ""
 var XPOS_DELTA_TEXT = ""
 var FRAMES_DELTA_TEXT = ""
 
+var loadMsg = "Loading FrameTimeCalculator..."
+
+var TIMES_PANEL = -1
+var TIMES_TOTAL_TEXT = ""
+
+func MakeColumnPanel(_x, _y, _w)
+  var panel = ui.AddPanel()
+  panel.dock = top_left
+  panel.anchor = top_left
+  panel.x = _x
+  panel.y = _y
+  panel.w = _w
+  panel.h = 3
+
+  return panel
+
+func AddRowToColumn(_column_panel, _h, _style)
+  var panel = ui.AddPanel()
+
+  var rowY = 0
+  for child : _column_panel.children
+    rowY = child.y + _h
+
+  _column_panel.Add(panel)
+
+  panel.dock = top_left
+  panel.anchor = top_left
+  panel.y = rowY
+  panel.x = 0
+  panel.w = _column_panel.w
+  panel.h = _h
+  panel.style = _style
+
+  _column_panel.h = _column_panel.h + _h
+
+  var text = ui.AddText()
+  text.anchor = top_left
+  text.dock = top_left
+  text.x = text.x + 1
+  text.y = text.y + 1
+  text.text = "!"
+
+  panel.Add(text)
+
+  return text
+
 func MakeTextPanel(_x, _y, _w, _h, _style)
   var panel = ui.AddPanel()
   panel.anchor = top_left
@@ -85,7 +131,9 @@ func InitUI()
   FRAMES_PCT_TEXT     = MakeTextPanel(0,  10, 7, 3, ui.AddStyle(＂├─┼% │└─┘＂))
   FRAMES_DELTA_TEXT   = MakeTextPanel(0,  12, 7, 3, ui.AddStyle(＂├─┼▲ │└─┴＂))
 
-
+  // TIMES_PANEL = MakeColumnPanel(10, 10, 5)
+  // TIMES_TOTAL_TEXT = AddRowToColumn(TIMES_PANEL, 3, REGULAR_STYLE)
+  // TIMES_TOTAL_TEXT.text = "!!"
   // TIME_TEXT           = MakeTextPanel(7, 6, 10, 3)
   // TIME_TOTAL_TEXT     = MakeTextPanel(7, 8, 20, 3)
 
@@ -103,6 +151,7 @@ func Init()
   // load the previous times from storage. once a key has been stored a single time,
   // even if it's "Deleted", it will always be present, so we need to use Get with a default value
   ?storage.Get(frameNStorageKey, -1) ! -1
+    loadMsg = frameNStorageKey + ", "
     var prevFrameNArrayStrs = string.Split(storage.Get(frameNStorageKey), ",")
     for i = 0 .. prevFrameNArrayStrs.Count()-1
       var n = math.BigNumber(prevFrameNArrayStrs[i]).ToFloat()
@@ -111,7 +160,8 @@ func Init()
   :?loc.bestTime ! -1
     totalFrames = loc.bestTime
 
-  ?storage.Get(xPosStorageKey, -1) ! -1 
+  ?storage.Get(xPosStorageKey, -1) ! -1
+    loadMsg = loadMsg + xPosStorageKey
     prevXPosArrayStrs = string.Split(storage.Get(xPosStorageKey), ",")
     for i = 0 .. prevXPosArrayStrs.Count()-1
       var n = math.BigNumber(prevXPosArrayStrs[i]).ToFloat()
@@ -157,6 +207,7 @@ func CalcFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
   return prevFrameNArray[i] - _frameN
 
 func Log(_posX, _totalX, _frameN, _totalFrames)
+  >`0,4,#yellow,@loadMsg@
   // print basic info if no previous times
   ?_totalX = 0
     XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
@@ -178,14 +229,14 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
     XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
     XPOS_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalX)
     XPOS_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_posX)/_totalX)
-    XPOS_DELTA_TEXT.text = string.Format("{0,5:N2}", CalcXPosDiff(_posX, _totalX, 20))
+    XPOS_DELTA_TEXT.text = string.Format("{0,5:N0}", CalcXPosDiff(_posX, _totalX, 20))
 
     // FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     // FRAMES_TOTAL_TEXT.text = log.FmtFramesAsTime(_totalFrames)
     FRAMES_TOTAL_TEXT.text = string.Format("{0,5}", _totalFrames)
     FRAMES_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_frameN)/_totalFrames)
-    FRAMES_DELTA_TEXT.text = string.Format("{0,5:N2}", CalcFrameNDiff(_posX, _frameN, _totalFrames, 20))
+    FRAMES_DELTA_TEXT.text = string.Format("{0,5:N0}", CalcFrameNDiff(_posX, _frameN, _totalFrames, 20))
 
     // TIME_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_frameN))
     // TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
