@@ -52,8 +52,6 @@ var TIME_TOTAL_TEXT = ""
 var XPOS_DELTA_TEXT = ""
 var FRAMES_DELTA_TEXT = ""
 
-var loadMsg = "Loading FrameTimeCalculator..."
-
 var TIMES_PANEL = -1
 var TIMES_TOTAL_TEXT = ""
 
@@ -133,9 +131,6 @@ func InitUI()
 
   // TIMES_PANEL = MakeColumnPanel(10, 10, 5)
   // TIMES_TOTAL_TEXT = AddRowToColumn(TIMES_PANEL, 3, REGULAR_STYLE)
-  // TIMES_TOTAL_TEXT.text = "!!"
-  // TIME_TEXT           = MakeTextPanel(7, 6, 10, 3)
-  // TIME_TOTAL_TEXT     = MakeTextPanel(7, 8, 20, 3)
 
 func Init()
   // this is the main function that is called when the script is loaded
@@ -151,7 +146,6 @@ func Init()
   // load the previous times from storage. once a key has been stored a single time,
   // even if it's "Deleted", it will always be present, so we need to use Get with a default value
   ?storage.Get(frameNStorageKey, -1) ! -1
-    loadMsg = frameNStorageKey + ", "
     var prevFrameNArrayStrs = string.Split(storage.Get(frameNStorageKey), ",")
     for i = 0 .. prevFrameNArrayStrs.Count()-1
       var n = math.BigNumber(prevFrameNArrayStrs[i]).ToFloat()
@@ -161,7 +155,6 @@ func Init()
     totalFrames = loc.bestTime
 
   ?storage.Get(xPosStorageKey, -1) ! -1
-    loadMsg = loadMsg + xPosStorageKey
     prevXPosArrayStrs = string.Split(storage.Get(xPosStorageKey), ",")
     for i = 0 .. prevXPosArrayStrs.Count()-1
       var n = math.BigNumber(prevXPosArrayStrs[i]).ToFloat()
@@ -207,17 +200,14 @@ func CalcFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
   return prevFrameNArray[i] - _frameN
 
 func Log(_posX, _totalX, _frameN, _totalFrames)
-  >`0,4,#yellow,@loadMsg@
   // print basic info if no previous times
   ?_totalX = 0
     XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
     FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
 
-    // FRAMES_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(totaltime))
-    FRAMES_TEXT .text = string.Format("{0,5:N0}", _frameN)
+    FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     ?_totalFrames > 0
       FRAMES_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalFrames)
-      // TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
       FRAMES_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_frameN)/_totalFrames)
   :
     ?_totalFrames = loc.bestTime
@@ -228,18 +218,14 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
     // print the time taken and the x position, and how far we are to the total
     XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
     XPOS_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalX)
-    XPOS_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_posX)/_totalX)
+    XPOS_PCT_TEXT.text = string.Format("{0,5:N1}", (100*_posX)/_totalX)
     XPOS_DELTA_TEXT.text = string.Format("{0,5:N0}", CalcXPosDiff(_posX, _totalX, 20))
 
-    // FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
-    // FRAMES_TOTAL_TEXT.text = log.FmtFramesAsTime(_totalFrames)
     FRAMES_TOTAL_TEXT.text = string.Format("{0,5}", _totalFrames)
-    FRAMES_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_frameN)/_totalFrames)
+    FRAMES_PCT_TEXT.text = string.Format("{0,5:N1}", (100*_frameN)/_totalFrames)
     FRAMES_DELTA_TEXT.text = string.Format("{0,5:N0}", CalcFrameNDiff(_posX, _frameN, _totalFrames, 20))
 
-    // TIME_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_frameN))
-    // TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
 
 // this is the main public function that can be called to update the time
 func Update()
