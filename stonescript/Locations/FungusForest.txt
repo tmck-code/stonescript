@@ -13,78 +13,79 @@ func Override()
 func FungusForest()
   log.LogStrat(0, "FungusForest", "#green")
 
-  ?strats.canUseBladeDS(2)
+  ?strats.canUseBladeDS(5)
     strats.useBladeDS()
 
   ?foe = boss
-    ?foe = epic_snail
-      ?strats.Speedy()
-        return
+    ?foe = epic_snail | fluff
+      // ?strats._Speedy(12, false)
+      //   return
       equip poison crossbow
       return
 
     ?foe = phase1
-      ?strats.UseWandAbility("explosive", "L")
-        return true
-      ?strats.UseWandAbility("frost", "L")
-        return true
+      ?foe.distance > 10
+        ?strats._Dash(5, 20)
+          return
+      // ?strats.UseWandAbility("explosive", "L")
+      //   return true
+      // ?strats.UseWandAbility("frost", "L")
+      //   return true
       ?foe.distance > 6
         ?strats._Speedy(12, false)
           return
-    ?foe.armor > 0
-      equip heavy hammer
-      // equipR ice hammer
-      // equipL poison hammer +11 dP
+      ?foe.armor > 0
+        equip heavy hammer
+        return
+      equipL poison hammer
+      equipR poison wand +11
       return
+
+    //   // equipR ice hammer
+    //   // equipL poison hammer +11 dP
+    //   return
 
     ?foe = phase2
       activate potion
-
-      ?foe.count > 1
-        ?strats.UseWandAbility("plague", "L")
-          return true
+      ?foe.distance > 10
+        ?strats._Dash(5, 20)
+          return
+        :?strats._Speedy(5, false)
+          return
+      ?foe.count > 1 & foe.armor = 0
+      //   // ?strats.UseWandAbility("plague", "L")
+      //   //   return true
         equip poison crossbow
           return
 
-      ?strats.MaskOfTheLost()
-        return
-      ?strats.UseWandAbility("explosive", "L")
-        return true
-      equipR poison sword +11
-      equipL poison hammer +11 dP
+      // ?strats.UseWandAbility("explosive", "L")
+      //   return true
+      equipL poison hammer
+      equipR poison wand +11
       return
 
-  ?strats._Speedy(25, true)
+  ?strats._Speedy(25, false)
     return
 
-  ?foe.count >= 2 & armor > 14
-    ?strats.UseWandAbility("calamity", "L")
-      return
-
-  ?foe.count <= 2 & (foe.hp + foe.armor) < 100
-    ?strats._Dash(5,20)
-      return
-
-  ?foe.distance > 15
+  ?foe.distance > 15 & foe.count > 10
     equip poison crossbow
     return
 
-  ?foe.count <= 2 & (foe.hp + foe.armor) < 100
-    ?strats._Dash(5,20)
-      return
-
-  ?foe.distance > 6
-    equipL poison wand
-    equipR vigor wand
-    ?strats.UseWandAbility("plague", "L")
-      return true
+  ?foe.count > 5 | foe = spawner
+    equipL poison wand +10
+    equipR poison wand +11
     return
+
+    // & (foe = snail | (foe.hp + foe.armor) < 100)
+  ?foe.count <= 3 & foe ! spawner
+    ?strats._Dash(5, 20)
+      return
 
   ?hp < 60
     equipL socketed_sword vigor
   :
-    equipL poison sword
-  equipR poison hammer
+    equipL poison hammer
+    equipR poison wand +11
 
 ?loc = fungus_forest
   ?gameEngine.OverrideEnabled() & Override()

@@ -10,7 +10,6 @@ var FrameTimer = new SS/Data/FrameTimeCalculator
 
 ?loc.begin | loc.loop
   FrameTimer.InitUI()
-?loc.begin
   FrameTimer.Init()
 FrameTimer.Update()
 
@@ -35,7 +34,7 @@ Components.render()
 // keybinds -------------------------------------
 
 strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
-log.ShowInfo([log.ShowWeapons, log.ShowStorageKeys], ability1)
+log.ShowInfo([log.ShowWeapons, log.ShowStorageKeys, log.ShowKeyPressed], ability1)
 // log._ShowWeapons(ability1)                    // show weapons by holding "shift"
 // gameEngine.AACToggle(downBegin)               // toggle AAC by pressing "down"
 // gameEngine.AACFastToggle(rightBegin)          // toggle fast AAC by pressing "right"

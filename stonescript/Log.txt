@@ -179,22 +179,22 @@ func FmtCooldownLogs(weapon_ids)
 var FRAMES_PER_SECOND = 30
 
 func FmtFramesAsTime(frame_n)
-  var seconds = frame_n / FRAMES_PER_SECOND
-  var framesWithinSecond = frame_n % FRAMES_PER_SECOND
+  var seconds = math.BigNumber(frame_n / FRAMES_PER_SECOND).ToInt()
+  var framesWithinSecond = math.BigNumber(frame_n % FRAMES_PER_SECOND).ToInt()
   // add a padding 0 e.g. "09"
-  ?framesWithinSecond <= 9
-    var framesWithinSecondFmt = string.Format("0{0,1:N0}", framesWithinSecond)
-  :
-    var framesWithinSecondFmt = string.Format("{0,2:N0}", framesWithinSecond)
+  >0,20,#red,@Type(framesWithinSecond)@
+  var framesWithinSecondFmt = string.Format("{0:D2}", framesWithinSecond)
   // only render the minutes if needed, e.g. "1921/1:01.01"
   ?frame_n > 60 * FRAMES_PER_SECOND
-    return string.Format("{0,2:N0}:{1,2:N0}.{2,2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
+    return string.Format("{0,2:N0}:{1,2:D2}.{2,2:N2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
   // the most common case, e.g. "637/21.07"
+  :frame_n < 0 & framesWithinSecond < 0
+    return string.Format("-{0,2:D2}.{1,2:N2}",       seconds, framesWithinSecondFmt*-1)
   :?frame_n > 0
-    return string.Format("{0,2:N0}.{1,2}",       seconds, framesWithinSecondFmt)
+    return string.Format("{0,2:D2}.{1,2:N2}",       seconds, framesWithinSecondFmt)
   // the total time is 0, e.g. "0/0:00.00"
   :
-    return string.Format("{0,2:N0}:{1,2:N0}.{2,2}", 0, 0, framesWithinSecondFmt)
+    return string.Format("{0,2:D2}:{1,2:D2}.{2,2}", 0, 0, framesWithinSecondFmt)
 
 func FmtFrames()
   return string.Format("{0,4}/{1}", totaltime, FmtFramesAsTime(totaltime))
@@ -215,6 +215,9 @@ func ShowWeapons()
 
 func ShowStorageKeys()
   >`0,20,#red,@Fmt(["keys [", storage.Keys().Count(), "]", storage.Keys()])@
+
+func ShowKeyPressed()
+  >`0,21,#yellow,@string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))@
 
 func ShowInfo(functions, keybind)
   ?key ! keybind | functions.Count() = 0
@@ -406,9 +409,9 @@ func LogItemStates()
   :
     var leftItemLines = CollectStates(item, FmtItemState(item.left.state), item.left.time, seenItemStatesLeft, itemStateTimesLeft)
     ?leftItemLines.Count() > 0
-      >`21,0,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
+      >`22,1,#yellow,@string.Sub(item.left, 0, math.Min(5, string.Size(item.left)))@
       for i = 0 .. leftItemLines.Count()-1
-        >`21,@0+1@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
+        >`22,@2@,@leftItemLines[i][0]@,@leftItemLines[i][1]@
 
   ?lastRightItem ! item.right.id | string.Size(item.right.id) = 0
     seenItemStatesRight = itemStatesFmt
@@ -417,9 +420,9 @@ func LogItemStates()
   :
     var rightItemLines = CollectStates(item, FmtItemState(item.right.state), item.right.time, seenItemStatesRight, itemStateTimesRight)
     ?rightItemLines.Count() > 0
-      >`29,0,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
+      >`30,1,#yellow,@string.Sub(item.right, 0, math.Min(5, string.Size(item.right)))@
       for i = 0 .. rightItemLines.Count()-1
-        >`29,@0+1@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
+        >`30,@2@,@rightItemLines[i][0]@,@rightItemLines[i][1]@
 
 func LogFoeStates(x_offset)
   ?lastFoe ! foe.id | string.Size(foe.id) = 0
@@ -546,6 +549,7 @@ func LogFoeDistance()
   ?foe.distance = 9999
     return
   LogAbovePlayer([["#yellow", foe.distance]], 0, -2, -1, "left")
+  LogAbovePlayer([["#yellow", foe.count]], 0, -1, -1, "left")
 
 // --------------------------
 
@@ -619,11 +623,8 @@ func WriteLogs()
   ^  "cinderwisp", "voidweaver"
   ^]))
   LogTopLeft(0, [
-    ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
-    // ["#white",  string.Format("{0}: {1}", "p", Fmt([pos.x, screen.FromWorldX(pos.x), screen.FromWorldZ(pos.z - pos.y)]))],
-    ["#blue",   string.Format("{0}: {1}", "key", Fmt([string.Break(key, 15)[0]]))],
-  ])
-
+  ^  ["#white",  string.Format("{0}: {1}", "t", Fmt([FmtFrames(), "gp:", loc.gp]))],
+  ^])
   LogTopRight(0, [["#green", Fmt([foe.state, foe.time])]])
 
   // log buffs and debuffs above the player
