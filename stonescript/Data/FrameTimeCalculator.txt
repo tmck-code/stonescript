@@ -141,7 +141,7 @@ func CalcXPosDiff(_posX, _totalX, _msgOffset)
 func CalcFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
   var diffX = 0
   // compare the current x position to the previous x position
-  ?prevXPosArray.Count() >= xPosArray.Count()
+  ?prevXPosArray.Count() >= xPosArray.Count() & xPosArray.Count() > 0
     diffX = _posX - prevXPosArray[xPosArray.Count()-1]
   :
     // or compare the current x position to the last-most previous x position
@@ -154,8 +154,7 @@ func CalcFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
   ?i = -1 | i >= prevFrameNArray.Count()
     return
 
-  var diffFrameBigN = math.BigNumber(prevFrameNArray[i]) - math.BigNumber(_frameN)
-  return diffFrameBigN.ToFloat()
+  return prevFrameNArray[i] - _frameN
 
 func Log(_posX, _totalX, _frameN, _totalFrames)
   // print basic info if no previous times

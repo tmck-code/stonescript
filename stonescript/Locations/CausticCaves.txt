@@ -38,20 +38,20 @@ func Caves()
 
   ?IS_FINAL_BOSS_STAGE
     BOSS_TIME = BOSS_TIME + 1
-    // ?BOSS_TIME > 400 & foe.hp > 0
-      // equip fire staff
-      // ?canUse.AbilityOfStaff("infernal")
-      //   activate R
-      //   return true
-      // ?strats.MaskOfTheLost()
-      //   return
-      // ?strats.UseWandAbility("explosive", "L")
-      //   return
-      // ?strats.UseWandAbility("plague", "R")
-      //   return
-      // ?buffs.GetFoeBuffLevel("damage") >= 2
-      //   ?strats.UseWandAbility("reset", "R")
-      //     return
+    ?BOSS_TIME > 400 & foe.hp > 0
+      equip fire staff
+      ?canUse.AbilityOfStaff("infernal")
+        activate R
+        return true
+      ?strats.MaskOfTheLost()
+        return
+      ?strats.UseWandAbility("explosive", "L")
+        return
+      ?strats.UseWandAbility("plague", "R")
+        return
+      ?buffs.GetFoeBuffLevel("damage") >= 2
+        ?strats.UseWandAbility("reset", "R")
+          return
 
     equip ice crossbow
     // ?foe.distance <= 10
@@ -91,14 +91,15 @@ func Caves()
   ?strats.Dash()
     return
 
-  // ?foe.distance >= MIN_DISTANCE
-  //   ?strats.Dash()
-  //     return
+  ?foe.distance >= MIN_DISTANCE
+    ?strats.Dash()
+      return
     // equipL ice wand
     // equipR tri
     // return
 
-  equipL stone sword
+  equipL vigor sword
+  equipR big vigor sword
   // equipR vigor sword
   // equip bardiche
 
