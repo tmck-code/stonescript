@@ -182,7 +182,7 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
     XPOS_DELTA_TEXT.text = string.Format("{0,5:N2}", CalcXPosDiff(_posX, _totalX, 20))
 
     // FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
-    FRAMES_TEXT.text = string.Format("{0:5,N0}", _frameN)
+    FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
     // FRAMES_TOTAL_TEXT.text = log.FmtFramesAsTime(_totalFrames)
     FRAMES_TOTAL_TEXT.text = string.Format("{0,5}", _totalFrames)
     FRAMES_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_frameN)/_totalFrames)
