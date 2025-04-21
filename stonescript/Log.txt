@@ -183,18 +183,18 @@ func FmtFramesAsTime(frame_n)
   var framesWithinSecond = frame_n % FRAMES_PER_SECOND
   // add a padding 0 e.g. "09"
   ?framesWithinSecond <= 9
-    var framesWithinSecondFmt = string.Format("0{0,1:N2}", framesWithinSecond)
+    var framesWithinSecondFmt = string.Format("0{0,1:N0}", framesWithinSecond)
   :
-    var framesWithinSecondFmt = string.Format("{0,2:N2}", framesWithinSecond)
+    var framesWithinSecondFmt = string.Format("{0,2:N0}", framesWithinSecond)
   // only render the minutes if needed, e.g. "1921/1:01.01"
   ?frame_n > 60 * FRAMES_PER_SECOND
-    return string.Format("{0,2}:{1,2}.{2,2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
+    return string.Format("{0,2:N0}:{1,2:N0}.{2,2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
   // the most common case, e.g. "637/21.07"
   :?frame_n > 0
-    return string.Format("{0,2}.{1,2}",       seconds, framesWithinSecondFmt)
+    return string.Format("{0,2:N0}.{1,2}",       seconds, framesWithinSecondFmt)
   // the total time is 0, e.g. "0/0:00.00"
   :
-    return string.Format("{0,2}:{1,2}.{2,2}", 0, 0, framesWithinSecondFmt)
+    return string.Format("{0,2:N0}:{1,2:N0}.{2,2}", 0, 0, framesWithinSecondFmt)
 
 func FmtFrames()
   return string.Format("{0,4}/{1}", totaltime, FmtFramesAsTime(totaltime))

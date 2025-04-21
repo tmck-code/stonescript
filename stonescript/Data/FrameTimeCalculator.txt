@@ -30,14 +30,13 @@ var prevXPosArrayStrs = []
 var logColour = #yellow
 var deltaLogColour = #red
 
-var REGULAR_STYLE_STR = ＂┌─┐│ │└─┘＂
+// var REGULAR_STYLE_STR = ＂┌─┐│ │└─┘＂
+var REGULAR_STYLE_STR = ＂├─┤│ │└─┘＂
 var REGULAR_STYLE = ui.AddStyle(REGULAR_STYLE_STR)
 
 var STYLE_LINED_BOX_NO_BOTTOM = ui.AddStyle(＂├─┤│ │   ＂)
 var STYLE_LINED_BOX_RHS = ui.AddStyle(＂┌─┐│     ＂)
 
-var X_POS_STYLE = ui.AddStyle(＂x─┐│ │└─┘＂)
-var F_POS_STYLE = ui.AddStyle(＂f─┐│ │└─┘＂)
 
 var XPOS_TEXT = ""
 var FRAMES_TEXT = ""
@@ -50,11 +49,14 @@ var XPOS_TOTAL_TEXT = ""
 var FRAMES_TOTAL_TEXT = ""
 var TIME_TOTAL_TEXT = ""
 
-func MakeTextPanel(_x, _y, _w, _h)
+var XPOS_DELTA_TEXT = ""
+var FRAMES_DELTA_TEXT = ""
+
+func MakeTextPanel(_x, _y, _w, _h, _style)
   var panel = ui.AddPanel()
   panel.anchor = top_left
   panel.dock = top_left
-  panel.style = STYLE_LINED_BOX_NO_BOTTOM
+  panel.style = _style
   panel.w = _w
   panel.h = _h
   panel.x = panel.x + _x
@@ -66,25 +68,26 @@ func MakeTextPanel(_x, _y, _w, _h)
   text.w = _w
   text.y = text.y + panel.h
   text.x = panel.x - _x + 1
-  text.text = "??"
+  text.text = string.Format("{0,5}", "??")
 
   panel.Add(text)
 
   return text
 
 func InitUI()
-  FRAMES_TEXT         = MakeTextPanel(0, 6, 8, 3)
-  FRAMES_TEXT.parent.style   = F_POS_STYLE
-  FRAMES_TOTAL_TEXT   = MakeTextPanel(0, 8, 8, 3)
-  FRAMES_PCT_TEXT     = MakeTextPanel(0, 10, 8, 3)
+  XPOS_TEXT           = MakeTextPanel(6, 6,  7, 3, ui.AddStyle(＂ ─┐│ │└─┘＂))
+  XPOS_TOTAL_TEXT     = MakeTextPanel(6, 8,  7, 3, ui.AddStyle(＂├─┤  │└─┘＂))
+  XPOS_PCT_TEXT       = MakeTextPanel(6, 10, 7, 3, ui.AddStyle(＂├─┤  │└─┘＂))
+  XPOS_DELTA_TEXT     = MakeTextPanel(6, 12, 7, 3, ui.AddStyle(＂├─┤  │└─┘＂))
 
-  TIME_TEXT           = MakeTextPanel(7, 6, 10, 3)
-  TIME_TOTAL_TEXT     = MakeTextPanel(7, 8, 20, 3)
+  FRAMES_TEXT         = MakeTextPanel(0,  6,  7, 3, ui.AddStyle(＂f─x│ │└─┘＂))
+  FRAMES_TOTAL_TEXT   = MakeTextPanel(0,  8,  7, 3, ui.AddStyle(＂├─┼Σ │└─┘＂))
+  FRAMES_PCT_TEXT     = MakeTextPanel(0,  10, 7, 3, ui.AddStyle(＂├─┼% │└─┘＂))
+  FRAMES_DELTA_TEXT   = MakeTextPanel(0,  12, 7, 3, ui.AddStyle(＂├─┼▲ │└─┴＂))
 
-  XPOS_TEXT           = MakeTextPanel(16, 6, 8, 3)
-  XPOS_TEXT.parent.style     = X_POS_STYLE
-  XPOS_TOTAL_TEXT     = MakeTextPanel(16, 8, 8, 3)
-  XPOS_PCT_TEXT       = MakeTextPanel(16, 10, 8, 3)
+
+  // TIME_TEXT           = MakeTextPanel(7, 6, 10, 3)
+  // TIME_TOTAL_TEXT     = MakeTextPanel(7, 8, 20, 3)
 
 func Init()
   // this is the main function that is called when the script is loaded
@@ -120,7 +123,7 @@ func Init()
 // - every array stored/used by this script has the same length
 // - so, just get the current array size
 // - and compare the current x position to the previous x position
-func LogXPosDiff(_posX, _totalX, _msgOffset)
+func CalcXPosDiff(_posX, _totalX, _msgOffset)
   ?xPosArray.Count() = 0 | prevXPosArray.Count() = 0
     return
   var diffX = 0
@@ -130,61 +133,42 @@ func LogXPosDiff(_posX, _totalX, _msgOffset)
   :
     // or compare the current x position to the last-most previous x position
     diffX = _posX - prevXPosArray[prevXPosArray.Count()-1]
-  // print the difference in x position
-  ?diffX >= 0
-    >`9,12,#green,@string.Format("▲{0:N0}", diffX)@
-    XPOS_TEXT.color = #green
-    XPOS_TOTAL_TEXT.color = #green
-    XPOS_PCT_TEXT.color = #green
-  :
-    >`9,12,#red,@string.Format("▼{0:N0}", diffX)@
-    XPOS_TEXT.color = #red
-    XPOS_TOTAL_TEXT.color = #red
-    XPOS_PCT_TEXT.color = #red
-
+  return diffX
 
 // this function takes the current frame/time (and x position), and
 // and looks up the previous run x positions to see what the frame/time was,
 // and diffs the twwo 
-func LogFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
+func CalcFrameNDiff(_posX, _frameN, _totalFrames, _msgOffset)
+  var diffX = 0
+  // compare the current x position to the previous x position
+  ?prevXPosArray.Count() >= xPosArray.Count()
+    diffX = _posX - prevXPosArray[xPosArray.Count()-1]
+  :
+    // or compare the current x position to the last-most previous x position
+    diffX = _posX - prevXPosArray[prevXPosArray.Count()-1]
+
   ?frameNArray.Count() = 0 | prevFrameNArray.Count() = 0
     return
   // find the index of our current x pos in the previous run
   var i = prevXPosArray.IndexOf(_posX)
-  // compare what time we were at when we last saw this x pos
   ?i = -1 | i >= prevFrameNArray.Count()
-    >`0,18,#red,xpos not found:@_posX@
     return
-  var diffFrameN = prevFrameNArray[i] - _frameN
-  var diffFrameNFmt = ""
 
-  ?diffFrameN < 0
-    diffFrameNFmt = "-" + log.FmtFramesAsTime(math.Abs(diffFrameN))
-  :
-    diffFrameNFmt = log.FmtFramesAsTime(diffFrameN)
-
-  ?diffFrameN >= 0
-    var log = import SS/Log
-    >`2,13,#green,@string.Format("▲{0} - {1}-{2}", diffFrameNFmt, prevFrameNArray[i], _frameN)@
-    FRAMES_TEXT.color = #green
-    FRAMES_TOTAL_TEXT.color = #green
-    FRAMES_PCT_TEXT.color = #green
-  :
-    >`2,13,#red,@string.Format("▼{0} - {1}-{2}", diffFrameNFmt, prevFrameNArray[i], _frameN)@
-    FRAMES_TEXT.color = #red
-    FRAMES_TOTAL_TEXT.color = #red
-    FRAMES_PCT_TEXT.color = #red
+  var diffFrameBigN = math.BigNumber(prevFrameNArray[i]) - math.BigNumber(_frameN)
+  return diffFrameBigN.ToFloat()
 
 func Log(_posX, _totalX, _frameN, _totalFrames)
   // print basic info if no previous times
   ?_totalX = 0
     XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
     FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
-    TIME_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_frameN))
+
+    // FRAMES_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(totaltime))
+    FRAMES_TEXT .text = string.Format("{0,5:N0}", _frameN)
     ?_totalFrames > 0
       FRAMES_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalFrames)
-      TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
-      FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
+      // TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
+      FRAMES_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_frameN)/_totalFrames)
   :
     ?_totalFrames = loc.bestTime
       // if we have a best time, then set the colour to green
@@ -194,18 +178,18 @@ func Log(_posX, _totalX, _frameN, _totalFrames)
     // print the time taken and the x position, and how far we are to the total
     XPOS_TEXT.text = string.Format("{0,5:N0}", _posX)
     XPOS_TOTAL_TEXT.text = string.Format("{0,5:N0}", _totalX)
-    XPOS_PCT_TEXT.text = string.Format("{0:N1}%", (100*_posX)/_totalX)
- 
-    FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
-    FRAMES_TOTAL_TEXT.text = string.Format("{0:N0}", _totalFrames)
-    FRAMES_PCT_TEXT.text = string.Format("{0:N1}%", (100*_frameN)/_totalFrames)
+    XPOS_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_posX)/_totalX)
+    XPOS_DELTA_TEXT.text = string.Format("{0,5:N2}", CalcXPosDiff(_posX, _totalX, 20))
 
-    TIME_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_frameN))
-    TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
+    // FRAMES_TEXT.text = string.Format("{0,5:N0}", _frameN)
+    FRAMES_TEXT.text = string.Format("{0:5,N0}", _frameN)
+    // FRAMES_TOTAL_TEXT.text = log.FmtFramesAsTime(_totalFrames)
+    FRAMES_TOTAL_TEXT.text = string.Format("{0,5}", _totalFrames)
+    FRAMES_PCT_TEXT.text = string.Format("{0,5:N2}", (100*_frameN)/_totalFrames)
+    FRAMES_DELTA_TEXT.text = string.Format("{0,5:N2}", CalcFrameNDiff(_posX, _frameN, _totalFrames, 20))
 
-    // if we should be updating (as per total frame N / time)
-    LogXPosDiff(_posX, _totalX, 20)
-    LogFrameNDiff(_posX, _frameN, _totalFrames, 20)
+    // TIME_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_frameN))
+    // TIME_TOTAL_TEXT.text = string.Format("{0}", log.FmtFramesAsTime(_totalFrames))
 
 // this is the main public function that can be called to update the time
 func Update()
@@ -227,7 +211,7 @@ func Update()
     xPosArray.Add(posX)
 
   // log the current stats
-  Log(posX, totalX, totaltime, totalFrames)
+  Log(posX, totalX, math.BigNumber(totaltime).ToFloat(), totalFrames)
 
   // if we have just looped around (started at 0 again), then store struct and reset vars
   ?!(loc.loop)
