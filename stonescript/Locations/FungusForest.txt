@@ -13,14 +13,14 @@ func Override()
 func FungusForest()
   log.LogStrat(0, "FungusForest", "#green")
 
-  ?strats.canUseBladeDS(5)
+  ?strats.canUseBladeDS(3)
     strats.useBladeDS()
 
   ?foe = boss
-    ?foe = epic_snail | fluff
+    ?foe = epic_snail | foe = fluff
       // ?strats._Speedy(12, false)
       //   return
-      equip poison crossbow
+      equip repeating crossbow
       return
 
     ?foe = phase1
@@ -52,22 +52,25 @@ func FungusForest()
           return
         :?strats._Speedy(5, false)
           return
-      ?foe.count > 1 & foe.armor = 0
-      //   // ?strats.UseWandAbility("plague", "L")
-      //   //   return true
+      ?foe.count > 1
         equip poison crossbow
           return
-
-      // ?strats.UseWandAbility("explosive", "L")
-      //   return true
-      equipL poison hammer
-      equipR poison wand +11
-      return
+    
+      ?foe.armor > 0
+        equip heavy hammer
+        return
+      :
+        equipL poison hammer
+        equipR poison sword
+        return
+    equipL poison hammer
+    equipR poison sword
+    return
 
   ?strats._Speedy(25, false)
     return
 
-  ?foe.distance > 15 & foe.count > 10
+  ?foe.distance > 15 & foe.count > 4
     equip poison crossbow
     return
 
@@ -82,7 +85,8 @@ func FungusForest()
       return
 
   ?hp < 60
-    equipL socketed_sword vigor
+    equipL poison hammer
+    equipR socketed_sword vigor
   :
     equipL poison hammer
     equipR poison wand +11

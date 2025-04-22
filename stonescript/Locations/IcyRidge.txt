@@ -1,8 +1,6 @@
 var log    = import SS/Log
 var strats = import SS/Strats
 var buffs = import SS/Checks/Buffs
-var gameEngine = import SS/GameEngine
-var CanUse = import SS/Checks/CanUse
 
 buffs._UpdateBuffs()
 
@@ -14,6 +12,7 @@ var BOSS_TIME = 0
   BOSS_TIME = 0
 
 // >`0,10,#white,BOSS_TIME @IS_FINAL_BOSS_STAGE@ @BOSS_TIME@
+
 
 func QuickShield()
   // about to be hit! equip the shield
@@ -31,18 +30,10 @@ func QuickShield()
     needShield = false
     return false
 
-func Override()
-  // activate potion
-  equip fire staff
-  ?CanUse.AbilityOfStaff("infernal")
-    activate R
-    return true
-  return true
-
 func IcyRidge()
-  log.LogStrat(0, "IcyRidge", "#green")
+  log.LogStrat(4, "IcyRidge", "#green")
 
-  ?strats.canUseBladeDS(5)
+  ?strats.canUseBladeDS(1)
     strats.useBladeDS()
 
   ?foe = yeti & !IS_FINAL_BOSS_STAGE
@@ -60,16 +51,12 @@ func IcyRidge()
     ?foe.count > 1
       equip fire crossbow
       return
-    ?foe.hp < 100
-      ?strats.Dash()
-        return
     // equip repeating crossbow
     equip fire crossbow
     return
 
   ?IS_FINAL_BOSS_STAGE
     ?foe.armor > 0
-
       equipL ice hammer
       equipR fire hammer
       return
@@ -80,7 +67,6 @@ func IcyRidge()
       return
 
     ?BOSS_TIME > 400 & foe = yeti
-      activate potion
       ?strats.MaskOfTheLost()
         return
       ?armor > 30
@@ -94,8 +80,15 @@ func IcyRidge()
       equipR ice hammer
       return
 
+    ?foe.count > 5 & armor > 14
+      ?strats.UseWandAbility("calamity", "L")
+        return
+
     equip fire crossbow
       return
+
+    // ?strats.Dash()
+    //   return
 
     ?buffs.GetFoeDebuffLevel("dot") < 1
       equipR fire wand dF
@@ -105,35 +98,32 @@ func IcyRidge()
       equip fire crossbow
       return
 
-  ?strats._Speedy(22, false)
+  ?strats._Speedy(22, true)
     return
-
-  ?foe.distance > 12
-    equip fire crossbow
-    return
-
-  ?foe.count <= 4 & foe.hp < 100 & foe ! ice_pillarand foe ! ice_wall
-    ?strats._Dash(11, 20)
-      return
 
   ?foe = ice_pillar & foe.count < 4
     equipR fire wand dF
     equipL fire wand +13
     return
 
-  ?foe.count <= 4 & foe.hp < 100 & foe ! ice_pillarand foe ! ice_wall
-    ?strats._Dash(11, 20)
-      return
-
-  ?foe.distance > 8
+  ?foe.distance > 12
     equip fire crossbow
     return
 
+  equipR fire wand dF
+  equipL fire wand
+
+  ?foe.distance > 12
+    equipR fire wand dF
+    equipL fire wand +13
+    return
+
+  // ?strats.Dash()
+  //   return
+
   equipL fire sword
-  equipR fire hammer
+  equipR compound shield
   return
 
 ?loc = icy_ridge
-  ?gameEngine.OverrideEnabled() & Override()
-    return
   IcyRidge()

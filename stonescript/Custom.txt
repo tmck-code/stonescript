@@ -10,6 +10,7 @@ var FrameTimer = new SS/Data/FrameTimeCalculator
 
 ?loc.begin | loc.loop
   FrameTimer.InitUI()
+?loc.begin
   FrameTimer.Init()
 FrameTimer.Update()
 

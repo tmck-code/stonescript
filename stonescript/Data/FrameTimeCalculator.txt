@@ -260,15 +260,16 @@ func Update()
   totalFrames = frameNArray[frameNArray.Count()-1]
   totalX = xPosArray[xPosArray.Count()-1]
 
-  var frameNArrayStrs = []
-  var xPosArrayStrs = []
-  for frameN : frameNArray
-    frameNArrayStrs.Add(math.BigNumber(frameN).ToString())
-  for xPos : xPosArray
-    xPosArrayStrs.Add(math.BigNumber(xPos).ToString())
+  ?totalFrames < loc.bestTime
+    var frameNArrayStrs = []
+    var xPosArrayStrs = []
+    for frameN : frameNArray
+      frameNArrayStrs.Add(math.BigNumber(frameN).ToString())
+    for xPos : xPosArray
+      xPosArrayStrs.Add(math.BigNumber(xPos).ToString())
 
-  storage.Set(frameNStorageKey, string.Join(",", frameNArrayStrs))
-  storage.Set(xPosStorageKey,   string.Join(",", xPosArrayStrs))
+    storage.Set(frameNStorageKey, string.Join(",", frameNArrayStrs))
+    storage.Set(xPosStorageKey,   string.Join(",", xPosArrayStrs))
 
   // clear & initialise the arrays
   prevFrameNArray.Clear()

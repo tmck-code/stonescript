@@ -24,9 +24,9 @@ func Rocky()
   log.LogStrat(4, "Rocky", "#green")
 
   ?foe ! boss | foe.distance > 10
-    // ?harvest = Boulder & harvest.distance < 3
-    //   equip shovel
-    //   return
+    ?harvest = Boulder & harvest.distance < 3
+      equip shovel
+      return
     equipL tri
     equipR star
     return

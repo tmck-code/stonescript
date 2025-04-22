@@ -188,7 +188,7 @@ func FmtFramesAsTime(frame_n)
   ?frame_n > 60 * FRAMES_PER_SECOND
     return string.Format("{0,2:N0}:{1,2:D2}.{2,2:N2}", seconds / 60, seconds % 60, framesWithinSecondFmt)
   // the most common case, e.g. "637/21.07"
-  :frame_n < 0 & framesWithinSecond < 0
+  :?frame_n < 0 & framesWithinSecond < 0
     return string.Format("-{0,2:D2}.{1,2:N2}",       seconds, framesWithinSecondFmt*-1)
   :?frame_n > 0
     return string.Format("{0,2:D2}.{1,2:N2}",       seconds, framesWithinSecondFmt)
