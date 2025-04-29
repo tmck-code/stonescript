@@ -33,16 +33,16 @@ func HauntedHalls()
 
   ?loc.loop
     BOSS = false
-  >`0,13,#green,BOSS:@BOSS@
-  >`0,14,#green,MINIBOSS:@MINIBOSS@
-  >`0,15,#green,weaponCycles:@weaponCycles@ (@equippedWeapon@)
+  // >`0,13,#green,BOSS:@BOSS@
+  // >`0,14,#green,MINIBOSS:@MINIBOSS@
+  // >`0,15,#green,weaponCycles:@weaponCycles@ (@equippedWeapon@)
 
-  ?strats.canUseBladeDS(1)
-    strats.useBladeDS()
-    return
+  // ?strats.canUseBladeDS(1)
+  //   strats.useBladeDS()
+  //   return
   
-  ?strats.MaskOfTheLost()
-    return
+  // ?strats.MaskOfTheLost()
+  //   return
 
   ?foe = boss & foe ! skeleton_boss & !MINIBOSS
     MINIBOSS = true
@@ -67,7 +67,7 @@ func HauntedHalls()
       weaponCycles = 0
       ?equippedWeapon = "crossbow"
         equipL vigor wand
-        equipR poison wand
+        equipR vigor wand +10
         equippedWeapon = "wand"
         return
       :
@@ -75,7 +75,7 @@ func HauntedHalls()
         equippedWeapon = "crossbow"
         return
     equipL vigor wand
-    equipR poison wand
+    equipR vigor wand +10
     return
 
   ?foe = skeleton_boss & BOSS = true & foe.hp = 0
@@ -87,67 +87,68 @@ func HauntedHalls()
     return
 
   ?BOSS
-    equipL big vigor sword
-    equipR vigor sword
-    ?foe.armor > 0
-      equip heavy crossbow
-      return
+    // equipL big vigor sword
+    // equipR vigor sword
+    equipL vigor wand
+    equipR vigor wand +10
+    // ?foe.armor > 0
+    //   equip heavy crossbow
+    //   return
 
     ?(foe.state = 32 | foe.state = 33) & boss = phase2
       equipL vigor wand
-      equipR compound shield
+      equipR big vigor sword
       return
     ?foe = ghost | foe = "immune_to_physical"
       equip vigor wand
-      equipR poison wand
+      equipR vigor wand +10
       return
 
-    ?!foe.debuffs.string = chill
-      equipR ice wand dI
-      equipL fire wand df
-      return
+    // ?!foe.debuffs.string = chill
+    //   equipR ice wand dI
+    //   equipL fire wand df
+    //   return
 
     ?boss = phase2
       equipL big vigor sword
-      equipR vigor sword
+      equipR vigor wand
+      // equipR vigor sword
       activate potion
-      ?strats.UseWandAbility("plague", "R")
-        return
-      ?strats.UseWandAbility("explosive", "L")
-        return
+      // ?strats.UseWandAbility("plague", "R")
+      //   return
+      // ?strats.UseWandAbility("explosive", "L")
+      //   return
 
     // equip vigor crossbow
     // equip repeating crossbow
-    equipL big vigor sword
+    // equipL big vigor sword
+    equipL vigor wand
     equipR vigor sword
     return
 
-  ?strats._Speedy(22, false)
+  ?strats._Speedy(25, false)
     return
 
-  ?foe.distance > 15
+  ?foe.distance > 18
     ?foe = ghost
       equipL vigor wand
-      equipR reset wand +10
+      // equipR reset wand +10
+      equipR vigor wand +10
     :
       equip vigor crossbow
       return
 
-  ?foe.count > 10
-    ?strats.UseWandAbility("calamity", "L")
+  ?foe.count < 6
+    ?strats._Dash(5, 20)
       return
-
-  ?foe.count < 8 & foe ! ghost
-    ?strats.Dash()
-      return
-
-  // ?foe.distance > 20
-  //   equipL tri
-  //   equipR vigor wand +12
-  //   return
+  :
+    equipL vigor wand +12
+    equipR vigor sword +10
+    return
 
   equipL vigor wand +12
-  equipR reset wand +10
+  // equipR reset wand +10
+  equipR vigor wand +10
 
 ?loc = halls
   ?gameEngine.OverrideEnabled() & Override()

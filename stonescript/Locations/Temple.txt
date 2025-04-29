@@ -18,50 +18,50 @@ func Temple()
     //   equip heavy hammer
     //   return
     equipL big ice sword
-    equipR ice sword
+    // equipR ice sword
+    equipR ice hammer
     return
 
   ?foe = boss & foe = nagaraja
+    activate potion
     ?foe.state = 112 & foe.time = 59
       equipR mind
     equipR ice sword
+    // equipR ice hammer
     ?hp < 10
       equip vigor crossbow
       return
     ?strats._Speedy(16, false)
       return
     activate potion
+    equipR ice hammer
     equipL big ice sword
     return
 
-  ?strats._Speedy(22, false)
+  ?strats._Speedy(28, false)
     return
   
-  ?foe.count > 8
+  ?foe.count > 4
     equip ice crossbow
     return
 
-  ?(foe.distance < 18 & foe.count <= 8) | foe = cult_marksman | foe.count <= 3
-    ?strats.Dash()
-      return
-
-  ?(foe = heavy_hitter | foe = worm_rider) & foe.distance > 16
-    equip ice crossbow
+  // ?(foe = heavy_hitter | foe = worm_rider) & foe.distance > 16
+  ?foe.distance > 7
+    equipL ice wand +13
+    equipR ice wand +12
     return
 
-  ?(foe.distance < 18 & foe.count <= 8) | foe = cult_marksman | foe = cult_sorcerer | foe.count <= 3
-    ?strats._Dash(12, 18)
-      return
-
-  ?foe.distance > 8 & foe ! cult_marksman
-    equip ice crossbow
-    return
+  // ?foe.distance > 8 & foe ! cult_marksman
+  //   // equip ice crossbow
+  //   equipL ice wand +13
+  //   equipR ice wand +12
+  //   return
 
   ?strats.Dash()
     return
 
-  equipL ice sword
-  equipR big ice sword
+  equipL big ice sword
+  equipR ice hammer
 
 ?loc = temple
   Temple()

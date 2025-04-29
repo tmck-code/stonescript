@@ -87,8 +87,8 @@ func IcyRidge()
     equip fire crossbow
       return
 
-    // ?strats.Dash()
-    //   return
+    ?strats.Dash(10,20)
+      return
 
     ?buffs.GetFoeDebuffLevel("dot") < 1
       equipR fire wand dF
@@ -101,7 +101,7 @@ func IcyRidge()
   ?strats._Speedy(22, true)
     return
 
-  ?foe = ice_pillar & foe.count < 4
+  ?foe = ice_pillar
     equipR fire wand dF
     equipL fire wand +13
     return
@@ -118,8 +118,8 @@ func IcyRidge()
     equipL fire wand +13
     return
 
-  // ?strats.Dash()
-  //   return
+  ?strats.Dash()
+    return
 
   equipL fire sword
   equipR compound shield

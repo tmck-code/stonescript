@@ -6,7 +6,6 @@
 // global variables -----------------------------
 
 var AAC_ENABLED                = false
-var AAC_FAST_ENABLED           = false
 var CUSTOM_STONESCRIPT_ENABLED = true
 var OVERRIDE_ENABLED           = false
 
@@ -58,20 +57,6 @@ func AACFast()
   ?item.left.state = 3
     equipL trisk
     equipL @item.left@
-
-func AACFastEnabled()
-  return AAC_FAST_ENABLED
-
-func SetAACFastEnabled(enabled)
-  AAC_FAST_ENABLED = enabled
-
-func _AACFastToggle()
-  AAC_FAST_ENABLED = !AAC_FAST_ENABLED
-  >0,10,AAC_FAST_ENABLED: @AAC_FAST_ENABLED@
-
-func AACFastToggle(keybind)
-  ?key = keybind
-    _AACFastToggle()
 
 // Loading Custom Stonescript -------------------
 

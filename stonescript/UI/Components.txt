@@ -4,7 +4,6 @@ var PANEL = 0
 var BUTTONS = []
 var BUTTON_ACTIONS = [
 ^  [0, ["††",  gameEngine.AACEnabled,               gameEngine._AACToggle]],
-^  [0, ["††☆", gameEngine.AACFastEnabled,           gameEngine._AACFastToggle]],
 ^  [0, ["☺",   gameEngine.CustomStonescriptEnabled, gameEngine._CustomStonescriptToggle]],
 ^]
 

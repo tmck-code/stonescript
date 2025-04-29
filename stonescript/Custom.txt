@@ -23,12 +23,6 @@ FrameTimer.Update()
 
 // update UI ------------------------------------
 
-// ?loc.begin | loc.loop
-//   ?hp < 80
-//     brew stone + tar
-//   :
-//     brew bronze + stone
-
 Buffs._UpdateBuffs()
 Components.render()
 
@@ -36,9 +30,7 @@ Components.render()
 
 strats._ListenForBladeTrigger(rightBegin)     // trigger blade of the fallen god by pressing "right"
 log.ShowInfo([log.ShowWeapons, log.ShowStorageKeys, log.ShowKeyPressed], ability1)
-// log._ShowWeapons(ability1)                    // show weapons by holding "shift"
-// gameEngine.AACToggle(downBegin)               // toggle AAC by pressing "down"
-// gameEngine.AACFastToggle(rightBegin)          // toggle fast AAC by pressing "right"
+gameEngine.AACToggle(downBegin)               // toggle AAC by pressing "down"
 gameEngine.RemoteCacheToggle(upBegin)         // toggle remote caching of scripts by pressing "up"
 gameEngine.CustomStonescriptToggle(leftBegin) // toggle custom stonescript by pressing "left"
 
@@ -56,7 +48,7 @@ gameEngine.AACFast()
   return
 
 strats._AutoPotion(45) // enable auto-heal (via potions)
-strats._LootStar(30)   // enable bonus loot with star stone
+// strats._LootStar(30)   // enable bonus loot with star stone
 
 // location-specific strategies -----------------
 import SS/Locations/RockyPlateau

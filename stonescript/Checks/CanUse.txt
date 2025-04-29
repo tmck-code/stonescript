@@ -4,23 +4,23 @@
 var structs = import SS/Data/Structs
 
 var _WAND_ABILITIES_MAP = [
-  ["plague",    "poison"],
-  ["reset",     "vigor"],
-  ["calamity",  "aether"],
-  ["explosive", "fire"],
-  ["frost",     "ice"],
-  ["gravity",   "stone"],
-]
+^  ["plague",    "poison"], // deals damage over time
+^  ["reset",     "vigor"],  // resets opponents active ability
+^  ["calamity",  "aether"], // deals damage to multiple targets
+^  ["explosive", "fire"],   // deals damage to single target
+^  ["frost",     "ice"],    // slows target
+^  ["gravity",   "stone"],  // gathers enemies into a straight linle
+^]
 
 // ability, element, armor cost
 var _STAFF_ABILITIES_MAP = [
-  ["berserker",  ["poison", 7]],
-  ["infernal",   ["fire",   6]],
-  ["eternity",   ["ice",    1]],
-  ["grasping",   ["aether", 2]],
-  ["acrobatic",  ["stone",  3]],
-  ["prevention", ["vigor",  4]],
-]
+^  ["berserker",  ["poison", 7]], // 
+^  ["infernal",   ["fire",   6]],
+^  ["eternity",   ["ice",    1]],
+^  ["grasping",   ["aether", 2]],
+^  ["acrobatic",  ["stone",  3]],
+^  ["prevention", ["vigor",  4]],
+^]
 
 var _WAND_ABILITIES  = structs.DictKeys(_WAND_ABILITIES_MAP)
 var _WANDS           = structs.DictValues(_WAND_ABILITIES_MAP)
